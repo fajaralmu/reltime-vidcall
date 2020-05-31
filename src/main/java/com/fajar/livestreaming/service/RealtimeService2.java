@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
+import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 
@@ -25,9 +26,9 @@ public class RealtimeService2 {
 	}
 
 
-	public boolean sendUpdateSession(Object payload) {
+	public boolean sendUpdateSession(RegisteredRequest registeredRequest) {
  
-		webSocket.convertAndSend("/wsResp/sessions", payload);
+		webSocket.convertAndSend("/wsResp/sessions", WebResponse.builder().registeredRequest(registeredRequest).build());
 
 		return true;
 	}

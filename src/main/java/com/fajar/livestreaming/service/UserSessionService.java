@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
@@ -22,6 +23,10 @@ public class UserSessionService {
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
 	private static final String SESS_1 = "1";
 	private static final String SESSION_DATA = "session-data";
+	
+	@Autowired
+	private RealtimeService2 realtimeService;
+	
 	@PostConstruct
 	public void init() {
 		LogProxyFactory.setLoggers(this); 
@@ -84,6 +89,7 @@ public class UserSessionService {
 		RegisteredRequest newRequest = createNewRequest();
 		request.getSession(true).setAttribute(SESSION_DATA, newRequest);
 		addRequestId(newRequest);
+		realtimeService.sendUpdateSession(newRequest);
 		return newRequest;
 	}
 

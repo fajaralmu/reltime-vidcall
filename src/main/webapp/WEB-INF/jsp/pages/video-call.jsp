@@ -10,7 +10,7 @@
 	<a href="<spring:url value="/admin/home" />">Back</a>
 
 	<h2>Live Streaming</h2>
-	<p>Stream ID: ${registeredRequestId}</p> 
+	<p>Stream ID: ${registeredRequest.requestId}</p> 
 	<div id="live-wrapper" style="display: grid; grid-template-columns: 47% 47%">
 		<div class ="camera" style="padding: 20px; border: solid 1px green; text-align: center">
 			<h2>You</h2>   
@@ -111,7 +111,7 @@ function sendVideoImage(imageData ){
 	console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
 	const requestObject =  {
 			partnerId : "${partnerId}",
-			originId : "${registeredRequestId}",
+			originId : "${registeredRequest.requestId}",
 			imageData : imageData
 		};
 	
@@ -245,19 +245,20 @@ function initLiveStream(){
 
 function initWebSocket(){
 	const _class = this;
-	connectToWebsocket(null, null, null, {
-		partnerId : "${partnerId}",
-		callback : function(resp){
-			_class.handleLiveStream(resp);
-		}
-		
-	});
+	const callbackObject = {
+			subscribeUrl : "/wsResp/videostream/${partnerId}",
+			callback : function(resp){
+				_class.handleLiveStream(resp);
+			}
+			
+		};
+	connectToWebsocket(callbackObject);
 }
 function onClose(){
-	postReq("<spring:url value="/api/stream/disconnect" />",
+	/* postReq("<spring:url value="/api/stream/disconnect" />",
 			{originId : "${registeredRequestId}"}, function(xhr) {
 				 
-			});
+			}); */
 }
 initLiveStream();
 </script>

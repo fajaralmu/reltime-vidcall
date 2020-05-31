@@ -30,14 +30,14 @@ function sendToWebsocket(url, requestObject){
 
 /**
  *  
- * @param callbackObject4 video call
+ * @param callBackObject video call
  * @returns
  */
-function connectToWebsocket(  callbackObject4) {
+function connectToWebsocket(  callBackObject) {
 
 	const requestIdElement = document.getElementById("request-id");
 	 
-	var socket = new SockJS('/universal-good-shop/shop-app');
+	var socket = new SockJS('/livestreaming/realtime-app');
 	const stompClients = Stomp.over(socket);
 	stompClients.connect({}, function(frame) {
 		wsConnected = true;
@@ -47,14 +47,14 @@ function connectToWebsocket(  callbackObject4) {
 		// document.getElementById("ws-info").innerHTML =
 		// stompClients.ws._transport.ws.url; 
 		
-		if(callbackObject4){
-			stompClients.subscribe("/wsResp/videostream/"+callbackObject4.partnerId, function(response) {
+		if(callBackObject){
+			stompClients.subscribe(callBackObject.subscribeUrl, function(response) {
 				 
 				console.log("Websocket Updated...");
 				
 				var respObject = JSON.parse(response.body);
 				 
-				callbackObject4.callback(respObject);
+				callBackObject.callback(respObject);
 				 
 			});
 		}
