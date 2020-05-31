@@ -44,6 +44,7 @@ public class MvcStreamController extends BaseController{
 		}catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("title", "Invalid Session");
+			model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;
 	}
@@ -64,9 +65,8 @@ public class MvcStreamController extends BaseController{
 			model.addAttribute("title", "Video Call");
 			model.addAttribute("partnerInfo", partnerSession);
 			model.addAttribute("pageUrl", "pages/video-call");
-		} catch (Exception e) {
-			 
-			 
+		} catch (Exception e) { 
+			 model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;
 	} 

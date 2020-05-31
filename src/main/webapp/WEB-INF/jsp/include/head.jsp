@@ -24,8 +24,8 @@
 }
 </style>
 	<div class="page-header" style="color:blue">
-		<h1>Realtime Video Conference</h1>
-		<p>test 12345</p>
+		<h1>Real Time Video Conference</h1>
+		<a href="<spring:url value="/livestream/app"></spring:url>">Main Page</a>
 	</div>
 
 	<div>

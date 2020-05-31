@@ -1,18 +1,11 @@
 package com.fajar.livestreaming.controller;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fajar.livestreaming.dto.RegisteredRequest;
-import com.fajar.livestreaming.service.StreamingService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +33,7 @@ public class MvcAppController extends BaseController{
 			model.addAttribute("pageUrl", "pages/main-menu");
 		}catch (Exception e) {
 			model.addAttribute("title", "Invalid Session");
+			model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;
 	}
