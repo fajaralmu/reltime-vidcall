@@ -34,10 +34,8 @@ public class MvcAppController extends BaseController{
 	@RequestMapping(value = { "/" })
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
-		
-		RegisteredRequest currentRequest = userSessionService.getRegisteredRequest(request);
-		try {
-			model.addAttribute("currentRequest", currentRequest);
+		 
+		try { 
 			model.addAttribute("title", "Welcome"); 
 			model.addAttribute("pageUrl", "pages/main-menu");
 		}catch (Exception e) {

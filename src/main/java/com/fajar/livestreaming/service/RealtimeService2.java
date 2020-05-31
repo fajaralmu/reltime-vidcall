@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 
@@ -19,7 +20,7 @@ public class RealtimeService2 {
 	private UserSessionService userSessionService;
 
 	public RealtimeService2() {
-//		LogProxyFactory.setLoggers(this);
+		LogProxyFactory.setLoggers(this);
 		log.info("=======================REALTIME SERVICE 2======================="); 
 	}
 

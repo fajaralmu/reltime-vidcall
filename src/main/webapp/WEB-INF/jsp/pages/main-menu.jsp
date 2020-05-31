@@ -8,14 +8,14 @@
 <h2>Main Menu Page</h2>
 
 <h3>Request ID:</h3>
-<p id="req-id-generated">${currentRequest == null? 'Not Generated' : currentRequest.requestId } </p>
+<p id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId } </p>
 <a class="btn btn-success" href="<spring:url value="/stream/sessionlist" /> ">View Available Sessions</a> 
-<c:if test="${currentRequest == null }">
+<c:if test="${registeredRequest == null }">
 	<button class="btn btn-info" onclick="registerSession()">Register</button>
 </c:if>
 
 </div>
-<c:if test="${currentRequest == null }">
+<c:if test="${registeredRequest == null }">
 	<script type="text/javascript" >
 		
 		function registerSession(){

@@ -2,11 +2,13 @@ package com.fajar.livestreaming.service;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.controller.BaseController;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 
@@ -22,7 +24,10 @@ public class StreamingService {
 	private BaseController baseController;
 	@Autowired
 	private RealtimeService2 realtimeService2;
-	
+	@PostConstruct
+	public void init() {
+		LogProxyFactory.setLoggers(this); 
+	}
 	public RegisteredRequest getPartnerSession(String partnerId) throws Exception {
 		RegisteredRequest partnerSession = userSessionService.getAvailableSession(partnerId);
 		
@@ -47,10 +52,11 @@ public class StreamingService {
 			throw new Exception("invalid current sssion");
 		}
 		List<RegisteredRequest> sessionList = userSessionService.getAvaliableRequests();
+		
+		log.info("sessionList size: {}", sessionList.size());
 		for (RegisteredRequest registeredRequest : sessionList) {
 			if(registeredRequest.getRequestId().equals(currentRequest.getRequestId())) {
-				sessionList.remove(registeredRequest);
-				break;
+ 				 
 			}
 		}
 		return sessionList;

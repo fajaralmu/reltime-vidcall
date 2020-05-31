@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.UserSessionService;
 @Controller 
 public class BaseController {
@@ -19,12 +20,13 @@ public class BaseController {
 	@Autowired
 	protected UserSessionService userSessionService;
 	
-	@ModelAttribute("requestId")
-	public String getPublicRequestId(HttpServletRequest request) {
-		Cookie cookie = getCookie("JSESSSIONID", request.getCookies());
-		String cookieValue = cookie == null ? UUID.randomUUID().toString():cookie.getValue();
-		return	cookieValue;
-		 
+	@ModelAttribute("registeredRequest")
+	public RegisteredRequest getPublicRequestId(HttpServletRequest request) {
+		try {
+			return userSessionService.getRegisteredRequest(request);
+		}catch (Exception e) {
+			return null;
+		} 
 	}
 	
 	@ModelAttribute("contextPath")

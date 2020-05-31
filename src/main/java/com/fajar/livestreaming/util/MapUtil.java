@@ -25,8 +25,8 @@ public class MapUtil {
 			return result;
 		}
 		Set mapKeys = map.keySet();
-		for (Object object : mapKeys) {
-			result.add(object);
+		for (Object key : mapKeys) {
+			result.add(map.get(key));
 		}
 		
 		return result;

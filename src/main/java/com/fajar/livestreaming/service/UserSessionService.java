@@ -1,17 +1,17 @@
 package com.fajar.livestreaming.service;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
+import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
 import com.fajar.livestreaming.util.MapUtil;
@@ -22,7 +22,10 @@ public class UserSessionService {
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
 	private static final String SESS_1 = "1";
 	private static final String SESSION_DATA = "session-data";
-
+	@PostConstruct
+	public void init() {
+		LogProxyFactory.setLoggers(this); 
+	}
 	private SessionData getSessionData(String key) {
 		if (null == SESSION_MAP.get(key)) {
 			SESSION_MAP.put(key, new SessionData());

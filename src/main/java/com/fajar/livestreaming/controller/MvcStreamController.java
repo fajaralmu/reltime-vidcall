@@ -1,6 +1,7 @@
 package com.fajar.livestreaming.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,8 +37,9 @@ public class MvcStreamController extends BaseController{
 	@RequestMapping(value = { "/sessionlist" })
 	public String sessionlist(Model model, HttpServletRequest request, HttpServletResponse response)  {
 		try {
+			List<RegisteredRequest> sessions = streamingService.getSessionList(request);
 			model.addAttribute("title", "Session List");
-			model.addAttribute("sessions", streamingService.getSessionList(request));
+			model.addAttribute("sessions", sessions);
 			model.addAttribute("pageUrl", "pages/session-list");
 		}catch (Exception e) {
 			e.printStackTrace();
