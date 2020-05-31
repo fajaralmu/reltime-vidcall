@@ -38,7 +38,7 @@ function connectToWebsocket( ... callBackObjects) {
 
 	const requestIdElement = document.getElementById("request-id");
 	 
-	var socket = new SockJS('/livestreaming/realtime-app');
+	var socket = new SockJS(websocketUrl);
 	const stompClients = Stomp.over(socket);
 	stompClients.connect({}, function(frame) {
 		wsConnected = true;
