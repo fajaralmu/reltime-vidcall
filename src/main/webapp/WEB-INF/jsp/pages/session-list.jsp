@@ -7,17 +7,20 @@
 <div>
 	<h2>Available Sessions</h2>
 	<c:forEach var="session" items="${sessions }">
-	 
+	<% int i = 1; %>
 	<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
 		<div>
-			<p>${session.requestId }</p>
-			<p>Modified Date: ${session.modifiedDate }</p>
+			<p>(<%=i %>) ${session.requestId }</p>
+			<p>Created Date: ${session.created }</p>
 			<c:if test="${registeredRequest.requestId != session.requestId }">
 				<a class="btn btn-success"
 				href="<spring:url value="/stream/videocall" />/${session.requestId }">Video
 				Call</a>
 			</c:if>
-			 
+			<c:if test="${registeredRequest.requestId == session.requestId }">
+				<b>Your session</b>
+			</c:if>
+			<% i++; %>
 		</div>
 	</c:forEach>
 </div>
