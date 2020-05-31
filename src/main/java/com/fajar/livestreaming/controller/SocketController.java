@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.service.RealtimeService2;
+import com.fajar.livestreaming.service.RealtimeService;
 
 @CrossOrigin
 @RestController
@@ -28,7 +28,7 @@ public class SocketController extends BaseController{
 //	@Autowired
 //	private SimpMessagingTemplate webSocket;
 	@Autowired
-	RealtimeService2 realtimeUserService;
+	RealtimeService realtimeUserService;
 	 
 	
 	public SocketController() {

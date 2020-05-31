@@ -25,7 +25,7 @@ public class UserSessionService {
 	private static final String SESSION_DATA = "session-data";
 	
 	@Autowired
-	private RealtimeService2 realtimeService;
+	private RealtimeService realtimeService;
 	
 	@PostConstruct
 	public void init() {
@@ -70,6 +70,7 @@ public class UserSessionService {
 			return;
 		}
 		SESSION_MAP.get(SESS_1).getRequest(requestId).setActive(active);
+		realtimeService.sendUpdateSessionStatus(existingReqId);
 	}
 	
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {

@@ -12,15 +12,15 @@ import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 
 @Service
-public class RealtimeService2 {
-	Logger log = LoggerFactory.getLogger(RealtimeService2.class);
+public class RealtimeService {
+	Logger log = LoggerFactory.getLogger(RealtimeService.class);
 
 	@Autowired
 	private SimpMessagingTemplate webSocket; 
 	@Autowired
 	private UserSessionService userSessionService;
 
-	public RealtimeService2() {
+	public RealtimeService() {
 		LogProxyFactory.setLoggers(this);
 		log.info("=======================REALTIME SERVICE 2======================="); 
 	}
@@ -60,6 +60,13 @@ public class RealtimeService2 {
 //		userSessionService.setActiveSession(request.getOriginId(), false);
 //		WebResponse response = WebResponse.builder().code("01").requestId(request.getOriginId()).build();
 //		sendLiveStramResponse(response );
+	}
+
+
+	public void sendUpdateSessionStatus(RegisteredRequest registeredRequest) {
+		 
+		webSocket.convertAndSend("/wsResp/sessionstatus", WebResponse.builder().registeredRequest(registeredRequest).build());
+
 	}
 
 }

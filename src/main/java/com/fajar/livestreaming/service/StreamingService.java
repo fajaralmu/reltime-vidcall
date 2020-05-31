@@ -23,7 +23,7 @@ public class StreamingService {
 	@Autowired
 	private BaseController baseController;
 	@Autowired
-	private RealtimeService2 realtimeService2;
+	private RealtimeService realtimeService2;
 	@PostConstruct
 	public void init() {
 		LogProxyFactory.setLoggers(this); 

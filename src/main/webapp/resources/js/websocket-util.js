@@ -29,11 +29,12 @@ function sendToWebsocket(url, requestObject){
 }
 
 /**
- *  
- * @param callBackObject video call
+ * 
+ * @param callBackObject
+ *            video call
  * @returns
  */
-function connectToWebsocket(  callBackObject) {
+function connectToWebsocket( ... callBackObjects) {
 
 	const requestIdElement = document.getElementById("request-id");
 	 
@@ -45,18 +46,21 @@ function connectToWebsocket(  callBackObject) {
 		console.log('Connected -> ' + frame, stompClients.ws._transport.ws.url);
 
 		// document.getElementById("ws-info").innerHTML =
-		// stompClients.ws._transport.ws.url; 
-		
-		if(callBackObject){
-			stompClients.subscribe(callBackObject.subscribeUrl, function(response) {
-				 
-				console.log("Websocket Updated...");
-				
-				var respObject = JSON.parse(response.body);
-				 
-				callBackObject.callback(respObject);
-				 
-			});
+		// stompClients.ws._transport.ws.url;
+		for(let i =0;i<callBackObjects.length;i++){
+			const callBackObject = callBackObjects[i];
+			
+			if(callBackObject){
+				stompClients.subscribe(callBackObject.subscribeUrl, function(response) {
+					 
+					console.log("Websocket Updated...");
+					
+					var respObject = JSON.parse(response.body);
+					 
+					callBackObject.callback(respObject);
+					 
+				});
+			}
 		}
 
 	});
@@ -68,7 +72,7 @@ function disconnect() {
 	if (stompClient != null) {
 		stompClient.disconnect();
 	}
-	//wsConnected = (false);
+	// wsConnected = (false);
 	console.log("Disconnected");
 }
 

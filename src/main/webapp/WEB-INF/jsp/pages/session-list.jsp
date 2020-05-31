@@ -11,8 +11,9 @@
 
 			<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
 			<div id="${session.requestId }">
-				<h3>ID:${session.requestId } </h3>
+				<h3>ID:${session.requestId }</h3>
 				<p>Created: ${session.created }</p>
+				<p>Active: <span id="status-${registeredRequest.requestId }">${registeredRequest.active}</span></p>
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }">Video
@@ -32,28 +33,44 @@
 
 	function initWebSocket() {
 		const _class = this;
-		const callbackObject = {
+		const callbackObject1 = {
 			subscribeUrl : "/wsResp/sessions",
 			callback : function(resp) {
 				_class.addSessionList(resp);
 			}
 
 		};
-		connectToWebsocket(callbackObject);
+		const callbackObject2 = {
+			subscribeUrl : "/wsResp/sessionstatus",
+			callback : function(resp) {
+				_class.updateSessionStatus(resp);
+			}
+
+		};
+		connectToWebsocket(callbackObject1, callbackObject2);
+	}
+
+	function updateSessionStatus(response) {
+		const status = response.registeredRequest.active;
+		const requestId = response.registeredRequest.requestId;
+		
+		_byId("status-"+requestId).innerHTML = status;
 	}
 
 	function addSessionList(response) {
 		sessionList.innerHTML += generateHtmlTextForSession(response.registeredRequest);
 	}
 
-	function generateHtmlTextForSession(regisreredRequest) {
+	function generateHtmlTextForSession(registeredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
-		const html = "<div id=\""+regisreredRequest.requestId+"\"><h3>ID:"
-				+ regisreredRequest.requestId
-				+ " <p>Created:"
-				+ regisreredRequest.created
-				+ "</p></h3> \r\n"
-				+ "<a class=\"btn btn-success\" href=\"" + urlStream+"/"+ regisreredRequest.requestId+"\">"
+		const html = "<div id=\""+registeredRequest.requestId+"\"><h3>ID:"
+				+ registeredRequest.requestId
+				+ "</h3><p>Created:"
+				+ registeredRequest.created
+				+ "</p><p>Active:<span id=\"status-"+registeredRequest.requestId+"\">"
+				+ registeredRequest.active
+				+ "</span></p>"
+				+ "<a class=\"btn btn-success\" href=\"" + urlStream+"/"+ registeredRequest.requestId+"\">"
 				+ "Video Call</a>" + "<hr/></div>";
 
 		return html;
