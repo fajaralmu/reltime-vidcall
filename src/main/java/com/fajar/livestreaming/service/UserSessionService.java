@@ -50,7 +50,7 @@ public class UserSessionService {
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
-		request.getSession().invalidate();
+		
 		try {
 			RegisteredRequest registeredRequest = getRegisteredRequest(request);
 
@@ -60,6 +60,8 @@ public class UserSessionService {
 			
 			log.error("Error Removing Session" );
 			e.printStackTrace();
+		} finally {
+			request.getSession().invalidate();
 		}
 
 	}
