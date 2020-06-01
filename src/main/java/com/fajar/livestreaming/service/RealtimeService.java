@@ -26,7 +26,7 @@ public class RealtimeService {
 	}
 
 
-	public boolean sendUpdateSession(RegisteredRequest registeredRequest) {
+	public boolean sendUpdateSessionExistance(RegisteredRequest registeredRequest) {
  
 		webSocket.convertAndSend("/wsResp/sessions", WebResponse.builder().registeredRequest(registeredRequest).build());
 

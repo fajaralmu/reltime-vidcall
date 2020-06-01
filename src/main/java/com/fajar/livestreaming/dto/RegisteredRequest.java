@@ -36,4 +36,7 @@ public class RegisteredRequest implements Serializable{/**
 	 
 	private boolean active;
 	
+	@Builder.Default
+	private boolean exist = true;
+	
 }

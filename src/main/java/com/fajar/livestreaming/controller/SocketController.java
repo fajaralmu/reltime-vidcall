@@ -53,6 +53,12 @@ public class SocketController extends BaseController{
 		RegisteredRequest registeredRequest = userSessionService.registerSession(httpRequest);;
 		return WebResponse.builder().registeredRequest(registeredRequest).build();
 	}
+	@PostMapping(value = "/api/stream/invalidate")
+	public WebResponse invalidate( HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) { 
+		userSessionService.removeSessioon(httpRequest);
+		return new WebResponse();
+	}
 	
 	//@MessageMapping("/move")
 //	//@SendTo("/wsResp/players")

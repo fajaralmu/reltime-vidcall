@@ -36,7 +36,7 @@
 		const callbackObject1 = {
 			subscribeUrl : "/wsResp/sessions",
 			callback : function(resp) {
-				_class.addSessionList(resp);
+				_class.updateSessionList(resp);
 			}
 
 		};
@@ -57,8 +57,17 @@
 		_byId("status-"+requestId).innerHTML = status;
 	}
 
-	function addSessionList(response) {
-		sessionList.innerHTML += generateHtmlTextForSession(response.registeredRequest);
+	function updateSessionList(response) {
+		const registeredRequest = response.registeredRequest;
+		if(!registeredRequest){
+			return;
+		}
+		
+		if(registeredRequest.exist){
+			sessionList.innerHTML += generateHtmlTextForSession(registeredRequest);
+		}else{
+			removeElementById(registeredRequest.requestId);
+		}
 	}
 
 	function generateHtmlTextForSession(registeredRequest) {

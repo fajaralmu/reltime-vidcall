@@ -13,7 +13,7 @@
 <c:if test="${registeredRequest == null }">
 	<button class="btn btn-info" onclick="registerSession()">Register</button>
 </c:if>
-
+<button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
 </div>
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript" >
@@ -25,6 +25,16 @@
 						infoDone();
 						var response = (xhr.data);
 						_byId("req-id-generated").innerHTML =  response.registeredRequest.requestId;
+					});
+		}
+		
+		function invalidate(){
+			const requestObject = {};
+			postReq("<spring:url value="/api/stream/invalidate" />",
+					requestObject, function(xhr) {
+						infoDone();
+						var response = (xhr.data);
+						window.location.reload();
 					});
 		}
 	

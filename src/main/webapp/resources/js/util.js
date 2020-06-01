@@ -12,6 +12,13 @@ function infoDone() {
 	document.getElementById("loading-div").innerHTML = "";
 }
 
+function removeElementById(id){
+	const element = _byId(id);
+	if(element != null){
+		element.parentNode.removeChild(element);
+	}
+}
+
 /** ***************COMPONENT*************** */
 function createAnchor(id, html, url){
 	var a = document.createElement("a");
