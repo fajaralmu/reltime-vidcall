@@ -15,6 +15,17 @@
 </c:if>
 <button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
 </div>
+<script type="text/javascript">
+	function invalidate(){
+		const requestObject = {};
+		postReq("<spring:url value="/api/stream/invalidate" />",
+				requestObject, function(xhr) {
+					infoDone();
+					var response = (xhr.data);
+					window.location.reload();
+				});
+	}
+</script>
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript" >
 		
@@ -26,17 +37,7 @@
 						var response = (xhr.data);
 						_byId("req-id-generated").innerHTML =  response.registeredRequest.requestId;
 					});
-		}
-		
-		function invalidate(){
-			const requestObject = {};
-			postReq("<spring:url value="/api/stream/invalidate" />",
-					requestObject, function(xhr) {
-						infoDone();
-						var response = (xhr.data);
-						window.location.reload();
-					});
-		}
+		} 
 	
 	</script>
 </c:if>

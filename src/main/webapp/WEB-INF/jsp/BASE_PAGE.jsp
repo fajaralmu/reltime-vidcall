@@ -28,7 +28,7 @@
 <script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script>
 <script type="text/javascript">
 	var ctxPath = "${contextPath}";
-	var websocketUrl = "${contextPath}" + "<spring:url value="/realtime-app" />";
+	var websocketUrl = "<spring:url value="/realtime-app" />";
 </script>
 <style>
 .container {
