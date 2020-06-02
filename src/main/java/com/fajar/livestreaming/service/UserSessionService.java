@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserSessionService {
 
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
-	private static final String SESS_1 = "1";
+	private static final String SESSION_TRIAL_ONE = "1";
 	private static final String SESSION_DATA = "session-data";
 
 	@Autowired
@@ -44,9 +44,9 @@ public class UserSessionService {
 	}
 
 	public void addRequestId(RegisteredRequest request) {
-		getSessionData(SESS_1);
+		getSessionData(SESSION_TRIAL_ONE);
 
-		SESSION_MAP.get(SESS_1).addNewApp(request);
+		SESSION_MAP.get(SESSION_TRIAL_ONE).addNewApp(request);
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
@@ -54,7 +54,7 @@ public class UserSessionService {
 		try {
 			RegisteredRequest registeredRequest = getRegisteredRequest(request);
 
-			SESSION_MAP.get(SESS_1).remove(registeredRequest.getRequestId());
+			SESSION_MAP.get(SESSION_TRIAL_ONE).remove(registeredRequest.getRequestId());
 
 		} catch (Exception e) {
 			
@@ -77,7 +77,7 @@ public class UserSessionService {
 	}
 
 	public List<RegisteredRequest> getAvaliableRequests() {
-		Map<String, RegisteredRequest> registeredApps = getSessionData(SESS_1).getRegisteredApps();
+		Map<String, RegisteredRequest> registeredApps = getSessionData(SESSION_TRIAL_ONE).getRegisteredApps();
 		return MapUtil.mapToList(registeredApps);
 	}
 
@@ -90,7 +90,7 @@ public class UserSessionService {
 		if (null == existingReqId) {
 			return;
 		}
-		SESSION_MAP.get(SESS_1).getRequest(requestId).setActive(active);
+		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
 		realtimeService.sendUpdateSessionStatus(existingReqId);
 	}
 
@@ -112,19 +112,24 @@ public class UserSessionService {
 		}
 	}
 
-	public RegisteredRequest registerSession(HttpServletRequest request) {
-		RegisteredRequest newRequest = createNewRequest();
-		request.getSession(true).setAttribute(SESSION_DATA, newRequest);
-		addRequestId(newRequest);
-		realtimeService.sendUpdateSessionExistance(newRequest);
+	public RegisteredRequest registerSession(HttpServletRequest httpRequest) {
+		RegisteredRequest newRegisteredRequest = createNewRequest(httpRequest);
+		setSessionAttributeSessionData(httpRequest, newRegisteredRequest);
+		addRequestId(newRegisteredRequest);
+		realtimeService.sendUpdateSessionExistance(newRegisteredRequest);
 
-		return newRequest;
+		return newRegisteredRequest;
+	}
+	
+	private static void setSessionAttributeSessionData(HttpServletRequest request, RegisteredRequest newRequest) {
+		request.getSession(true).setAttribute(SESSION_DATA, newRequest);
 	}
 
-	private RegisteredRequest createNewRequest() {
+	private RegisteredRequest createNewRequest(HttpServletRequest httpRequest) {
 		RegisteredRequest registeredRequest = new RegisteredRequest();
 		registeredRequest.setActive(false);
 		registeredRequest.setCreated(new Date());
+		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));
 		registeredRequest.setRequestId(UUID.randomUUID().toString());
 		return registeredRequest;
 	}

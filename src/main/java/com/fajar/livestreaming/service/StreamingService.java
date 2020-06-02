@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
-import com.fajar.livestreaming.controller.BaseController;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,7 @@ public class StreamingService {
 	
 	@Autowired
 	private UserSessionService userSessionService;
-	@Autowired
-	private BaseController baseController;
-	@Autowired
-	private RealtimeService realtimeService2;
+	 
 	@PostConstruct
 	public void init() {
 		LogProxyFactory.setLoggers(this); 
