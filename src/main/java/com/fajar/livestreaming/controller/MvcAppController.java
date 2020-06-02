@@ -29,10 +29,12 @@ public class MvcAppController extends BaseController{
 			HttpServletRequest request, HttpServletResponse response)  {
 		 
 		try { 
-			model.addAttribute("title", "Welcome"); 
-			model.addAttribute("pageUrl", "pages/main-menu");
+			
+			setTitle(request, "Welcome"); 
+			setPageUrl(request, "pages/main-menu");
+			
 		}catch (Exception e) {
-			model.addAttribute("title", "Invalid Session");
+			setTitle(request, "Invalid Session");
 			model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;

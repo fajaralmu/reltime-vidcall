@@ -25,7 +25,7 @@ public class UserSessionService {
 
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
 	private static final String SESSION_TRIAL_ONE = "1";
-	private static final String SESSION_DATA = "session-data";
+	private static final String SESSION_ATTR_SESS_DATA = "session-data";
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -96,7 +96,7 @@ public class UserSessionService {
 
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {
 		try {
-			return (RegisteredRequest) request.getSession(false).getAttribute(SESSION_DATA);
+			return (RegisteredRequest) request.getSession(false).getAttribute(SESSION_ATTR_SESS_DATA);
 		} catch (Exception e) {
 
 			return null;
@@ -122,7 +122,7 @@ public class UserSessionService {
 	}
 	
 	private static void setSessionAttributeSessionData(HttpServletRequest request, RegisteredRequest newRequest) {
-		request.getSession(true).setAttribute(SESSION_DATA, newRequest);
+		request.getSession(true).setAttribute(SESSION_ATTR_SESS_DATA, newRequest);
 	}
 
 	private RegisteredRequest createNewRequest(HttpServletRequest httpRequest) {

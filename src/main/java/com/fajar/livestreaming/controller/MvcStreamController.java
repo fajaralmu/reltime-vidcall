@@ -38,12 +38,15 @@ public class MvcStreamController extends BaseController{
 	public String sessionlist(Model model, HttpServletRequest request, HttpServletResponse response)  {
 		try {
 			List<RegisteredRequest> sessions = streamingService.getSessionList(request);
-			model.addAttribute("title", "Session List");
+			
+			setTitle(request,  "Session List");
+			setPageUrl(request, "pages/session-list");
+			
 			model.addAttribute("sessions", sessions);
-			model.addAttribute("pageUrl", "pages/session-list");
+			
 		}catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("title", "Invalid Session");
+			setTitle(request,  "Invalid Session");
 			model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;
@@ -62,9 +65,12 @@ public class MvcStreamController extends BaseController{
 			streamingService.setActive(request);
 		 
 			model.addAttribute("partnerId", partnerId);
-			model.addAttribute("title", "Video Call");
+			
+			setTitle(request,  "Video Call");
+			setPageUrl(request,  "pages/video-call");
+			
 			model.addAttribute("partnerInfo", partnerSession);
-			model.addAttribute("pageUrl", "pages/video-call");
+			
 		} catch (Exception e) { 
 			 model.addAttribute("message", "Invalid Session");
 		}

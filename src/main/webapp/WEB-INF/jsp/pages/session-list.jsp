@@ -72,7 +72,7 @@
 
 	function generateHtmlTextForSession(registeredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
-		const html = "<div id=\""+registeredRequest.requestId+"\"><h3>ID:"
+		const html = "<div id=\""+ registeredRequest.requestId +"\"><h3>ID:"
 				+ registeredRequest.requestId
 				+ "</h3><p>Created:"
 				+ registeredRequest.created
