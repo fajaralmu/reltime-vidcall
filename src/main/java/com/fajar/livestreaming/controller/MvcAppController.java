@@ -30,11 +30,11 @@ public class MvcAppController extends BaseController{
 		 
 		try { 
 			
-			setTitle(request, "Welcome"); 
-			setPageUrl(request, "pages/main-menu");
+			setTitle(model, "Welcome"); 
+			setPageUrl(model, "pages/main-menu");
 			
 		}catch (Exception e) {
-			setTitle(request, "Invalid Session");
+			setTitle(model, "Invalid Session");
 			model.addAttribute("message", "Invalid Session");
 		}
 		return basePage;

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.fajar.livestreaming.dto.RegisteredRequest;
@@ -38,35 +39,14 @@ public class BaseController {
 		return request.getContextPath();
 	}
 
-	@ModelAttribute("title")
-	public String getTitle(HttpServletRequest request) {
-		try {
-			return request.getSession().getAttribute(SESSION_ATTR_TITLE).toString();
-		} catch (Exception e) {
-			 
-			return "Realtime VidCall";
-		}
-	}
+	 
 	
-	@ModelAttribute("pageUrl")
-	public String getPageUrl(HttpServletRequest request) {
-		try {
-			return request.getSession().getAttribute(SESSION_ATTR_PAGE_URL).toString();
-		} catch (Exception e) {
-			 
-			return "Realtime VidCall";
-		}
+	 
+	protected static void setTitle(Model model, String title) {
+		model.addAttribute("title", title);
 	}
-	
-	protected static void setSessionAttribute(HttpServletRequest httpServletRequest, String attributeName, Object value) {
-		httpServletRequest.getSession().setAttribute(attributeName, value);
-	}
-	
-	protected static void setTitle(HttpServletRequest httpServletRequest, String title) {
-		setSessionAttribute(httpServletRequest, SESSION_ATTR_TITLE, title);
-	}
-	protected static void setPageUrl(HttpServletRequest httpServletRequest, String title) {
-		setSessionAttribute(httpServletRequest, SESSION_ATTR_PAGE_URL, title);
+	protected static void setPageUrl(Model model, String pageUrl) {
+		model.addAttribute("pageUrl", pageUrl);
 	}
 
 	/**
