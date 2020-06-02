@@ -75,7 +75,7 @@ function init () {
         	
             _class.initAudio(source, audioCtx, analyser);
             console.debug("END getUserMedia");
-            _class.LoopFunc();
+           /*  _class.LoopFunc(); */
         })
         .catch(function (err) {
             //console.log("An error occurred: " + err);
@@ -97,11 +97,11 @@ function init () {
     this.clearphoto();
 } 
 
-var LoopFunc = function (){
+/* var LoopFunc = function (){
     setInterval(function(){
-    	getSoundData();               
+    	getSoundData();   
     },100);
-}
+} */
 
 function initAudio(_mediaSource, _audioContext, _analyser){
 	// initialize the audioContext
@@ -116,10 +116,10 @@ function initAudio(_mediaSource, _audioContext, _analyser){
 
 function getSoundData() {
 	   var sample = new Float32Array(analyser.frequencyBinCount);
-	   var soundData = analyser.getFloatFrequencyData(sample); 
+	   analyser.getFloatFrequencyData(sample); 
 	   console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
-	   console.debug("soundData: ",soundData);
-	   return soundData;
+	   console.debug("soundData: ",sample);
+	   return sample;
 	}
 
 function terminate (){
