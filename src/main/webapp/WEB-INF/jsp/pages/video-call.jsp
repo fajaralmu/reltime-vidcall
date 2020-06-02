@@ -49,18 +49,36 @@ const theCanvas = document.createElement("canvas");
 var btnTerminate = _byId("btn-terminate");
 var btnPause = _byId("btn-pause");
 var partnerInfo = _byId("partner-info");
+//AUDIO
+var audioContext; 
+var mediaSource;
+var analyser;
+var mySoundData;
 
 function init () {
 	const _class = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(function (stream) {
+        	 console.debug("START getUserMedia");
             _class.video.srcObject = stream;
-           // console.log("stream:", stream); 
-            _class.video.play();
-           
+           // //console.log("stream:", stream); 
+            _class.onloadedmetadata = function(e) {
+            	_class.video.play();
+            	//_class.video.muted = true;
+        	};
+            //_class.video.play();
+            var audioCtx = new AudioContext();
+        	var source = audioCtx.createMediaStreamSource(stream);
+        	var analyser = audioCtx.createAnalyser();
+        	source.connect(analyser);
+        	analyser.connect(audioCtx.destination);
+        	
+            _class.initAudio(source, audioCtx, analyser);
+            console.debug("END getUserMedia");
+            _class.LoopFunc();
         })
         .catch(function (err) {
-            console.log("An error occurred: " + err);
+            //console.log("An error occurred: " + err);
         });
    
     this.video.addEventListener('canplay', function (ev) {
@@ -72,12 +90,37 @@ function init () {
             _class.canvas.setAttribute('width', _class.width );
             _class.canvas.setAttribute('height', _class.height );
             _class.streaming = true; 
-           
+             
         }
     }, false);  
 
     this.clearphoto();
 } 
+
+var LoopFunc = function (){
+    setInterval(function(){
+    	getSoundData();               
+    },100);
+}
+
+function initAudio(_mediaSource, _audioContext, _analyser){
+	// initialize the audioContext
+	console.info("INIT AUDIO");
+	audioContext = _audioContext;
+	mediaSource = _mediaSource;
+	analyser = _analyser;
+
+	console.debug("Created Analyzer: ", analyser); 
+	
+}
+
+function getSoundData() {
+	   var sample = new Float32Array(analyser.frequencyBinCount);
+	   var soundData = analyser.getFloatFrequencyData(sample); 
+	   console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
+	   console.debug("soundData: ",soundData);
+	   return soundData;
+	}
 
 function terminate (){
     this.terminated = true;
@@ -108,7 +151,7 @@ function sendVideoImage(imageData ){
 	        return;
 	    }
 	this.sendingVideo = true;   
-	console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
+	//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
 	const requestObject =  {
 			partnerId : "${partnerId}",
 			originId : "${registeredRequest.requestId}",
@@ -131,7 +174,7 @@ function handleLiveStream(response)  {
     
     if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True";
-    	console.info("Getting response.imageData :",response.imageData .length);
+    	//console.info("Getting response.imageData :",response.imageData .length);
         photoReceiver.setAttribute('src', response.imageData );
     }else{
     	partnerInfo.innerHTML = "Online: False";
@@ -148,6 +191,7 @@ function handleLiveStream(response)  {
 
  function takepicture () {
     const _class = this;
+     
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
     })
@@ -229,17 +273,17 @@ function animate(){
 }
 
 function initLiveStream(){
-	console.info("START initLiveStream");
+	//console.info("START initLiveStream");
 	
 	 this.video = _byId('video');
-     console.log("video:", this.video);
+     //console.log("video:", this.video);
      this.canvas = _byId('canvas'); 
      this.photoReceiver = _byId("photo-receiver");
      this.init();
      this.initAnimation(this);
      this.initWebSocket();
      this.myCapture = _byId("my-capture");
-     console.info("END initLiveStream");
+     //console.info("END initLiveStream");
      document.body.onunload = onClose;
 }
 
