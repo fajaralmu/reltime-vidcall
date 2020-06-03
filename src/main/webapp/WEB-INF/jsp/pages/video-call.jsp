@@ -44,7 +44,8 @@
 
 	<hr />
 	<h3>Audio</h3>
-	<p id="audio"></p>
+	<p id="info-audio"></p>
+	<audio controls="controls" id="audio"></audio>
 </div>
 <script type="text/javascript">
 
@@ -70,6 +71,7 @@ var mySoundData;
 var mediaRecorder;
 var chunks = [];
 var _blob;
+var audio = _byId("audio");
 
 function init () {
 	const _class = this;   
@@ -243,12 +245,10 @@ function sendVideoImage(imageData ){
 function handleAudioStream(response){
 	if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True";
-        const snd = new Audio(response.audioData);
-        snd.onloadedmetadata = function(e) {
-        	snd.play();
-        	//_class.video.muted = true;
-    	};
-        _byId("audio").innerHTML = response.audioData;
+    	audio.src = response.audioData;
+    	audio.play();
+         
+        _byId("info-audio").innerHTML = response.audioData;
     }else{
     	partnerInfo.innerHTML = "Online: False";
     } 
