@@ -78,7 +78,7 @@ function init () {
         	 console.debug("START getUserMedia");
             _class.video.srcObject = stream;
            // //console.log("stream:", stream); 
-            _class.onloadedmetadata = function(e) {
+            _class.video.onloadedmetadata = function(e) {
             	_class.video.play();
             	//_class.video.muted = true;
         	};
@@ -243,10 +243,11 @@ function sendVideoImage(imageData ){
 function handleAudioStream(response){
 	if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True";
-    	//console.info("Getting response.imageData :",response.imageData .length);
-        /***
-        	TODO: voice
-        **/
+        const snd = new Audio(response.audioData);
+        snd.onloadedmetadata = function(e) {
+        	snd.play();
+        	//_class.video.muted = true;
+    	};
         _byId("audio").innerHTML = response.audioData;
     }else{
     	partnerInfo.innerHTML = "Online: False";
