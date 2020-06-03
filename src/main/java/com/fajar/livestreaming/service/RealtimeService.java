@@ -16,9 +16,7 @@ public class RealtimeService {
 	Logger log = LoggerFactory.getLogger(RealtimeService.class);
 
 	@Autowired
-	private SimpMessagingTemplate webSocket; 
-	@Autowired
-	private UserSessionService userSessionService;
+	private SimpMessagingTemplate webSocket;  
 
 	public RealtimeService() {
 		LogProxyFactory.setLoggers(this);
@@ -67,6 +65,23 @@ public class RealtimeService {
 		 
 		webSocket.convertAndSend("/wsResp/sessionstatus", WebResponse.builder().registeredRequest(registeredRequest).build());
 
+	}
+
+
+	public WebResponse audioStream(WebRequest request) {
+		WebResponse response = new WebResponse();
+		
+		response.setAudioData(request.getAudioData());
+		response.setRequestId(request.getOriginId());
+		
+		sendLiveAudioStramResponse(response);
+		return response;
+	}
+
+
+	private void sendLiveAudioStramResponse(WebResponse response) {
+		 
+		webSocket.convertAndSend("/wsResp/audiostream/"+response.getRequestId(), response);
 	}
 
 }

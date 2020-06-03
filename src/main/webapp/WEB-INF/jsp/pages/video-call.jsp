@@ -3,35 +3,48 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%><!DOCTYPE html>
- 
-<div   class="content" onload="initLiveStream()">
+
+<div class="content" onload="initLiveStream()">
 	<h2>Video Call With</h2>
 	<h3>Partner ID: ${partnerId }</h3>
 	<a href="<spring:url value="/admin/home" />">Back</a>
 
 	<h2>Live Streaming</h2>
-	<p>Stream ID: ${registeredRequest.requestId}</p> 
-	<div id="live-wrapper" style="display: grid; grid-template-columns: 47% 47%">
-		<div class ="camera" style="padding: 20px; border: solid 1px green; text-align: center">
-			<h2>You</h2>   
+	<p>Stream ID: ${registeredRequest.requestId}</p>
+	<div id="live-wrapper"
+		style="display: grid; grid-template-columns: 47% 47%">
+		<div class="camera"
+			style="padding: 20px; border: solid 1px green; text-align: center">
+			<h2>You</h2>
 			<img id="my-capture" height="350" width="350" />
 			<p></p>
-			<div>  
-				<button id="btn-terminate" class="btn btn-danger btn-sm" onClick="terminate()">Terminate</button>
-				<button id="btn-pause" class="btn btn-info btn-sm" onClick="pauseOrContinue()">Pause</button>
+			<div>
+				<button id="btn-terminate" class="btn btn-danger btn-sm"
+					onClick="terminate()">Terminate</button>
+				<button id="btn-pause" class="btn btn-info btn-sm"
+					onClick="pauseOrContinue()">Pause</button>
 			</div>
-			<div style="display: none"><canvas id="canvas"> </canvas></div>
+			<div style="display: none">
+				<canvas id="canvas"> </canvas>
+			</div>
 			<p>Preview</p>
-			<video controls id="video">Video stream not available. </video>
-		</div> 
-		<div class ="output-receiver" style="padding: 20px; border: solid 1px green; text-align: center;">
-			<h2>Partner <small id="partner-info">Online: ${partnerInfo.active }</small></h2>
+			<video controls id="video">Video stream not available.
+			</video>
+		</div>
+		<div class="output-receiver"
+			style="padding: 20px; border: solid 1px green; text-align: center;">
+			<h2>
+				Partner <small id="partner-info">Online:
+					${partnerInfo.active }</small>
+			</h2>
 			<img width="350" height="350" id="photo-receiver"
 				alt="The screen RECEIVER will appear in this box." />
 		</div>
 	</div>
-	 
+
 	<hr />
+	<h3>Audio</h3>
+	<p id="audio"></p>
 </div>
 <script type="text/javascript">
 
@@ -54,6 +67,9 @@ var audioContext;
 var mediaSource;
 var analyser;
 var mySoundData;
+var mediaRecorder;
+var chunks = [];
+var _blob;
 
 function init () {
 	const _class = this;   
@@ -74,6 +90,14 @@ function init () {
         	analyser.connect(audioCtx.destination);
         	
             _class.initAudio(source, audioCtx, analyser);
+            
+            console.debug("Will init media recorder");
+            var mediaRecorder = new MediaRecorder(stream);
+            
+			 
+			_class.initMediaRecorder(mediaRecorder);
+			console.debug("mediaRecorder:",mediaRecorder);
+            
             console.debug("END getUserMedia");
            /*  _class.LoopFunc(); */
         })
@@ -102,6 +126,56 @@ function init () {
     	getSoundData();   
     },100);
 } */
+
+function initMediaRecorder(_mediaRecorder){
+	this.mediaRecorder = _mediaRecorder;
+	this.mediaRecorder.ondataavailable = function(e) {
+		console.debug("ondataavailable");
+	      chunks.push(e.data);
+	   }
+	this.mediaRecorder.onstop = function(e){
+		/* console.debug("Stop.."); */
+		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+		console.debug("blob:",_blob);
+	    chunks = [];
+	    var audioURL = URL.createObjectURL(_blob);
+	   	console.debug("audioURL: ",audioURL);
+	   	processAudioData(_blob); 
+	}
+	console.debug("INIT MEDIA RECORDER END");
+}
+
+function processAudioData(_blob){
+	blobToBase64(_blob, function(base64data){
+		sendAudio(base64data);
+	});
+}
+
+function sendAudio(base64data){
+	if(this.sendingVideo == true || this.terminated || this.paused){
+        return;
+    }
+	//this.sendingVideo = true;   
+	//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
+	const requestObject =  {
+			partnerId : "${partnerId}",
+			originId : "${registeredRequest.requestId}",
+			audioData : base64data
+		};
+	
+	const audioSent = sendToWebsocket("/app/audiostream", requestObject);
+	 
+}
+ 
+
+function blobToBase64(blob, onloadCallback){ 
+	 var reader = new FileReader();
+	 reader.readAsDataURL(blob); 
+	 reader.onloadend = function() {
+	     var base64data = reader.result;                
+	     onloadCallback(base64data);
+	 }
+}
 
 function initAudio(_mediaSource, _audioContext, _analyser){
 	// initialize the audioContext
@@ -166,6 +240,19 @@ function sendVideoImage(imageData ){
 	myCapture.setAttribute("src", imageData);
 }
 
+function handleAudioStream(response){
+	if(response.code == "00"){
+    	partnerInfo.innerHTML = "Online: True";
+    	//console.info("Getting response.imageData :",response.imageData .length);
+        /***
+        	TODO: voice
+        **/
+        _byId("audio").innerHTML = response.audioData;
+    }else{
+    	partnerInfo.innerHTML = "Online: False";
+    } 
+}
+
 function handleLiveStream(response)  { 
 	setSendingVideoFalse();
     if(this.terminated){
@@ -191,9 +278,12 @@ function handleLiveStream(response)  {
 
  function takepicture () {
     const _class = this;
-     
+    if(mediaRecorder)
+    	mediaRecorder.start();
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
+        if( _class.mediaRecorder)
+        	_class.mediaRecorder.stop();
     })
 
 }
@@ -204,18 +294,7 @@ function resizeWebcamImage () {
         var context = _class.canvas.getContext('2d');
         resolve(_class.canvas.toDataURL('image/png'));
        // if(paused) return;
-        context.drawImage(_class.video, 0, 0, _class.width, _class.height    );
-         
-        // if (_class.width && _class.height) {
-        //     const dividier = 1;
-        //     _class.canvas.width = _class.width/ dividier;
-        //     _class.canvas.height = _class.height/ dividier;
-        //     context.drawImage(_class.video, 0, 0, _class.width/ dividier, _class.height/dividier);
-        //     var data = _class.canvas.toDataURL('image/png');  
-        //     resolve(data);
-        // }else {
-        //     _class.clearphoto();
-        // }
+        context.drawImage(_class.video, 0, 0, _class.width, _class.height    ); 
     })
 
    
@@ -236,15 +315,7 @@ function imageToDataUri (img, width, height)   {
     return theCanvas.toDataURL('image/png');
 }
 
-function clearphoto () {
-    // var context = this.canvas.getContext('2d');
-    // context.fillStyle = "#AAA";
-    // context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // var data = this.canvas.toDataURL('image/png'); 
-    // var img = new Image();
-    // img.src = data;
-}
+function clearphoto () {  }
 
 
 /**
@@ -289,14 +360,21 @@ function initLiveStream(){
 
 function initWebSocket(){
 	const _class = this;
-	const callbackObject = {
+	const callbackObjectVideo = {
 			subscribeUrl : "/wsResp/videostream/${partnerId}",
 			callback : function(resp){
 				_class.handleLiveStream(resp);
 			}
 			
 		};
-	connectToWebsocket(callbackObject);
+	const callbackObjectAudio = {
+			subscribeUrl : "/wsResp/audiostream/${partnerId}",
+			callback : function(resp){
+				_class.handleAudioStream(resp);
+			}
+			
+		};
+	connectToWebsocket(callbackObjectVideo, callbackObjectAudio);
 }
 function onClose(){
 	/* postReq("<spring:url value="/api/stream/disconnect" />",

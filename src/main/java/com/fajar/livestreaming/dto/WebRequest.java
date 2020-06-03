@@ -23,6 +23,7 @@ public class WebRequest implements Serializable {
 	private String value; 
 	
 	private String imageData;
+	private String audioData;
 	private String partnerId;
 	private String originId;
 

@@ -108,9 +108,14 @@ public class SocketController extends BaseController{
 //	    return response;
 //	}
 	@MessageMapping("/stream") 
-	public WebResponse leave( WebRequest request) throws IOException {
+	public WebResponse stream( WebRequest request) throws IOException {
 		
 		return realtimeUserService.stream(request);
+	}
+	@MessageMapping("/audiostream") 
+	public WebResponse audiostream( WebRequest request) throws IOException {
+		
+		return realtimeUserService.audioStream(request);
 	}
 	
 	

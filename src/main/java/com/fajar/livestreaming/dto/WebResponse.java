@@ -27,6 +27,7 @@ public class WebResponse implements Serializable {
 	private String message = "success";
 	private String requestId;
 	private String imageData;
+	private String audioData;
 	private RegisteredRequest registeredRequest;
  
 	 
