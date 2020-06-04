@@ -137,7 +137,7 @@ function init () {
 function initMediaRecorder(_mediaRecorder){
 	this.mediaRecorder = _mediaRecorder;
 	this.mediaRecorder.ondataavailable = function(e) {
-		console.debug("ondataavailable");
+		//console.debug("ondataavailable");
 	      chunks.push(e.data);
 	   }
 	this.mediaRecorder.onstop = function(e){ 
@@ -150,9 +150,14 @@ function initMediaRecorder(_mediaRecorder){
 }
 
 function processAudioData(_blob){
-	blobToBase64(_blob, function(base64data){
-		sendAudio(base64data);
-	});
+	console.debug("processAudioData, blob size: ", _blob.size);
+	const _class = this;
+	console.debug("_class.blobToBase64");
+	_class.blobToBase64(_blob, function(base64data){
+		_byId("info-audio").innerHTML = base64data;
+		_class.sendAudio(base64data);
+		_class.audio.src = base64data;
+	}); 
 }
 
 function sendAudio(base64data){
@@ -166,16 +171,18 @@ function sendAudio(base64data){
 			originId : "${registeredRequest.requestId}",
 			audioData : base64data
 		};
-	
+	console.debug("Send Audio Data");
 	const audioSent = sendToWebsocket("/app/audiostream", requestObject);
 	 
 }
  
 
 function blobToBase64(blob, onloadCallback){ 
+	 alert("blobToBase64:");
 	 var reader = new FileReader();
 	 reader.readAsDataURL(blob); 
 	 reader.onloadend = function() {
+		 console.log("onloadend");
 	     var base64data = reader.result;                
 	     onloadCallback(base64data);
 	 }
@@ -245,6 +252,7 @@ function sendVideoImage(imageData ){
 }
 
 function handleAudioStream(response){
+	console.debug("handleAudioStream");
 	if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True";
     	audio.src = response.audioData;
@@ -287,8 +295,8 @@ function handleLiveStream(response)  {
  }
  
  function stopAudio(){
-	  if( _class.mediaRecorder)
-      	_class.mediaRecorder.stop();
+	  if( mediaRecorder)
+      	mediaRecorder.stop();
  }
  
  function setAudioInfo(info){
