@@ -23,6 +23,11 @@
 					onClick="terminate()">Terminate</button>
 				<button id="btn-pause" class="btn btn-info btn-sm"
 					onClick="pauseOrContinue()">Pause</button>
+					<p>Audio Playing: <span id="audio-play-info">False</span></p>
+				<button id="btn-play-audio" class="btn btn-info btn-sm"
+					onClick="playAudio()">Play Audio</button>
+				<button id="btn-stop-audio" class="btn btn-info btn-sm"
+					onClick="stopAudio()">Stop And Send Audio</button>
 			</div>
 			<div style="display: none">
 				<canvas id="canvas"> </canvas>
@@ -71,7 +76,7 @@ var mySoundData;
 var mediaRecorder;
 var chunks = [];
 var _blob;
-var audio = _byId("audio");
+var audio = _byId("audio"); 
 
 function init () {
 	const _class = this;   
@@ -135,13 +140,10 @@ function initMediaRecorder(_mediaRecorder){
 		console.debug("ondataavailable");
 	      chunks.push(e.data);
 	   }
-	this.mediaRecorder.onstop = function(e){
-		/* console.debug("Stop.."); */
-		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-		console.debug("blob:",_blob);
-	    chunks = [];
-	    var audioURL = URL.createObjectURL(_blob);
-	   	console.debug("audioURL: ",audioURL);
+	this.mediaRecorder.onstop = function(e){ 
+		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
+	    chunks = []; 
+	    setAudioInfo("False");
 	   	processAudioData(_blob); 
 	}
 	console.debug("INIT MEDIA RECORDER END");
@@ -276,15 +278,30 @@ function handleLiveStream(response)  {
     }); */
 }
  
+ function playAudio(){
+	 if(mediaRecorder){
+	    	mediaRecorder.start();
+	    	setAudioInfo("true");
+	 }
+	 
+ }
+ 
+ function stopAudio(){
+	  if( _class.mediaRecorder)
+      	_class.mediaRecorder.stop();
+ }
+ 
+ function setAudioInfo(info){
+	 _byId("audio-play-info").innerHTML = info;
+ }
 
  function takepicture () {
     const _class = this;
-    if(mediaRecorder)
-    	mediaRecorder.start();
+    
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
-        if( _class.mediaRecorder)
-        	_class.mediaRecorder.stop();
+      /*   if( _class.mediaRecorder)
+        	_class.mediaRecorder.stop(); */
     })
 
 }
