@@ -150,13 +150,13 @@ function initMediaRecorder(_mediaRecorder){
 }
 
 function processAudioData(_blob){
-	console.debug("processAudioData, blob size: ", _blob.size);
+ 
 	const _class = this;
-	console.debug("_class.blobToBase64");
+	 
 	_class.blobToBase64(_blob, function(base64data){
-		_byId("info-audio").innerHTML = base64data;
+		//_byId("info-audio").innerHTML = base64data;
 		_class.sendAudio(base64data);
-		_class.audio.src = base64data;
+		//_class.audio.src = base64data;
 	}); 
 }
 
@@ -178,11 +178,11 @@ function sendAudio(base64data){
  
 
 function blobToBase64(blob, onloadCallback){ 
-	 alert("blobToBase64:");
+	// alert("blobToBase64:");
 	 var reader = new FileReader();
 	 reader.readAsDataURL(blob); 
 	 reader.onloadend = function() {
-		 console.log("onloadend");
+		// console.log("onloadend");
 	     var base64data = reader.result;                
 	     onloadCallback(base64data);
 	 }
@@ -305,9 +305,10 @@ function handleLiveStream(response)  {
 
  function takepicture () {
     const _class = this;
-    
+    playAudio();
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
+        _class.stopAudio();
       /*   if( _class.mediaRecorder)
         	_class.mediaRecorder.stop(); */
     })
