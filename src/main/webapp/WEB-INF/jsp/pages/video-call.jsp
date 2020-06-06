@@ -49,8 +49,10 @@
 
 	<hr />
 	<h3>Audio</h3>
-	<p id="info-audio"></p>
+	
+	<p>Duration: <span id="duration-info"></span></p>
 	<audio controls="controls" id="audio"></audio>
+	<p id="info-audio"></p>
 </div>
 <script type="text/javascript">
 
@@ -79,6 +81,7 @@ var _blob;
 var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
+var durationInfo = _byId("duration-info");
 
 function init () {
 	const _class = this;   
@@ -105,8 +108,7 @@ function init () {
 			_class.initMediaRecorder(mediaRecorder);
 			console.debug("mediaRecorder:",mediaRecorder);
             
-            console.debug("END getUserMedia");
-           /*  _class.LoopFunc(); */
+            console.debug("END getUserMedia"); 
         })
         .catch(function (err) {
             //console.log("An error occurred: " + err);
@@ -126,13 +128,7 @@ function init () {
     }, false);  
 
     this.clearphoto();
-} 
-
-/* var LoopFunc = function (){
-    setInterval(function(){
-    	getSoundData();   
-    },100);
-} */
+}  
 
 function initMediaRecorder(_mediaRecorder){
 	this.mediaRecorder = _mediaRecorder;
@@ -142,7 +138,7 @@ function initMediaRecorder(_mediaRecorder){
 	   }
 	this.mediaRecorder.onstop = function(e){ 
 		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
-	    chunks = []; 
+	  	chunks = []; 
 	    setAudioInfo("False");
 	   	processAudioData(_blob); 
 	}
@@ -191,15 +187,10 @@ function blobToBase64(blob, onloadCallback){
 	 }
 }
 
-function initAudio(_mediaSource, _audioContext, _analyser){
-	// initialize the audioContext
-	console.info("INIT AUDIO");
+function initAudio(_mediaSource, _audioContext, _analyser){ 
 	audioContext = _audioContext;
 	mediaSource = _mediaSource;
-	analyser = _analyser;
-
-	console.debug("Created Analyzer: ", analyser); 
-	
+	analyser = _analyser;   
 }
 
 function getSoundData() {
@@ -317,6 +308,7 @@ function playAudioByBase64Data(audioData){
 		
 		audio.play();
 		audioMetadataLoaded = false;
+		durationInfo.innerHTML = audio.duration;
 	}
 	
 }
@@ -362,12 +354,10 @@ function handleLiveStream(response)  {
 
  function takepicture () {
     const _class = this;
-    playAudio();
+   	playAudio();
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
-        _class.stopAudio();
-      /*   if( _class.mediaRecorder)
-        	_class.mediaRecorder.stop(); */
+       	_class.stopAudio(); 
     })
 
 }
