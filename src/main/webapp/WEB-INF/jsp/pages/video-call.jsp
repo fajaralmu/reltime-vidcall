@@ -76,7 +76,8 @@ var mySoundData;
 var mediaRecorder;
 var chunks = [];
 var _blob;
-var audio = _byId("audio"); 
+var audio = _byId("audio");
+var base64Datas = new Array();
 
 function init () {
 	const _class = this;   
@@ -156,6 +157,7 @@ function processAudioData(_blob){
 	_class.blobToBase64(_blob, function(base64data){
 		//_byId("info-audio").innerHTML = base64data;
 		_class.sendAudio(base64data);
+		_class.addBase64Data(base64data);
 		//_class.audio.src = base64data;
 	}); 
 }
@@ -255,13 +257,31 @@ function handleAudioStream(response){
 	console.debug("handleAudioStream");
 	if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True";
-    	audio.src = response.audioData;
-    	audio.play();
+    	playAudioByBase64Data(response.audioData);
          
         _byId("info-audio").innerHTML = response.audioData;
     }else{
     	partnerInfo.innerHTML = "Online: False";
     } 
+}
+
+function addBase64Data(audioData){
+	playAudioByBase64Data.push(audioData);
+}
+
+function clearBase64Data(){
+	playAudioByBase64Data = new Array();
+}
+
+function playAllBase64Data(){
+	for (var i = 0; i < base64Datas.length; i++) {
+		playAudioByBase64Data(base64Datas[i]);
+	} 
+}
+
+function playAudioByBase64Data(audioData){
+	audio.src = audioData;
+	audio.play();
 }
 
 function handleLiveStream(response)  { 
