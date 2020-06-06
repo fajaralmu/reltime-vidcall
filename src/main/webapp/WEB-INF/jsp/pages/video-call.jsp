@@ -100,9 +100,7 @@ function init () {
             _class.initAudio(source, audioCtx, analyser);
             
             console.debug("Will init media recorder");
-            var mediaRecorder = new MediaRecorder(stream);
-            
-			 
+            var mediaRecorder = new MediaRecorder(stream); 
 			_class.initMediaRecorder(mediaRecorder);
 			console.debug("mediaRecorder:",mediaRecorder);
             
@@ -204,8 +202,8 @@ function initAudio(_mediaSource, _audioContext, _analyser){
 function getSoundData() {
 	   var sample = new Float32Array(analyser.frequencyBinCount);
 	   analyser.getFloatFrequencyData(sample); 
-	   console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
-	   console.debug("soundData: ",sample);
+	  /*  console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
+	   console.debug("soundData: ",sample); */
 	   return sample;
 	}
 
@@ -266,11 +264,11 @@ function handleAudioStream(response){
 }
 
 function addBase64Data(audioData){
-	playAudioByBase64Data.push(audioData);
+	base64Datas.push(audioData);
 }
 
 function clearBase64Data(){
-	playAudioByBase64Data = new Array();
+	base64Datas = new Array();
 }
 
 function playAllBase64Data(){
