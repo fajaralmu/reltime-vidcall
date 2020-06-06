@@ -253,9 +253,9 @@ function sendVideoImage(imageData ){
 }
 
 function handleAudioStream(response){
-	console.debug("handleAudioStream");
+//	console.debug("handleAudioStream");
 	if(response.code == "00"){
-    	partnerInfo.innerHTML = "Online: True";
+    	partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
     	playAudioByBase64Data(response.audioData);
          
         _byId("info-audio").innerHTML = response.audioData;
