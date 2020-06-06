@@ -149,7 +149,9 @@ function initMediaRecorder(_mediaRecorder){
 }
 
 function processAudioData(_blob){
- 
+ 	if(this.paused){
+ 		return;
+ 	}
 	const _class = this;
 	 
 	_class.blobToBase64(_blob, function(base64data){
@@ -171,18 +173,17 @@ function sendAudio(base64data){
 			originId : "${registeredRequest.requestId}",
 			audioData : base64data
 		};
-	console.debug("Send Audio Data");
+	//console.debug("Send Audio Data");
 	const audioSent = sendToWebsocket("/app/audiostream", requestObject);
 	 
 }
  
 
 function blobToBase64(blob, onloadCallback){ 
-	// alert("blobToBase64:");
+	 
 	 var reader = new FileReader();
 	 reader.readAsDataURL(blob); 
-	 reader.onloadend = function() {
-		// console.log("onloadend");
+	 reader.onloadend = function() { 
 	     var base64data = reader.result;                
 	     onloadCallback(base64data);
 	 }
@@ -271,15 +272,38 @@ function clearBase64Data(){
 	base64Datas = new Array();
 }
 
-function playAllBase64Data(){
+var audioIndex = 0;
+
+function playAllAudioData(){
 	for (var i = 0; i < base64Datas.length; i++) {
 		playAudioByBase64Data(base64Datas[i]);
 	} 
 }
 
+function playAllAudioDatav2(audioIndex){
+	const theAudioIndex = audioIndex ? audioIndex : 0; 
+	
+	audio.src = base64Datas[audioIndex];
+	const _class = this;
+	audio.onloadedmetadata = function(e){
+		console.debug("will play");
+		audio.play(); 
+	}
+	audio.onplay = function(e){
+		_class.audioIndex = theAudioIndex + 1;
+		if(theAudioIndex >= _class.base64Datas.length - 1){
+			return;
+		}
+		_class.playAllAudioDatav2();
+	}
+}
+
 function playAudioByBase64Data(audioData){
 	audio.src = audioData;
-	audio.play();
+	audio.onloadedmetadata = function(e){
+		audio.play();
+	}
+	
 }
 
 function handleLiveStream(response)  { 
