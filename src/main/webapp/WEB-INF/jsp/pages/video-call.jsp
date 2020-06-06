@@ -78,6 +78,7 @@ var chunks = [];
 var _blob;
 var audio = _byId("audio");
 var base64Datas = new Array();
+var audioMetadataLoaded = false;
 
 function init () {
 	const _class = this;   
@@ -145,6 +146,7 @@ function initMediaRecorder(_mediaRecorder){
 	    setAudioInfo("False");
 	   	processAudioData(_blob); 
 	}
+	 
 	console.debug("INIT MEDIA RECORDER END");
 }
 
@@ -306,9 +308,15 @@ function playAllAudioDatav2(_audioIndex){
 }
 
 function playAudioByBase64Data(audioData){
+	if(audioMetadataLoaded == true){
+		return;
+	}
+	audioMetadataLoaded = true;
 	audio.src = audioData;
 	audio.onloadedmetadata = function(e){
+		
 		audio.play();
+		audioMetadataLoaded = false;
 	}
 	
 }
