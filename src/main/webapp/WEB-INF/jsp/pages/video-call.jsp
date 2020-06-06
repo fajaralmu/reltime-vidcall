@@ -280,22 +280,29 @@ function playAllAudioData(){
 	} 
 }
 
-function playAllAudioDatav2(audioIndex){
-	const theAudioIndex = audioIndex ? audioIndex : 0; 
+function playAllAudioDatav2(_audioIndex){
+	const theAudioIndex = _audioIndex ? _audioIndex : 0; 
 	
-	audio.src = base64Datas[audioIndex];
+	audio.src = base64Datas[_audioIndex];
 	const _class = this;
+	/* console.debug("base64Datas[audioIndex]: ",base64Datas[audioIndex]);
+	console.debug("audio.src: ", audio.src); */
+	
 	audio.onloadedmetadata = function(e){
-		console.debug("will play");
-		audio.play(); 
+		console.debug("on loaded metadata ", _audioIndex); 
+		_class.audio.play(); 
 	}
-	audio.onplay = function(e){
+	audio.onended = function(e){
+		console.debug("on ended");
 		_class.audioIndex = theAudioIndex + 1;
 		if(theAudioIndex >= _class.base64Datas.length - 1){
+			_class.audioIndex = 0;
 			return;
 		}
-		_class.playAllAudioDatav2();
+		_class.playAllAudioDatav2(_class.audioIndex);
 	}
+	
+	audio.onerror = audio.onended;
 }
 
 function playAudioByBase64Data(audioData){
