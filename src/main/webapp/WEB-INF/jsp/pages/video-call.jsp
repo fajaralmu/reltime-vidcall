@@ -51,7 +51,7 @@
 	<h3>Audio</h3>
 	
 	<p>Duration: <span id="duration-info"></span></p>
-	<audio controls="controls" id="audio"></audio>
+	<audio autoplay="autoplay"  controls="controls" id="audio"></audio>
 	<p id="info-audio"></p>
 </div>
 <script type="text/javascript">
@@ -306,9 +306,17 @@ function playAudioByBase64Data(audioData){
 	audio.src = audioData;
 	audio.onloadedmetadata = function(e){
 		
-		audio.play();
-		audioMetadataLoaded = false;
+		audio.play(); 
+		
+	}
+	/* audio.onplay = function(e){
+		
+	} */
+	
+	audio.onended = function(e){
+		console.warn("AURIO DURATION:",audio.duration);
 		durationInfo.innerHTML = audio.duration;
+		audioMetadataLoaded = false;
 	}
 	
 }
