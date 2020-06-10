@@ -1,4 +1,5 @@
 var currentTime = new Date().getTime();
+var timeUpdated = 0;
 
 function getDeltaTime(){
 	const now = getNowDateMilis();
@@ -13,7 +14,7 @@ function deltaTimeLessThan(value){
 function updateCurrentTime(){
 	//console.warn("getDeltaTime: ", getDeltaTime());
 	currentTime = getNowDateMilis();
-	
+	timeUpdated = timeUpdated + 1;
 }
 
 function getNowDateMilis(){

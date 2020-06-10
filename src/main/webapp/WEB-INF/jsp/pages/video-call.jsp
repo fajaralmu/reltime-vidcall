@@ -82,6 +82,7 @@ var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info"); 
+var mediaRecorderStarted  = false;
 
 function init () {
 	const _class = this;   
@@ -105,6 +106,7 @@ function init () {
             
             console.debug("Will init media recorder");
             var mediaRecorder = new MediaRecorder(stream); 
+            
 			_class.initMediaRecorder(mediaRecorder);
 			console.debug("mediaRecorder:",mediaRecorder);
             
@@ -132,6 +134,10 @@ function init () {
 
 function initMediaRecorder(_mediaRecorder){
 	this.mediaRecorder = _mediaRecorder;
+	mediaRecorder.onstart = function(e){
+    	mediaRecorderStarted = true;
+    	setAudioInfo("true");
+    }
 	this.mediaRecorder.ondataavailable = function(e) {
 		//console.debug("ondataavailable");
 	      chunks.push(e.data);
@@ -141,6 +147,7 @@ function initMediaRecorder(_mediaRecorder){
 	  	chunks = []; 
 	    setAudioInfo("False");
 	   	processAudioData(_blob); 
+	   	mediaRecorderStarted = false;
 	}
 	 
 	console.debug("INIT MEDIA RECORDER END");
@@ -169,7 +176,7 @@ function sendAudio(base64data){
 			originId : "${registeredRequest.requestId}",
 			audioData : base64data
 		};
-	//console.debug("Send Audio Data");
+	console.info("Send Audio Data");
 	const audioSent = sendToWebsocket("/app/audiostream", requestObject);
 	 
 }
@@ -342,15 +349,14 @@ function handleLiveStream(response)  {
 }
  
  function playAudio(){
-	 if(mediaRecorder){
-	    	mediaRecorder.start();
-	    	setAudioInfo("true");
+	 if(mediaRecorder && mediaRecorderStarted == false){
+	    	mediaRecorder.start(); 
 	 }
 	 
  }
  
  function stopAudio(){
-	  if( mediaRecorder && !deltaTimeLessThan(100)){
+	  if( mediaRecorder && !deltaTimeLessThan(50)){
       	mediaRecorder.stop();
       	updateCurrentTime();
 	  }
