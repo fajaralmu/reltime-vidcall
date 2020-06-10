@@ -157,6 +157,7 @@ function initMediaRecorder(_mediaRecorder){
 	  	chunks = []; 
 	    setAudioInfo("False");
 	   	processAudioData(_blob);  
+		updateCurrentTime();
 	}
 	
 	console.debug("End init media recorder");
@@ -315,13 +316,15 @@ function playAllAudioDatav2(_audioIndex){
 }
 
 function playAudioByBase64Data(audioData){
-	if(audioMetadataLoaded == true){
+	console.warn("--playAudioByBase64Data--");
+	/* if(audioMetadataLoaded == true){
 		return;
-	}
+	} */
+	 
 	audioMetadataLoaded = true;
 	audio.src = audioData;
 	audio.onloadedmetadata = function(e){
-		
+		console.warn("audio.onloadedmetadata");
 		audio.play(); 
 		
 	}
@@ -334,6 +337,8 @@ function playAudioByBase64Data(audioData){
 		durationInfo.innerHTML = audio.duration;
 		audioMetadataLoaded = false;
 	}
+	
+	console.warn("playAudioByBase64Data end");
 	
 }
 
@@ -369,7 +374,7 @@ function handleLiveStream(response)  {
  function stopAudio(){
 	  if( mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
       	mediaRecorder.stop();
-      	updateCurrentTime();
+      	
 	  }
  }
  
