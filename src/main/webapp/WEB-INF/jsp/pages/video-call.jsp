@@ -89,7 +89,7 @@ var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info");  
 var audios = _byId("audios");
 
-var MIN_DELTA_TIME = 400;
+var MIN_DELTA_TIME = 500;
 
 function initVideo(){
 	  this.video.onloadedmetadata = function(e) {
@@ -280,13 +280,18 @@ function sendVideoImage(imageData){
 
 function handleAudioStream(response){
  
-	if(response.code == "00"){
-    	//partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
-    	playAudioByBase64Data(response.audioData); 
-        //_byId("info-audio").value = response.audioData;
-    }else{
-    	//partnerInfo.innerHTML = "Online: False";
-    } 
+	return new Promise(function(resolve, reject){
+		if(response.code == "00"){
+	    	//partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
+	    	playAudioByBase64Data(response.audioData); 
+	    	resolve(0);
+	        //_byId("info-audio").value = response.audioData;
+	    }else{
+	    	//partnerInfo.innerHTML = "Online: False";
+	    	//reject(1);
+	    } 
+	});
+	
 }
 
 function addBase64Data(audioData){
@@ -332,19 +337,26 @@ function playAudioByBase64Data(audioData){
 	//console.warn("playAudioByBase64Data end"); 
 }
 
-function handleLiveStream(response)  { 
-	setSendingVideoFalse();
-    if(this.terminated){
-        return;
-    }
-    
-    if(response.code == "00"){
-    	//partnerInfo.innerHTML = "Online: True";
-    	//console.info("Getting response.imageData :",response.imageData .length);
-        photoReceiver.setAttribute('src', response.imageData );
-    }else{
-    	//partnerInfo.innerHTML = "Online: False";
-    } 
+function handleLiveStream(response)  {
+	const _class = this;
+	return new Promise(function(resolve, reject){
+		_class.setSendingVideoFalse();
+	    if(_class.terminated){
+	        return;
+	    }
+	    
+	    if(response.code == "00"){
+	    	//partnerInfo.innerHTML = "Online: True";
+	    	//console.info("Getting response.imageData :",response.imageData .length);
+	       _class. photoReceiver.setAttribute('src', response.imageData );
+	       resolve(0);
+	    }else{
+	    	//partnerInfo.innerHTML = "Online: False";
+	    	//reject(1);
+	    } 
+	})
+	
+	
      
 }
  
