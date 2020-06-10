@@ -81,61 +81,69 @@ var _blob;
 var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
-var durationInfo = _byId("duration-info"); 
-var mediaRecorderStarted  = false;
+var durationInfo = _byId("duration-info");  
+
+function initVideo(){
+	  this.video.onloadedmetadata = function(e) {
+      	video.play();
+      	//_class.video.muted = true;
+  	};
+}
 
 function init () {
 	const _class = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(function (stream) {
         	 console.debug("START getUserMedia");
-            _class.video.srcObject = stream;
-           // //console.log("stream:", stream); 
-            _class.video.onloadedmetadata = function(e) {
-            	_class.video.play();
-            	//_class.video.muted = true;
-        	};
-            //_class.video.play();
-            var audioCtx = new AudioContext();
-        	var source = audioCtx.createMediaStreamSource(stream);
-        	var analyser = audioCtx.createAnalyser();
+        	 
+        	 //------ video
+            _class.video.srcObject = stream; 
+            _class.initVideo();
+             
+            //------- analyzer
+            const audioCtx = new AudioContext();
+            const source = audioCtx.createMediaStreamSource(stream);
+            const analyser = audioCtx.createAnalyser();
         	source.connect(analyser);
-        	analyser.connect(audioCtx.destination);
-        	
+        	analyser.connect(audioCtx.destination); 
             _class.initAudio(source, audioCtx, analyser);
-            
-            console.debug("Will init media recorder");
-            var mediaRecorder = new MediaRecorder(stream); 
-            
+             
+            //------- media recorder
+            const mediaRecorder = new MediaRecorder(stream);  
 			_class.initMediaRecorder(mediaRecorder);
-			console.debug("mediaRecorder:",mediaRecorder);
-            
+			 
             console.debug("END getUserMedia"); 
         })
         .catch(function (err) {
             //console.log("An error occurred: " + err);
         });
    
-    this.video.addEventListener('canplay', function (ev) {
-        if (!_class.streaming) {
-            _class.height = _class.video.videoHeight /  (_class.video.videoWidth / _class.width);
-
-            _class.video.setAttribute('width', _class.width);
-            _class.video.setAttribute('height', _class.height);
-            _class.canvas.setAttribute('width', _class.width );
-            _class.canvas.setAttribute('height', _class.height );
-            _class.streaming = true; 
-             
-        }
+    this.video.addEventListener('canplay', function (ev) { 
+			_class.updateVideoDom();  
+         
     }, false);  
 
     this.clearphoto();
 }  
 
+function updateVideoDom(){
+	if (this.streaming) { 
+		return;
+		
+	}
+	this.height = this.video.videoHeight /  (this.video.videoWidth / this.width);
+	this.video.setAttribute('width', this.width);
+	this.video.setAttribute('height', this.height);
+	this.canvas.setAttribute('width', this.width );
+	this.canvas.setAttribute('height', this.height );
+	this.streaming = true; 
+}
+
 function initMediaRecorder(_mediaRecorder){
+	console.debug("Will init media recorder");
+	
 	this.mediaRecorder = _mediaRecorder;
-	mediaRecorder.onstart = function(e){
-    	mediaRecorderStarted = true;
+	mediaRecorder.onstart = function(e){ 
     	setAudioInfo("true");
     }
 	this.mediaRecorder.ondataavailable = function(e) {
@@ -146,9 +154,10 @@ function initMediaRecorder(_mediaRecorder){
 		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
 	  	chunks = []; 
 	    setAudioInfo("False");
-	   	processAudioData(_blob); 
-	   	mediaRecorderStarted = false;
+	   	processAudioData(_blob);  
 	}
+	
+	console.debug("End init media recorder");
 	 
 	console.debug("INIT MEDIA RECORDER END");
 }
@@ -319,7 +328,7 @@ function playAudioByBase64Data(audioData){
 	} */
 	
 	audio.onended = function(e){
-		console.warn("AURIO DURATION:",audio.duration);
+		//console.warn("AURIO DURATION:",audio.duration);
 		durationInfo.innerHTML = audio.duration;
 		audioMetadataLoaded = false;
 	}
@@ -349,14 +358,14 @@ function handleLiveStream(response)  {
 }
  
  function playAudio(){
-	 if(mediaRecorder && mediaRecorderStarted == false){
+	 if(mediaRecorder && mediaRecorder.state != "recording"){
 	    	mediaRecorder.start(); 
 	 }
 	 
  }
  
  function stopAudio(){
-	  if( mediaRecorder && !deltaTimeLessThan(50)){
+	  if( mediaRecorder && !deltaTimeLessThan(70)){
       	mediaRecorder.stop();
       	updateCurrentTime();
 	  }
