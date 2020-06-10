@@ -23,7 +23,9 @@
 					onClick="terminate()">Terminate</button>
 				<button id="btn-pause" class="btn btn-info btn-sm"
 					onClick="pauseOrContinue()">Pause</button>
-					<p>Audio Playing: <span id="audio-play-info">False</span></p>
+				<p>
+					Audio Playing: <span id="audio-play-info">False</span>
+				</p>
 				<button id="btn-play-audio" class="btn btn-info btn-sm"
 					onClick="playAudio()">Play Audio</button>
 				<button id="btn-stop-audio" class="btn btn-info btn-sm"
@@ -49,9 +51,11 @@
 
 	<hr />
 	<h3>Audio</h3>
-	
-	<p>Duration: <span id="duration-info"></span></p>
-	<audio autoplay="autoplay"  controls="controls" id="audio"></audio>
+
+	<p>
+		Duration: <span id="duration-info"></span>
+	</p>
+	<audio autoplay="autoplay" controls="controls" id="audio"></audio>
 	<textarea id="info-audio" cols="100" rows="10"></textarea>
 	<div id="audios"></div>
 </div>
@@ -65,8 +69,8 @@ var myCapture;
 var terminated = false;
 var receiver = "${partnerId}";
 var latestImageResponse = {};
-var width = 150;
-var height = 150;
+var width = 70;
+var height = 70;
 const theCanvas = document.createElement("canvas");
 var btnTerminate = _byId("btn-terminate");
 var btnPause = _byId("btn-pause");
@@ -149,57 +153,20 @@ function initMediaRecorder(_mediaRecorder){
 	mediaRecorder.onstart = function(e){ 
     	setAudioInfo("true");
     }
-	this.mediaRecorder.ondataavailable = function(e) {
-		 
+	this.mediaRecorder.ondataavailable = function(e) { 
 	      chunks.push(e.data);
 	   }
 	this.mediaRecorder.onstop = function(e){ 
 		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
 	  	chunks = []; 
 	    setAudioInfo("False");
-	   	processAudioData(_blob);  
-		updateCurrentTime();
+	   	processAudioData(_blob);   
+		 
 	}
 	
 	console.debug("End init media recorder");
 	 
 	console.debug("INIT MEDIA RECORDER END");
-}
-
-function processAudioData(_blob){
- 	if(this.paused){
- 		return;
- 	}
-	const _class = this;
-	 
-	this.blobToBase64(_blob, function(base64data){ 
-		_class.sendAudio(base64data);
-		_class.addBase64Data(base64data); 
-	}); 
-}
-
-function sendAudio(base64data){
-	if( this.terminated || this.paused){
-        return;
-    } 
-	 //console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
-	const requestObject =  {
-			partnerId : "${partnerId}",
-			originId : "${registeredRequest.requestId}",
-			audioData : base64data
-		};
-	//console.info("Send Audio Data");
-	const audioSent = sendToWebsocket("/app/audiostream", requestObject); 
-}
-  
-function blobToBase64(blob, onloadCallback){ 
-	 
-	 var reader = new FileReader();
-	 reader.readAsDataURL(blob); 
-	 reader.onloadend = function() { 
-	     var base64data = reader.result;                
-	     onloadCallback(base64data);
-	 }
 }
 
 function initAudio(_mediaSource, _audioContext, _analyser){ 
@@ -217,13 +184,13 @@ function getSoundData() {
 	}
 
 function terminate (){
-    this.terminated = true;
-    
-    btnTerminate.innerHTML = "Reload to continue";
-    btnTerminate.setAttribute("class", "btn btn-info btn-sm");
-    btnTerminate.onclick = function(){
-    	window.location.reload();
-    }
+ this.terminated = true;
+ 
+ btnTerminate.innerHTML = "Reload to continue";
+ btnTerminate.setAttribute("class", "btn btn-info btn-sm");
+ btnTerminate.onclick = function(){
+ 	window.location.reload();
+ }
 }
 
 function pauseOrContinue(){
@@ -235,40 +202,90 @@ function pauseOrContinue(){
 	}
 }
 
-function setSendingVideoFalse () {
-   this.sendingVideo = false;
-}
- 
+/**
+ * =========== Loop ===============
+ */
 
-function sendVideoImage(imageData ){
-	if(this.sendingVideo == true || this.terminated || this.paused){
-	        return;
+function processAudioData(_blob){
+ 	if(this.paused){
+ 		return;
+ 	}
+	const _class = this;
+	 
+	this.blobToBase64(_blob, function(base64data){ 
+		_class.sendAudio(base64data).then(function(res){
+			updateCurrentTime();
+		});
+		//_class.addBase64Data(base64data); 
+	}); 
+}
+
+function sendAudio(base64data){
+	const _class = this;
+ 
+	return new Promise(function(resolve, reject) {
+		if( _class.terminated || _class.paused){
+			reject(1);
+	    } 
+		 //console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
+		const requestObject =  {
+				partnerId : "${partnerId}",
+				originId : "${registeredRequest.requestId}",
+				audioData : base64data
+			};
+		//console.info("Send Audio Data");
+		const audioSent = sendToWebsocket("/app/audiostream", requestObject); 
+		resolve(0);
+	});
+}
+  
+function blobToBase64(blob, onloadCallback){ 
+	 
+	 var reader = new FileReader();
+	 reader.readAsDataURL(blob); 
+	 reader.onloadend = function() { 
+	     var base64data = reader.result;                
+	     onloadCallback(base64data);
+	 }
+}
+  
+function setSendingVideoFalse () {  this.sendingVideo = false; } 
+
+function sendVideoImage(imageData){
+	const _class = this;
+	
+	return new Promise(function(resolve, reject){
+		if(_class.sendingVideo == true || _class.terminated || _class.paused){
+	        reject(1);
 	    }
-	this.sendingVideo = true;   
-	//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
-	const requestObject =  {
-			partnerId : "${partnerId}",
-			originId : "${registeredRequest.requestId}",
-			imageData : imageData
-		};
+		_class.sendingVideo = true;   
+		//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
+		const requestObject =  {
+				partnerId : "${partnerId}",
+				originId : "${registeredRequest.requestId}",
+				imageData : imageData
+			};
+		
+		const imageSent = sendToWebsocket("/app/stream", requestObject);
+		
+		if(!imageSent){
+			_class.sendingVideo = false;
+		}
+		
+		_class.myCapture.setAttribute("src", imageData);
+		resolve(0);
+	});
 	
-	const imageSent = sendToWebsocket("/app/stream", requestObject);
-	if(!imageSent){
-		this.sendingVideo = false
-	}
-	
-	myCapture.setAttribute("src", imageData);
 }
 
 function handleAudioStream(response){
  
 	if(response.code == "00"){
-    	partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
-    	playAudioByBase64Data(response.audioData);
-         
-        _byId("info-audio").value = response.audioData;
+    	//partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
+    	playAudioByBase64Data(response.audioData); 
+        //_byId("info-audio").value = response.audioData;
     }else{
-    	partnerInfo.innerHTML = "Online: False";
+    	//partnerInfo.innerHTML = "Online: False";
     } 
 }
 
@@ -307,7 +324,7 @@ function playAudioByBase64Data(audioData){
 	
 	theAudio.onended = function(e){
 		//console.warn("AUDIO DURATION:",theAudio.duration);
-		durationInfo.innerHTML = theAudio.duration;
+		//durationInfo.innerHTML = theAudio.duration;
 		audioMetadataLoaded = false;
 		audios.removeChild(this);
 	}
@@ -322,31 +339,43 @@ function handleLiveStream(response)  {
     }
     
     if(response.code == "00"){
-    	partnerInfo.innerHTML = "Online: True";
+    	//partnerInfo.innerHTML = "Online: True";
     	//console.info("Getting response.imageData :",response.imageData .length);
         photoReceiver.setAttribute('src', response.imageData );
     }else{
-    	partnerInfo.innerHTML = "Online: False";
+    	//partnerInfo.innerHTML = "Online: False";
     } 
      
 }
  
  function playAudio(){
-	 if(mediaRecorder && mediaRecorder.state != "recording"){
-	    	mediaRecorder.start(); 
-	 }
+	 const _class = this;
+	 return new Promise(function(resolve, reject){
+		if(_class.mediaRecorder && _class.mediaRecorder.state != "recording"){
+			_class.mediaRecorder.start(); 
+			resolve(0);
+		}else{
+			reject(1);
+		}
+	 });
+	
 	 
  }
  
  function stopAudio(){
-	  if( mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
-      	mediaRecorder.stop();
-      	
-	  }
+	 const _class = this;
+	 return new Promise(function(resolve, reject){
+		 	 if(_class.mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
+			  _class.mediaRecorder.stop(); 
+			  resolve(0);
+			}else{
+				reject(1);
+			}
+	 });
  }
  
  function setAudioInfo(info){
-	 _byId("audio-play-info").innerHTML = info;
+	 //_byId("audio-play-info").innerHTML = info;
  }
 
  function takepicture () {
@@ -366,9 +395,7 @@ function resizeWebcamImage () {
         resolve(_class.canvas.toDataURL('image/png'));
        // if(paused) return;
         context.drawImage(_class.video, 0, 0, _class.width, _class.height    ); 
-    })
-
-   
+    }) 
 }
 
 function imageToDataUri (img, width, height)   {
@@ -387,13 +414,7 @@ function imageToDataUri (img, width, height)   {
 }
 
 function clearphoto () {  }
-
-
-/**
-* ==================================================
-*                  Frame Loop
-* ================================================== 
-*/
+ 
 
 function initAnimation () {
     this.isAnimate = !this.isAnimate;
@@ -413,6 +434,8 @@ function animate(){
         });
     }
 }
+
+
 
 function initLiveStream(){
 	//console.info("START initLiveStream");
