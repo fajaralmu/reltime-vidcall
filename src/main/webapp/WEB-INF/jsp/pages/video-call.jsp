@@ -52,7 +52,7 @@
 	
 	<p>Duration: <span id="duration-info"></span></p>
 	<audio autoplay="autoplay"  controls="controls" id="audio"></audio>
-	<p id="info-audio"></p>
+	<textarea id="info-audio" cols="100" rows="10"></textarea>
 	<div id="audios"></div>
 </div>
 <script type="text/javascript">
@@ -65,8 +65,8 @@ var myCapture;
 var terminated = false;
 var receiver = "${partnerId}";
 var latestImageResponse = {};
-var width = 70;
-var height = 70;
+var width = 150;
+var height = 150;
 const theCanvas = document.createElement("canvas");
 var btnTerminate = _byId("btn-terminate");
 var btnPause = _byId("btn-pause");
@@ -266,7 +266,7 @@ function handleAudioStream(response){
     	partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
     	playAudioByBase64Data(response.audioData);
          
-        _byId("info-audio").innerHTML = response.audioData;
+        _byId("info-audio").value = response.audioData;
     }else{
     	partnerInfo.innerHTML = "Online: False";
     } 
