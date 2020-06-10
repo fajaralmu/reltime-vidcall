@@ -83,7 +83,7 @@ var base64Datas = new Array();
 var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info");  
 
-const MIN_DELTA_TIME = 150;
+const MIN_DELTA_TIME =  50;
 
 function initVideo(){
 	  this.video.onloadedmetadata = function(e) {
@@ -178,11 +178,11 @@ function processAudioData(_blob){
 }
 
 function sendAudio(base64data){
-	if(this.sendingVideo == true || this.terminated || this.paused){
+	if( this.terminated || this.paused){
         return;
     }
 	//this.sendingVideo = true;   
-	//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
+	 console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
 	const requestObject =  {
 			partnerId : "${partnerId}",
 			originId : "${registeredRequest.requestId}",
@@ -314,13 +314,16 @@ function playAllAudioDatav2(_audioIndex){
 	
 	audio.onerror = audio.onended;
 }
-
+var _audioData = "";
 function playAudioByBase64Data(audioData){
+	_audioData = audioData;
+	
 	console.warn("--playAudioByBase64Data--");
-	/* if(audioMetadataLoaded == true){
+	  if(audioMetadataLoaded == true){
+		 console.warn("try later..");
 		return;
-	} */
-	 
+	}  
+	console.warn("Will play");
 	audioMetadataLoaded = true;
 	audio.src = audioData;
 	audio.onloadedmetadata = function(e){
