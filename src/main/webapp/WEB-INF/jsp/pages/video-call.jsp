@@ -225,7 +225,7 @@ function sendAudio(base64data){
  
 	return new Promise(function(resolve, reject) {
 		if( _class.terminated || _class.paused){
-			reject(1);
+			//reject(1);
 	    } 
 		 //console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
 		const requestObject =  {
@@ -256,7 +256,7 @@ function sendVideoImage(imageData){
 	
 	return new Promise(function(resolve, reject){
 		if(_class.sendingVideo == true || _class.terminated || _class.paused){
-	        reject(1);
+	        //reject(1);
 	    }
 		_class.sendingVideo = true;   
 		//console.info("Sending video at ", new Date().toString(), " length: ", imageData.length);
@@ -349,29 +349,27 @@ function handleLiveStream(response)  {
 }
  
  function playAudio(){
-	 const _class = this;
-	 return new Promise(function(resolve, reject){
+	const _class = this;
+	return new Promise(function(resolve, reject){
 		if(_class.mediaRecorder && _class.mediaRecorder.state != "recording"){
 			_class.mediaRecorder.start(); 
 			resolve(0);
 		}else{
-			reject(1);
+			//reject(1);
 		}
-	 });
-	
-	 
+	 }); 
  }
  
  function stopAudio(){
-	 const _class = this;
-	 return new Promise(function(resolve, reject){
-		 	 if(_class.mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
-			  _class.mediaRecorder.stop(); 
-			  resolve(0);
-			}else{
-				reject(1);
-			}
-	 });
+	const _class = this;
+	return new Promise(function(resolve, reject){
+		if(_class.mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
+			_class.mediaRecorder.stop(); 
+			resolve(0);
+		}else{
+			//reject(1);
+		}
+	});
  }
  
  function setAudioInfo(info){
