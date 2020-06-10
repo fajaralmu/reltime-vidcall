@@ -64,8 +64,8 @@ var myCapture;
 var terminated = false;
 var receiver = "${partnerId}";
 var latestImageResponse = {};
-var width = 90;
-var height = 90;
+var width = 70;
+var height = 70;
 const theCanvas = document.createElement("canvas");
 var btnTerminate = _byId("btn-terminate");
 var btnPause = _byId("btn-pause");
@@ -82,6 +82,8 @@ var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info");  
+
+const MIN_DELTA_TIME = 150;
 
 function initVideo(){
 	  this.video.onloadedmetadata = function(e) {
@@ -260,7 +262,7 @@ function sendVideoImage(imageData ){
 }
 
 function handleAudioStream(response){
-//	console.debug("handleAudioStream");
+ 
 	if(response.code == "00"){
     	partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
     	playAudioByBase64Data(response.audioData);
@@ -328,7 +330,7 @@ function playAudioByBase64Data(audioData){
 	} */
 	
 	audio.onended = function(e){
-		//console.warn("AURIO DURATION:",audio.duration);
+		console.warn("AURIO DURATION:",audio.duration);
 		durationInfo.innerHTML = audio.duration;
 		audioMetadataLoaded = false;
 	}
@@ -365,7 +367,7 @@ function handleLiveStream(response)  {
  }
  
  function stopAudio(){
-	  if( mediaRecorder && !deltaTimeLessThan(70)){
+	  if( mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
       	mediaRecorder.stop();
       	updateCurrentTime();
 	  }

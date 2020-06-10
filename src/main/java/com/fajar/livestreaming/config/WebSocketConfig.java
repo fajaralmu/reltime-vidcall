@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
 @EnableScheduling
@@ -25,6 +26,13 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
       //  config.enableSimpleBroker("/topic");
         config.enableSimpleBroker("/wsResp");
         config.setApplicationDestinationPrefixes("/app");
+       
+    }
+    
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+    	registration.setMessageSizeLimit(519496);
+    	super.configureWebSocketTransport(registration);
     }
  
     @Override
