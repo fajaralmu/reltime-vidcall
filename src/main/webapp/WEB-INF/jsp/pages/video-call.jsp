@@ -85,12 +85,11 @@ var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info");  
 var audios = _byId("audios");
 
-var MIN_DELTA_TIME =  100;
+var MIN_DELTA_TIME = 400;
 
 function initVideo(){
 	  this.video.onloadedmetadata = function(e) {
-      	video.play();
-      	//_class.video.muted = true;
+      	video.play(); 
   	};
 }
 
@@ -151,7 +150,7 @@ function initMediaRecorder(_mediaRecorder){
     	setAudioInfo("true");
     }
 	this.mediaRecorder.ondataavailable = function(e) {
-		//console.debug("ondataavailable");
+		 
 	      chunks.push(e.data);
 	   }
 	this.mediaRecorder.onstop = function(e){ 
@@ -173,7 +172,7 @@ function processAudioData(_blob){
  	}
 	const _class = this;
 	 
-	_class.blobToBase64(_blob, function(base64data){ 
+	this.blobToBase64(_blob, function(base64data){ 
 		_class.sendAudio(base64data);
 		_class.addBase64Data(base64data); 
 	}); 
@@ -182,20 +181,17 @@ function processAudioData(_blob){
 function sendAudio(base64data){
 	if( this.terminated || this.paused){
         return;
-    }
-	//this.sendingVideo = true;   
-	 console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
+    } 
+	 //console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
 	const requestObject =  {
 			partnerId : "${partnerId}",
 			originId : "${registeredRequest.requestId}",
 			audioData : base64data
 		};
-	console.info("Send Audio Data");
-	const audioSent = sendToWebsocket("/app/audiostream", requestObject);
-	 
+	//console.info("Send Audio Data");
+	const audioSent = sendToWebsocket("/app/audiostream", requestObject); 
 }
- 
-
+  
 function blobToBase64(blob, onloadCallback){ 
 	 
 	 var reader = new FileReader();
@@ -290,18 +286,18 @@ var _audioData = "";
 function playAudioByBase64Data(audioData){
 	_audioData = audioData;
 	
-	console.warn("--playAudioByBase64Data--");
+	//console.warn("--playAudioByBase64Data--");
 	/*   if(audioMetadataLoaded == true){
 		 console.warn("try later..");
 		return;
 	}   */
 	const theAudio = new Audio();
-	;
-	console.warn("Will play");
+	 
+	//console.warn("Will play");
 	audioMetadataLoaded = true;
 	theAudio.src = audioData;
 	theAudio.onloadedmetadata = function(e){
-		console.warn("audio.onloadedmetadata");
+		//console.warn("audio.onloadedmetadata");
 		theAudio.play(); 
 		audios.appendChild(this);
 	}
@@ -316,8 +312,7 @@ function playAudioByBase64Data(audioData){
 		audios.removeChild(this);
 	}
 	
-	console.warn("playAudioByBase64Data end");
-	
+	//console.warn("playAudioByBase64Data end"); 
 }
 
 function handleLiveStream(response)  { 
@@ -333,13 +328,7 @@ function handleLiveStream(response)  {
     }else{
     	partnerInfo.innerHTML = "Online: False";
     } 
-    
-    
-    //_byId("base64-info").innerHTML = response.imageData;
-   /*  const _class = this;
-    this.populateCanvas().then(function(base64) {
-        _class.photoReceiver.setAttribute('src', base64 );
-    }); */
+     
 }
  
  function playAudio(){
