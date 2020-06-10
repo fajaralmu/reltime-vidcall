@@ -81,7 +81,7 @@ var _blob;
 var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
-var durationInfo = _byId("duration-info");
+var durationInfo = _byId("duration-info"); 
 
 function init () {
 	const _class = this;   
@@ -152,11 +152,9 @@ function processAudioData(_blob){
  	}
 	const _class = this;
 	 
-	_class.blobToBase64(_blob, function(base64data){
-		//_byId("info-audio").innerHTML = base64data;
+	_class.blobToBase64(_blob, function(base64data){ 
 		_class.sendAudio(base64data);
-		_class.addBase64Data(base64data);
-		//_class.audio.src = base64data;
+		_class.addBase64Data(base64data); 
 	}); 
 }
 
@@ -352,8 +350,10 @@ function handleLiveStream(response)  {
  }
  
  function stopAudio(){
-	  if( mediaRecorder)
+	  if( mediaRecorder && !deltaTimeLessThan(100)){
       	mediaRecorder.stop();
+      	updateCurrentTime();
+	  }
  }
  
  function setAudioInfo(info){
