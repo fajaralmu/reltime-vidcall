@@ -53,6 +53,7 @@
 	<p>Duration: <span id="duration-info"></span></p>
 	<audio autoplay="autoplay"  controls="controls" id="audio"></audio>
 	<p id="info-audio"></p>
+	<div id="audios"></div>
 </div>
 <script type="text/javascript">
 
@@ -82,8 +83,9 @@ var audio = _byId("audio");
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
 var durationInfo = _byId("duration-info");  
+var audios = _byId("audios");
 
-const MIN_DELTA_TIME =  50;
+var MIN_DELTA_TIME =  100;
 
 function initVideo(){
 	  this.video.onloadedmetadata = function(e) {
@@ -282,63 +284,36 @@ function clearBase64Data(){
 	base64Datas = new Array();
 }
 
-var audioIndex = 0;
-
-function playAllAudioData(){
-	for (var i = 0; i < base64Datas.length; i++) {
-		playAudioByBase64Data(base64Datas[i]);
-	} 
-}
-
-function playAllAudioDatav2(_audioIndex){
-	const theAudioIndex = _audioIndex ? _audioIndex : 0; 
-	
-	audio.src = base64Datas[_audioIndex];
-	const _class = this;
-	/* console.debug("base64Datas[audioIndex]: ",base64Datas[audioIndex]);
-	console.debug("audio.src: ", audio.src); */
-	
-	audio.onloadedmetadata = function(e){
-		console.debug("on loaded metadata ", _audioIndex); 
-		_class.audio.play(); 
-	}
-	audio.onended = function(e){
-		console.debug("on ended");
-		_class.audioIndex = theAudioIndex + 1;
-		if(theAudioIndex >= _class.base64Datas.length - 1){
-			_class.audioIndex = 0;
-			return;
-		}
-		_class.playAllAudioDatav2(_class.audioIndex);
-	}
-	
-	audio.onerror = audio.onended;
-}
+var audioIndex = 0;  
 var _audioData = "";
+
 function playAudioByBase64Data(audioData){
 	_audioData = audioData;
 	
 	console.warn("--playAudioByBase64Data--");
-	  if(audioMetadataLoaded == true){
+	/*   if(audioMetadataLoaded == true){
 		 console.warn("try later..");
 		return;
-	}  
+	}   */
+	const theAudio = new Audio();
+	;
 	console.warn("Will play");
 	audioMetadataLoaded = true;
-	audio.src = audioData;
-	audio.onloadedmetadata = function(e){
+	theAudio.src = audioData;
+	theAudio.onloadedmetadata = function(e){
 		console.warn("audio.onloadedmetadata");
-		audio.play(); 
-		
+		theAudio.play(); 
+		audios.appendChild(this);
 	}
 	/* audio.onplay = function(e){
 		
 	} */
 	
-	audio.onended = function(e){
-		console.warn("AURIO DURATION:",audio.duration);
-		durationInfo.innerHTML = audio.duration;
+	theAudio.onended = function(e){
+		//console.warn("AUDIO DURATION:",theAudio.duration);
+		durationInfo.innerHTML = theAudio.duration;
 		audioMetadataLoaded = false;
+		audios.removeChild(this);
 	}
 	
 	console.warn("playAudioByBase64Data end");
