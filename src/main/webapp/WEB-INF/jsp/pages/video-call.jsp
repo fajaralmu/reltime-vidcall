@@ -35,7 +35,7 @@
 				<canvas id="canvas"> </canvas>
 			</div>
 			<p>Preview</p>
-			<video controls id="video">Video stream not available.
+			<video muted="muted" controls id="video">Video stream not available.
 			</video>
 		</div>
 		<div class="output-receiver"
@@ -108,12 +108,12 @@ function init () {
             _class.initVideo();
              
             //------- analyzer
-            const audioCtx = new AudioContext();
+           /*  const audioCtx = new AudioContext();
             const source = audioCtx.createMediaStreamSource(stream);
             const analyser = audioCtx.createAnalyser();
         	source.connect(analyser);
         	analyser.connect(audioCtx.destination); 
-            _class.initAudio(source, audioCtx, analyser);
+            _class.initAudio(source, audioCtx, analyser); */
              
             //------- media recorder
             const mediaRecorder = new MediaRecorder(stream);  
