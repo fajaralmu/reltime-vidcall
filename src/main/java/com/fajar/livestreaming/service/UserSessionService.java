@@ -1,5 +1,6 @@
 package com.fajar.livestreaming.service;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,12 +10,14 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
+import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.util.MapUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +51,21 @@ public class UserSessionService {
 
 		SESSION_MAP.get(SESSION_TRIAL_ONE).addNewApp(request);
 	}
+	
+	private RegisteredRequest getRequestFromSessionMap(String requestId) {
+		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
+	}
+	
+	private void removeSessionById(String requestId) {
+		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
+	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
 		
 		try {
 			RegisteredRequest registeredRequest = getRegisteredRequest(request);
 
-			SESSION_MAP.get(SESSION_TRIAL_ONE).remove(registeredRequest.getRequestId());
+			removeSessionById(registeredRequest.getRequestId());
 
 		} catch (Exception e) {
 			
@@ -96,11 +107,14 @@ public class UserSessionService {
 
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {
 		try {
-			return (RegisteredRequest) request.getSession(false).getAttribute(SESSION_ATTR_SESS_DATA);
-		} catch (Exception e) {
-
-			return null;
-		}
+			RegisteredRequest storedInHttpSession = (RegisteredRequest) request.getSession(false).getAttribute(SESSION_ATTR_SESS_DATA);
+			if(null != storedInHttpSession) {
+				RegisteredRequest storedInSessionMap = getRequestFromSessionMap(storedInHttpSession.getRequestId());
+				return storedInSessionMap;
+			}
+			 
+		} catch (Exception e) { }
+		return null;
 	}
 
 	public void removeSessioon(HttpServletRequest request) {
@@ -132,6 +146,19 @@ public class UserSessionService {
 		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));
 		registeredRequest.setRequestId(UUID.randomUUID().toString());
 		return registeredRequest;
+	}
+
+	public WebResponse clearAllSession(HttpServletRequest request) {
+		try {
+			List<RegisteredRequest> requests = (List)SerializationUtils.clone((Serializable) getAvaliableRequests());
+			for (RegisteredRequest registeredRequest : requests) {
+				removeSessionById(registeredRequest.getRequestId());
+			}		
+			return new WebResponse();
+		}catch (Exception e) {
+			 
+			return WebResponse.failed(e.getMessage());
+		}
 	}
 
 }
