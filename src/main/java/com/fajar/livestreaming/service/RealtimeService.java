@@ -10,7 +10,6 @@ import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.util.ThreadUtil;
 
 @Service
 public class RealtimeService {
@@ -33,12 +32,7 @@ public class RealtimeService {
 	}
 
 	private void convertAndSend(String url, Object payload) {
-		ThreadUtil.run(new Runnable() { 
-			@Override
-			public void run() { 
-				webSocket.convertAndSend(url, payload);
-			}
-		});
+		webSocket.convertAndSend(url, payload); 
 		
 	}
 

@@ -135,10 +135,10 @@ function init () {
 
 function updateVideoDom(){
 	if (this.streaming) { 
-		return;
-		
+		return; 
 	}
-	this.height = this.video.videoHeight /  (this.video.videoWidth / this.width);
+	
+	this.height = this.video.videoHeight / (this.video.videoWidth / this.width);
 	this.video.setAttribute('width', this.width);
 	this.video.setAttribute('height', this.height);
 	this.canvas.setAttribute('width', this.width );
@@ -157,15 +157,15 @@ function initMediaRecorder(_mediaRecorder){
 	      chunks.push(e.data);
 	   }
 	this.mediaRecorder.onstop = function(e){ 
+		playAudio();
 		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
 	  	chunks = []; 
 	    setAudioInfo("False");
 	   	processAudioData(_blob);   
 		 
 	}
-	
-	console.debug("End init media recorder");
-	 
+	playAudio();
+	console.debug("End init media recorder"); 
 	console.debug("INIT MEDIA RECORDER END");
 }
 
@@ -355,9 +355,7 @@ function handleLiveStream(response)  {
 	    	//partnerInfo.innerHTML = "Online: False";
 	    	//reject(1);
 	    } 
-	})
-	
-	
+	}) 
      
 }
  
@@ -367,7 +365,10 @@ function handleLiveStream(response)  {
 		if(_class.mediaRecorder && _class.mediaRecorder.state != "recording"){
 			_class.mediaRecorder.start(); 
 			resolve(0);
+			 
 		}else{
+			if(_class.mediaRecorder)
+				console.warn("state: ", _class.mediaRecorder.state);
 			//reject(1);
 		}
 	 }); 
@@ -376,7 +377,7 @@ function handleLiveStream(response)  {
  function stopAudio(){
 	const _class = this;
 	return new Promise(function(resolve, reject){
-		if(_class.mediaRecorder && !deltaTimeLessThan(MIN_DELTA_TIME)){
+		if(_class.mediaRecorder &&  _class.mediaRecorder.state == "recording" && !deltaTimeLessThan(MIN_DELTA_TIME)){
 			_class.mediaRecorder.stop(); 
 			resolve(0);
 		}else{
@@ -391,7 +392,7 @@ function handleLiveStream(response)  {
 
  function takepicture () {
     const _class = this;
-   	playAudio();
+   	 
     this.resizeWebcamImage().then(function(data){
         _class.sendVideoImage(data);
        	_class.stopAudio(); 
