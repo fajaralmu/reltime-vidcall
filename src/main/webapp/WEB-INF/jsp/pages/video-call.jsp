@@ -321,7 +321,7 @@ function playAudioByBase64Data(audioData){
 	theAudio.onloadedmetadata = function(e){
 		//console.warn("audio.onloadedmetadata");
 		theAudio.play(); 
-		audios.appendChild(this);
+		//audios.appendChild(this);
 	}
 	/* audio.onplay = function(e){
 		
@@ -331,7 +331,8 @@ function playAudioByBase64Data(audioData){
 		//console.warn("AUDIO DURATION:",theAudio.duration);
 		//durationInfo.innerHTML = theAudio.duration;
 		audioMetadataLoaded = false;
-		audios.removeChild(this);
+		delete theAudio;
+		
 	}
 	
 	//console.warn("playAudioByBase64Data end"); 

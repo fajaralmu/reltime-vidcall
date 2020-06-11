@@ -10,6 +10,7 @@ import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.util.ThreadUtil;
 
 @Service
 public class RealtimeService {
@@ -26,19 +27,27 @@ public class RealtimeService {
 
 	public boolean sendUpdateSessionExistance(RegisteredRequest registeredRequest) {
  
-		webSocket.convertAndSend("/wsResp/sessions", WebResponse.builder().registeredRequest(registeredRequest).build());
+		convertAndSend("/wsResp/sessions", WebResponse.builder().registeredRequest(registeredRequest).build());
 
 		return true;
 	}
 
-	 
+	private void convertAndSend(String url, Object payload) {
+		ThreadUtil.run(new Runnable() { 
+			@Override
+			public void run() { 
+				webSocket.convertAndSend(url, payload);
+			}
+		});
+		
+	}
 
 	public void sendMessageChat(WebResponse response) {
-		webSocket.convertAndSend("/wsResp/messages", response); 
+		convertAndSend("/wsResp/messages", response); 
 	}
 	
 	private void sendLiveStramResponse(WebResponse response) {
-		webSocket.convertAndSend("/wsResp/videostream/"+response.getRequestId(), response);
+		convertAndSend("/wsResp/videostream/"+response.getRequestId(), response);
 	}
 
 
@@ -63,7 +72,7 @@ public class RealtimeService {
 
 	public void sendUpdateSessionStatus(RegisteredRequest registeredRequest) {
 		 
-		webSocket.convertAndSend("/wsResp/sessionstatus", WebResponse.builder().registeredRequest(registeredRequest).build());
+		convertAndSend("/wsResp/sessionstatus", WebResponse.builder().registeredRequest(registeredRequest).build());
 
 	}
 
@@ -81,7 +90,7 @@ public class RealtimeService {
 
 	private void sendLiveAudioStramResponse(WebResponse response) {
 		 
-		webSocket.convertAndSend("/wsResp/audiostream/"+response.getRequestId(), response);
+		convertAndSend("/wsResp/audiostream/"+response.getRequestId(), response);
 	}
  
 
