@@ -17,9 +17,9 @@ import com.fajar.livestreaming.service.UserSessionService;
 @Controller
 public class BaseController {
 
-	private static final String SESSION_ATTR_TITLE = "page-title";
+	private static final String MODEL_ATTR_TITLE = "title";
 
-	private static final String SESSION_ATTR_PAGE_URL = "page-url";
+	private static final String MODEL_ATTR_PAGE_URL = "pageUrl";
 
 	protected String basePage = "BASE_PAGE";
 	@Autowired
@@ -38,15 +38,12 @@ public class BaseController {
 	public String getContextPath(HttpServletRequest request) {
 		return request.getContextPath();
 	}
-
-	 
-	
 	 
 	protected static void setTitle(Model model, String title) {
-		model.addAttribute("title", title);
+		model.addAttribute(MODEL_ATTR_TITLE, title);
 	}
 	protected static void setPageUrl(Model model, String pageUrl) {
-		model.addAttribute("pageUrl", pageUrl);
+		model.addAttribute(MODEL_ATTR_PAGE_URL, pageUrl);
 	}
 
 	/**

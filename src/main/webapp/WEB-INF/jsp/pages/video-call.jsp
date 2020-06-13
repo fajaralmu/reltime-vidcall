@@ -155,7 +155,7 @@ function initMediaRecorder(_mediaRecorder){
     }
 	this.mediaRecorder.ondataavailable = function(e) { 
 	      chunks.push(e.data);
-	   }
+	}
 	this.mediaRecorder.onstop = function(e){ 
 		playAudio();
 		_blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' }); 
@@ -176,21 +176,21 @@ function initAudio(_mediaSource, _audioContext, _analyser){
 }
 
 function getSoundData() {
-	   var sample = new Float32Array(analyser.frequencyBinCount);
-	   analyser.getFloatFrequencyData(sample); 
-	  /*  console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
-	   console.debug("soundData: ",sample); */
-	   return sample;
-	}
+	 var sample = new Float32Array(analyser.frequencyBinCount);
+	 analyser.getFloatFrequencyData(sample); 
+	/*  console.debug("analyser.frequencyBinCount: ",analyser.frequencyBinCount);
+	 console.debug("soundData: ",sample); */
+	 return sample;
+}
 
 function terminate (){
- this.terminated = true;
- 
- btnTerminate.innerHTML = "Reload to continue";
- btnTerminate.setAttribute("class", "btn btn-info btn-sm");
- btnTerminate.onclick = function(){
- 	window.location.reload();
- }
+	this.terminated = true;
+	
+	btnTerminate.innerHTML = "Reload to continue";
+	btnTerminate.setAttribute("class", "btn btn-info btn-sm");
+	btnTerminate.onclick = function(){
+		window.location.reload();
+	}
 }
 
 function pauseOrContinue(){
@@ -308,11 +308,6 @@ var _audioData = "";
 function playAudioByBase64Data(audioData){
 	_audioData = audioData;
 	
-	//console.warn("--playAudioByBase64Data--");
-	/*   if(audioMetadataLoaded == true){
-		 console.warn("try later..");
-		return;
-	}   */
 	const theAudio = new Audio();
 	 
 	//console.warn("Will play");
