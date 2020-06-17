@@ -150,7 +150,7 @@ public class UserSessionService {
 
 	public WebResponse clearAllSession(HttpServletRequest request) {
 		try {
-			List<RegisteredRequest> requests = (List)SerializationUtils.clone((Serializable) getAvaliableRequests());
+			List<RegisteredRequest> requests = (List<RegisteredRequest>)SerializationUtils.clone((Serializable) getAvaliableRequests());
 			for (RegisteredRequest registeredRequest : requests) {
 				removeSessionById(registeredRequest.getRequestId());
 			}		

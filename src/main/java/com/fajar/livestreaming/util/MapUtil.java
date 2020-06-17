@@ -18,14 +18,14 @@ public class MapUtil {
 		return false;
 	}
 	
-	public static List mapToList(Map map) {
+	public static <K, V> List<V> mapToList(Map<K, V> map) {
 		
-		List result = new ArrayList<>();
+		List<V> result = new ArrayList<V>();
 		if(null == map) {
 			return result;
 		}
-		Set mapKeys = map.keySet();
-		for (Object key : mapKeys) {
+		Set<K> mapKeys = map.keySet();
+		for (K key : mapKeys) {
 			result.add(map.get(key));
 		}
 		
