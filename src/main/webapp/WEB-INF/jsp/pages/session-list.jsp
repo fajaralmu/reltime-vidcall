@@ -65,7 +65,8 @@
 		}
 		
 		if(registeredRequest.exist){
-			sessionList.innerHTML += generateHtmlTextForSession(registeredRequest);
+			const htmlTag = generateHtmlTextForSession(registeredRequest);
+			sessionList.appendChild(htmlTag);
 		}else{
 			removeElementById(registeredRequest.requestId);
 		}
@@ -78,14 +79,46 @@
 		const createdDate = newRegisteredRequest.created;
 		const videoCallUrl = urlStream+"/"+requestId;
 		
-		const html = `<div class=\"session-item\" id=\"${requestId}\"><h3>ID: `
+		/* const html = `<div class=\"session-item\" id=\"${requestId}\"><h3>ID: `
 				+ requestId
 				+ `</h3><p>Created: `+createdDate+`</p>`
 				+ `<p>Active:<span id=\"status-`+requestId+`\">`+isActive+`</span></p>`
 				+ `<a class=\"btn btn-success\" href=\"`+videoCallUrl+`\">Video Call</a></div>`;
-				console.log("html", html);
-		return html;
+				console.log("html", html); */
+		const htmlv2 = createHtmlTag({
+			'tagName':"div",
+			'class': "session-item",
+			'id':requestId,
+			'ch1':{
+				'tagName': "h3",
+				'innerHTML': "ID: "+requestId
+			},
+			'ch2':{
+				'tagName': "p",
+				'innerHTML': "Created: "+createdDate
+			},
+			'ch3':{
+				'tagName': "p",
+				'innerHTML' :"Active:",
+				'ch1':{
+					'tagName': "span",
+					'id': "status-"+requestId,
+					'innerHTML': isActive
+				}
+			},
+			'ch4':{
+				'tagName': "a",
+				'class': "btn btn-success",
+				'href': videoCallUrl,
+				'innerHTML': "Video Call"
+			}
+		});
+		return htmlv2;
 
+	}
+	
+	function buildHtmlTag(tagObj){
+		
 	}
 
 	initWebSocket();

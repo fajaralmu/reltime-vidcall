@@ -157,19 +157,22 @@ function createGridWrapper(cols, width){
 	}
 	return div;
 }
-function createHtmlTag(tagName, object){
-	var tag = document.createElement(tagName);
+function createHtmlTag(object){
+	const tag = document.createElement(object.tagName);
+	tag.innerHTML = object["innerHTML"] ? object["innerHTML"] : "";
 	
 	for(let key in object){
-		if(key == "innerHTML" || key == "child"){
+		if(key == "innerHTML" ){
 			continue;
+		} 
+		if(typeof(object[key]) ==  "object"){
+			const htmlObject = object[key];
+			const htmlTag = createHtmlTag(htmlObject);
+			tag.appendChild(htmlTag);
+		}else{
+			tag.setAttribute(key, object[key]);
 		}
-		tag.setAttribute(key, object[key]);
 	}
-	if(object["innerHTML"])
-		tag.innerHTML = object["innerHTML"];
-	if(object["child"])
-		tag.appendChild(object["child"]);
 	return tag;
 }
 
