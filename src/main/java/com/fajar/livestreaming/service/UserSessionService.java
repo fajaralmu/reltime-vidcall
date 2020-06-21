@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +18,7 @@ import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.util.MapUtil;
+import com.fajar.livestreaming.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -144,8 +144,12 @@ public class UserSessionService {
 		registeredRequest.setActive(false);
 		registeredRequest.setCreated(new Date());
 		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));
-		registeredRequest.setRequestId(UUID.randomUUID().toString());
+		registeredRequest.setRequestId(randomRequestId());
 		return registeredRequest;
+	}
+
+	private String randomRequestId() { 
+		return StringUtil.generateRandomChar(8);
 	}
 
 	public WebResponse clearAllSession(HttpServletRequest request) {

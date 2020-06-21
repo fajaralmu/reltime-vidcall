@@ -5,10 +5,28 @@ import java.util.Random;
 public class StringUtil {
 
 	static final Random rand = new Random();
-
+	public static final char[] CHARS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+			'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' , '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+ 
 	public static final String[] GREEK_NUMBER = new String[] {
 			"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
 	};
+	
+	public static final int CHARS_LENGTH = CHARS.length;
+	
+	public static String generateRandomChar(int length) {
+		StringBuilder randomString = new StringBuilder();
+		
+		if (length < 1) {
+			length = 1;
+		}
+		for (int i = 0; i < length; i++) {
+
+			Integer n = rand.nextInt(CHARS_LENGTH);
+			randomString.append(CHARS[n]);
+		}
+		return randomString.toString();
+	}
 	
 	public static String generateRandomNumber(int length) {
 

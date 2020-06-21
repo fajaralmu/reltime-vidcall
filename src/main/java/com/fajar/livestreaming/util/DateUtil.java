@@ -1,14 +1,10 @@
 package com.fajar.livestreaming.util;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.fajar.schoolmanagement.dto.KeyValue;
 
 public class DateUtil {
 
@@ -70,22 +66,7 @@ public class DateUtil {
 		"November",
 		"Desember"
 	};
-	
-	public static List<KeyValue> months(){
-		return new ArrayList<KeyValue>() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			{
-				for (int i = 1; i <=12; i++) {
-					add(new KeyValue(MONTH_NAMES[i - 1] + "("+i+")", i, true));
-				}
-			}
-		};
-	}
-	
+	 
 	public static <K, V> Map<K, V> map(final K key, final V value) {
 		return new HashMap<K, V>() { 
 			

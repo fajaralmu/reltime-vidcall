@@ -81,7 +81,7 @@
 				+ registeredRequest.active
 				+ "</span></p>"
 				+ "<a class=\"btn btn-success\" href=\"" + urlStream+"/"+ registeredRequest.requestId+"\">"
-				+ "Video Call</a>" + "<hr/></div>";
+				+ "Video Call</a></div>";
 
 		return html;
 
