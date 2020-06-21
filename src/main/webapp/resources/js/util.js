@@ -116,9 +116,11 @@ function createOption(value, html){
 }
 
 function createLabel(text){
-	let element = document.createElement("label");
-	element.innerHTML = text;
-	return element;
+	const html = createHtmlTag({
+		'tagName':'label',
+		'innerHTML': text
+	})
+	return html;
 }
 
 function createHeading(tag ,id, className, html){

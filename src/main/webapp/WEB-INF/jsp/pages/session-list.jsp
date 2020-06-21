@@ -99,11 +99,12 @@
 			},
 			'ch3':{
 				'tagName': "p",
-				'innerHTML' :"Active:",
+				'innerHTML' :"Active: ",
 				'ch1':{
 					'tagName': "span",
+					'innerHTML': ""+isActive,
 					'id': "status-"+requestId,
-					'innerHTML': isActive
+					
 				}
 			},
 			'ch4':{
