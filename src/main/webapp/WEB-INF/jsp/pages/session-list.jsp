@@ -71,18 +71,19 @@
 		}
 	}
 
-	function generateHtmlTextForSession(registeredRequest) {
+	function generateHtmlTextForSession(newRegisteredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
-		const html = "<div class=\"session-item\" id=\""+ registeredRequest.requestId +"\"><h3>ID: "
-				+ registeredRequest.requestId
-				+ "</h3><p>Created:"
-				+ registeredRequest.created
-				+ "</p><p>Active:<span id=\"status-"+registeredRequest.requestId+"\">"
-				+ registeredRequest.active
-				+ "</span></p>"
-				+ "<a class=\"btn btn-success\" href=\"" + urlStream+"/"+ registeredRequest.requestId+"\">"
-				+ "Video Call</a></div>";
-
+		const requestId = newRegisteredRequest.requestId;
+		const isActive = newRegisteredRequest.active;
+		const createdDate = newRegisteredRequest.created;
+		const videoCallUrl = urlStream+"/"+requestId;
+		
+		const html = `<div class=\"session-item\" id=\"${requestId}\"><h3>ID: `
+				+ requestId
+				+ `</h3><p>Created: `+createdDate+`</p>`
+				+ `<p>Active:<span id=\"status-`+requestId+`\">`+isActive+`</span></p>`
+				+ `<a class=\"btn btn-success\" href=\"`+videoCallUrl+`\">Video Call</a></div>`;
+				console.log("html", html);
 		return html;
 
 	}
