@@ -11,7 +11,7 @@
 
 			<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
 			<div class="session-item" id="${session.requestId }">
-				<h3>ID:${session.requestId }</h3>
+				<h3>ID: ${session.requestId }</h3>
 				<c:if test="${registeredRequest.requestId == session.requestId }">
 					<b>Your session</b>
 				</c:if>
@@ -73,7 +73,7 @@
 
 	function generateHtmlTextForSession(registeredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
-		const html = "<div class=\"session-item\" id=\""+ registeredRequest.requestId +"\"><h3>ID:"
+		const html = "<div class=\"session-item\" id=\""+ registeredRequest.requestId +"\"><h3>ID: "
 				+ registeredRequest.requestId
 				+ "</h3><p>Created:"
 				+ registeredRequest.created

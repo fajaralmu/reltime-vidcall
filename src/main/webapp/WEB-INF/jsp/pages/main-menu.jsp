@@ -7,8 +7,9 @@
 <div>
 <h2>Main Menu Page</h2>
 
-<h3>Request ID:</h3>
-<p id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId } </p>
+<h3>Request Information</h3>
+
+<p>Current Request ID : <b><span id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId } </span></b></p>
 <a class="btn btn-success" href="<spring:url value="/stream/sessionlist" /> ">View Available Sessions</a> 
 <c:if test="${registeredRequest == null }">
 	<button class="btn btn-info" onclick="registerSession()">Register</button>

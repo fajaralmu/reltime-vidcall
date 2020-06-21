@@ -35,8 +35,7 @@
 				<canvas id="canvas"> </canvas>
 			</div>
 			<p>Preview</p>
-			<video muted="muted" controls id="video">Video stream not available.
-			</video>
+			<video muted="muted" controls id="video"></video>
 		</div>
 		<div class="output-receiver"
 			style="padding: 20px; border: solid 1px green; text-align: center;">
@@ -71,10 +70,6 @@ var receiver = "${partnerId}";
 var latestImageResponse = {};
 var width = 70;
 var height = 70;
-const theCanvas = document.createElement("canvas");
-var btnTerminate = _byId("btn-terminate");
-var btnPause = _byId("btn-pause");
-var partnerInfo = _byId("partner-info");
 //AUDIO
 var audioContext; 
 var mediaSource;
@@ -83,11 +78,18 @@ var mySoundData;
 var mediaRecorder;
 var chunks = [];
 var _blob;
-var audio = _byId("audio");
+
 var base64Datas = new Array();
 var audioMetadataLoaded = false;
-var durationInfo = _byId("duration-info");  
-var audios = _byId("audios");
+
+
+const theCanvas = document.createElement("canvas");
+const btnTerminate = _byId("btn-terminate");
+const btnPause = _byId("btn-pause");
+const partnerInfo = _byId("partner-info");
+const audio = _byId("audio");
+const durationInfo = _byId("duration-info");  
+const audios = _byId("audios");
 
 var MIN_DELTA_TIME = 500;
 
