@@ -4,5 +4,5 @@
 			$('[data-toggle="tooltip"]').tooltip()
 		})
 	</script>
-	<p align="center">Fajar AM</p>
+	<p align="center">Fajar AM ${year }</p>
 </div>

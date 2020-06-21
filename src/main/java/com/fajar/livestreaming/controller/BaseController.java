@@ -1,6 +1,8 @@
 package com.fajar.livestreaming.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.UserSessionService;
+import com.fajar.livestreaming.util.DateUtil;
 
 @Controller
 public class BaseController {
@@ -37,6 +40,11 @@ public class BaseController {
 	@ModelAttribute("contextPath")
 	public String getContextPath(HttpServletRequest request) {
 		return request.getContextPath();
+	}
+	
+	@ModelAttribute("year")
+	public int getCurrentYear(HttpServletRequest request) {
+		return DateUtil.getCalendarItem(new Date(), Calendar.YEAR);
 	}
 	 
 	protected static void setTitle(Model model, String title) {

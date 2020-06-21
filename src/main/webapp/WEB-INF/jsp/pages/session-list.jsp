@@ -10,19 +10,20 @@
 		<c:forEach var="session" items="${sessions }">
 
 			<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
-			<div id="${session.requestId }">
+			<div class="session-item" id="${session.requestId }">
 				<h3>ID:${session.requestId }</h3>
+				<c:if test="${registeredRequest.requestId == session.requestId }">
+					<b>Your session</b>
+				</c:if>
 				<p>Created: ${session.created }</p>
 				<p>Active: <span id="status-${registeredRequest.requestId }">${registeredRequest.active}</span></p>
+				
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }">Video
 						Call</a>
-				</c:if>
-				<c:if test="${registeredRequest.requestId == session.requestId }">
-					<b>Your session</b>
-				</c:if>
-				<hr />
+				</c:if> 
+				 
 			</div>
 
 		</c:forEach>
@@ -72,7 +73,7 @@
 
 	function generateHtmlTextForSession(registeredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
-		const html = "<div id=\""+ registeredRequest.requestId +"\"><h3>ID:"
+		const html = "<div class=\"session-item\" id=\""+ registeredRequest.requestId +"\"><h3>ID:"
 				+ registeredRequest.requestId
 				+ "</h3><p>Created:"
 				+ registeredRequest.created

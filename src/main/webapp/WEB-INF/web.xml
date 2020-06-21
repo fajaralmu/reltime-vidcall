@@ -31,7 +31,7 @@
 		</init-param>
 	</filter> -->
 	<servlet>
-		<servlet-name>shop</servlet-name>
+		<servlet-name>app</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
