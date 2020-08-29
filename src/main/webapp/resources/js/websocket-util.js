@@ -50,7 +50,8 @@ function connectToWebsocket( ... callBackObjects) {
 		for(let i =0;i<callBackObjects.length;i++){
 			const callBackObject = callBackObjects[i];
 			
-			if(callBackObject){
+			if(callBackObject){ 
+				
 				stompClients.subscribe(callBackObject.subscribeUrl, function(response) {
 					 
 					console.log("Websocket Updated...");

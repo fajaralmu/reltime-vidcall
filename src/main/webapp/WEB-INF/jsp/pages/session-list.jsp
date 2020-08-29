@@ -77,14 +77,8 @@
 		const requestId = newRegisteredRequest.requestId;
 		const isActive = newRegisteredRequest.active;
 		const createdDate = newRegisteredRequest.created;
-		const videoCallUrl = urlStream+"/"+requestId;
+		const videoCallUrl = urlStream+"/"+requestId; 
 		
-		/* const html = `<div class=\"session-item\" id=\"${requestId}\"><h3>ID: `
-				+ requestId
-				+ `</h3><p>Created: `+createdDate+`</p>`
-				+ `<p>Active:<span id=\"status-`+requestId+`\">`+isActive+`</span></p>`
-				+ `<a class=\"btn btn-success\" href=\"`+videoCallUrl+`\">Video Call</a></div>`;
-				console.log("html", html); */
 		const htmlv2 = createHtmlTag({
 			'tagName':"div",
 			'class': "session-item",
@@ -104,7 +98,6 @@
 					'tagName': "span",
 					'innerHTML': ""+isActive,
 					'id': "status-"+requestId,
-					
 				}
 			},
 			'ch4':{
