@@ -37,6 +37,7 @@
 		<load-on-startup>1</load-on-startup>
 		<!-- <init-param> <param-name>contextConfigLocation</param-name> <param-value>/WEB-INF/app-config.xml</param-value> 
 			</init-param> -->
+		<async-supported>true</async-supported>
 	</servlet>
 
 	<servlet-mapping>

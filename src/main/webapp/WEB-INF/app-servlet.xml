@@ -86,6 +86,7 @@
             <value>classpath:config.properties</value>
         </list>
     </property>
+    
 </bean>
 
 </beans>
