@@ -15,9 +15,11 @@
 	<mvc:resources location="/resources/" mapping="/res/**"></mvc:resources>
 	<mvc:resources location="file:/D:/Development/Files/Web/"
 		mapping="/WebAsset/**"></mvc:resources>
-	<!-- <jpa:repositories base-package="com.fajar.shoppingmart.repository" /> -->
+	<!-- <jpa:repositories base-package="com.fajar.shoppingmart.repository" 
+		/> -->
 
-	<context:component-scan base-package="com.fajar.livestreaming" />
+	<context:component-scan
+		base-package="com.fajar.livestreaming" />
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -44,66 +46,46 @@
 	</bean>
 
 	<!-- web app custom config -->
-	<!-- <bean id="webAppConfig"
-		class="com.fajar.shoppingmart.service.WebConfigService">
-		<property name="basePage" value="BASE_PAGE"></property>
-		<property name="martCode" value="SHOP996"></property>
-		<property name="uploadedImageRealPath" value="D:/Development/Files/Web/Shop1/Images"></property>
-		<property name="uploadedImagePath" value="WebAsset/Shop1/Images"></property>
-		<property name="reportPath" value="D:/Development/Files/Web/Shop1/Reports"></property>
-	</bean>
-	 -->
+	<!-- <bean id="webAppConfig" class="com.fajar.shoppingmart.service.WebConfigService"> 
+		<property name="basePage" value="BASE_PAGE"></property> <property name="martCode" 
+		value="SHOP996"></property> <property name="uploadedImageRealPath" value="D:/Development/Files/Web/Shop1/Images"></property> 
+		<property name="uploadedImagePath" value="WebAsset/Shop1/Images"></property> 
+		<property name="reportPath" value="D:/Development/Files/Web/Shop1/Reports"></property> 
+		</bean> -->
 	<!-- persistance -->
 
-	<!--  
-	<bean id="transactionManager"
-		class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory"></property>
-	</bean> -->
-	
-<!-- 	<bean id="sessionFactory" class="org.hibernate.internal.SessionFactoryImpl"/> -->
+	<!-- <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory"></property> 
+		</bean> -->
 
-	<!-- <bean id="dataSource_OFFLINE"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver" />
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/goodshop" />
-		<property name="username" value="root" />
-		<property name="password" value="" />
-	</bean>
-	<bean id="dataSource_CLOUD"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver" />
-		<property name="url"
-			value="jdbc:mysql://remotemysql.com:3306/YcnBC2qXWF" />
-		<property name="username" value="YcnBC2qXWF" />
-		<property name="password" value="lkuEobwbqC" />
-	</bean>
+	<!-- <bean id="sessionFactory" class="org.hibernate.internal.SessionFactoryImpl"/> -->
 
+	<!-- <bean id="dataSource_OFFLINE" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
+		name="url" value="jdbc:mysql://localhost:3306/goodshop" /> <property name="username" 
+		value="root" /> <property name="password" value="" /> </bean> <bean id="dataSource_CLOUD" 
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> <property 
+		name="driverClassName" value="com.mysql.jdbc.Driver" /> <property name="url" 
+		value="jdbc:mysql://remotemysql.com:3306/YcnBC2qXWF" /> <property name="username" 
+		value="YcnBC2qXWF" /> <property name="password" value="lkuEobwbqC" /> </bean> 
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
+		<property name="packagesToScan" value="com.fajar.shoppingmart*" /> <property 
+		name="dataSource" ref="dataSource_OFFLINE" /> <property name="sessionFactory" 
+		ref="sessionFactory"></property> <property name="jpaProperties"> <props> 
+		<prop key="hibernate.show_sql">false</prop> <prop key="hibernate.hbm2ddl.auto">update</prop> 
+		<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop> <prop 
+		key="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</prop> 
+		</props> </property> <property name="persistenceProvider" ref="persistenceProvider"> 
+		<bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean> </property> 
+		</bean> <bean id="persistenceProvider" class="org.hibernate.jpa.HibernatePersistenceProvider" 
+		/> -->
 
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="packagesToScan" value="com.fajar.shoppingmart*" />
-		<property name="dataSource" ref="dataSource_OFFLINE" />
-		<property name="sessionFactory" ref="sessionFactory"></property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</prop>
-			</props>
-		</property>
-		<property name="persistenceProvider" ref="persistenceProvider">
-			<bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean>
-		</property>
-	</bean>
-	
-	<bean id="persistenceProvider"
-		class="org.hibernate.jpa.HibernatePersistenceProvider" />
-
- -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+        <list>
+            <value>classpath:config.properties</value>
+        </list>
+    </property>
+</bean>
 
 </beans>

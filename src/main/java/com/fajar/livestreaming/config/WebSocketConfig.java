@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurationSupport;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
@@ -22,6 +23,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+//    	org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurationSupport c = null;
+//    	c.messageBrokerTaskScheduler()
     	log.info("configureMessageBroker");
       //  config.enableSimpleBroker("/topic");
         config.enableSimpleBroker("/wsResp");

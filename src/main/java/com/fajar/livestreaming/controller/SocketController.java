@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,27 +41,27 @@ public class SocketController extends BaseController{
 //		LogProxyFactory.setLoggers(this);
 	}
 	
-	@PostMapping(value = "/api/stream/disconnect")
+	@PostMapping(value = "/api/stream/disconnect", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse disconnect(@RequestBody WebRequest request, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
 		realtimeUserService.disconnectLiveStream(request);
 		return new WebResponse();
 	}
-	@PostMapping(value = "/api/stream/register")
+	@PostMapping(value = "/api/stream/register", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse register(@RequestBody WebRequest request, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
 		
 		RegisteredRequest registeredRequest = userSessionService.registerSession(httpRequest);;
 		return WebResponse.builder().registeredRequest(registeredRequest).build();
 	}
-	@PostMapping(value = "/api/stream/invalidate")
+	@PostMapping(value = "/api/stream/invalidate", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse invalidate( HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
 	}
 	
-	@GetMapping(value = "/api/stream/clearsession")
+	@GetMapping(value = "/api/stream/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse clearsession(  HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
 		return userSessionService.clearAllSession( httpRequest);
