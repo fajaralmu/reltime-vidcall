@@ -50,9 +50,9 @@ function init () {
 	const app = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(function (stream) {
-        	 console.debug("START getUserMedia"); 
-        	 peerConnection.addStream(stream);
-        	 app.myVideo.srcObject = stream;
+	       	console.debug("START getUserMedia"); 
+	       	peerConnection.addStream(stream);
+	       	app.myVideo.srcObject = stream;
 			 
             console.debug("END getUserMedia"); 
         }).catch(function (err) {

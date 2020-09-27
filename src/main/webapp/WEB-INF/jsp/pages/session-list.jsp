@@ -11,7 +11,7 @@
 
 			<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
 			<div class="session-item" id="${session.requestId }">
-				<h3>ID: ${session.requestId }</h3>
+				<h3><i class="fa fa-user-circle"></i> ${session.requestId }</h3>
 				<c:if test="${registeredRequest.requestId == session.requestId }">
 					<b>Your session</b>
 				</c:if>
@@ -88,7 +88,7 @@
 			'id':requestId,
 			'ch1':{
 				'tagName': "h3",
-				'innerHTML': "ID: "+requestId
+				'innerHTML': "<i class=\"fa fa-user-circle\"></i> "+requestId
 			},
 			'ch2':{
 				'tagName': "p",
