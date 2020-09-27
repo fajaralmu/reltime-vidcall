@@ -4,48 +4,45 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%><!DOCTYPE html>
 
-<div class="content" >
+<div class="content">
 	<h2>Video Call With</h2>
 	<h3>Partner ID: ${partnerId }</h3>
 	<a href="<spring:url value="/admin/home" />">Back</a>
 
 	<h2>Live Streaming</h2>
 	<p>Stream ID: ${registeredRequest.requestId}</p>
-	<div class="row" style="grid-column-gap: 3px">
+	<div class="row" style="grid-row-gap: 5px">
 		<div class="col-6 camera"
-			style="padding: 20px; border: solid 1px green; text-align: center">
+			style="padding: 10px; border: solid 1px green; text-align: center">
 			<h2>You</h2>
-			<video height="200" width="200" muted="muted" controls id="my-video"></video> 
+			<video height="200" width="200" muted="muted" controls id="my-video"></video>
 
 		</div>
 		<div class="col-6 output-receiver"
-			style="padding: 20px; border: solid 1px green; text-align: center;">
+			style="padding: 10px; border: solid 1px green; text-align: center;">
 			<h2>
 				Partner <small id="partner-info">Online:
 					${partnerInfo.active }</small>
 			</h2>
-			<video style="visibility: hidden" height="200" width="200" controls id="video"></video>
+			<video style="visibility: hidden" height="200" width="200" controls
+				id="video"></video>
 		</div>
-	</div>
- 
-	<button class="btn btn-info btn-lg" onclick="createOffer()"><i class="fas fa-phone"></i>&nbsp;Call</button>
-	<!-- <input type="text" class="form-control" id="input-msg" />
-	<p></p>
-	<button class="btn btn-primary" onclick="sendInputMessage()"><i class="fas fa-paper-plane"></i></button> -->
-	 
+		<div>
+			<button class="btn btn-info btn-lg" onclick="createOffer()">
+				<i class="fas fa-phone"></i>&nbsp;Call
+			</button>
+		</div>
+	</div> 
+
 </div>
 <script type="text/javascript">
 
 var paused = false;
 var video;
 var myVideo; 
-
-var receiver = "${partnerId}";
-var latestImageResponse = {};
-var width = 70;
-var height = 70;  
  
-const partnerInfo = _byId("partner-info");    
+var width = 70;
+var height = 70;   
 
 var MIN_DELTA_TIME = 500; 
 

@@ -20,11 +20,9 @@
 				
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<a class="btn btn-success"
-						href="<spring:url value="/stream/videocall" />/${session.requestId }">Video
-						Call</a>
+						href="<spring:url value="/stream/videocall" />/${session.requestId }"><i class="fas fa-phone"></i> Call v1 (WebSocket)</a>
 					<a class="btn btn-success"
-						href="<spring:url value="/stream/videocallv2" />/${session.requestId }">Video
-						Call v2</a>
+						href="<spring:url value="/stream/videocallv2" />/${session.requestId }"><i class="fas fa-phone"></i> Call v2 (WebRTC)</a>
 				</c:if> 
 				 
 			</div>
@@ -109,13 +107,13 @@
 				'tagName': "a",
 				'class': "btn btn-success",
 				'href': videoCallUrl,
-				'innerHTML': "Video Call"
+				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v1 (WebSocket)"
 			},
 			'ch5':{
 				'tagName': "a",
 				'class': "btn btn-success",
 				'href': videoCallUrlv2,
-				'innerHTML': "Video Call v2"
+				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v2 (WebRTC)"
 			}
 		});
 		return htmlv2;
