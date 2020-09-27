@@ -4,23 +4,21 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%><!DOCTYPE html>
 
-<div class="content" onload="initLiveStream()">
+<div class="content" >
 	<h2>Video Call With</h2>
 	<h3>Partner ID: ${partnerId }</h3>
 	<a href="<spring:url value="/admin/home" />">Back</a>
 
 	<h2>Live Streaming</h2>
 	<p>Stream ID: ${registeredRequest.requestId}</p>
-	<div id="live-wrapper"
-		style="display: grid; grid-template-columns: 47% 47%">
-		<div class="camera"
+	<div class="row" style="grid-column-gap: 3px">
+		<div class="col-6 camera"
 			style="padding: 20px; border: solid 1px green; text-align: center">
 			<h2>You</h2>
-			<video height="200" width="200" controls id="my-video"></video>
-
+			<video height="200" width="200" muted="muted" controls id="my-video"></video> 
 
 		</div>
-		<div class="output-receiver"
+		<div class="col-6 output-receiver"
 			style="padding: 20px; border: solid 1px green; text-align: center;">
 			<h2>
 				Partner <small id="partner-info">Online:
@@ -29,13 +27,11 @@
 			<video style="visibility: hidden" height="200" width="200" controls id="video"></video>
 		</div>
 	</div>
-
-	<hr />
-	<button class="btn btn-info" onclick="createOffer()">Create
-		Offer</button>
-	<input type="text" class="form-control" id="input-msg" />
+ 
+	<button class="btn btn-info btn-lg" onclick="createOffer()"><i class="fas fa-phone"></i>&nbsp;Call</button>
+	<!-- <input type="text" class="form-control" id="input-msg" />
 	<p></p>
-	<button class="btn btn-primary" onclick="sendInputMessage()">Send</button>
+	<button class="btn btn-primary" onclick="sendInputMessage()"><i class="fas fa-paper-plane"></i></button> -->
 	 
 </div>
 <script type="text/javascript">
@@ -142,14 +138,15 @@ function initWebRtc(){
 	var configuration = {
 		    "iceServers" : [ 
 		    	{
-		    //	"url":"stun:stun2.1.google.com:19302"
+		    	//	"url":"stun:stun2.1.google.com:19302"
 		      		"urls" : "stun:127.0.0.1:3478"
 		    	},
 		    	{
 			      'urls': 'turn:127.0.0.1:8888',
 			      'credential': 'superpwd',
 			      'username': 'testuser'
-			    } ]
+			    } 
+		    ]
 		};
 	/* peerConnection = new RTCPeerConnection(configuration, {
 	    optional : [ {
