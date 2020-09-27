@@ -1,23 +1,6 @@
 var stompClient = null;
 var wsConnected = false;
-
-function updateMovement() {
-	stompClient.send("/app/move", {}, JSON.stringify({
-		'entity' : {
-			'id' : entity.id * 1,
-			'life' : entity.life,
-			'active' : true,
-			'physical' : {
-				'x' : entity.physical.x,
-				'y' : entity.physical.y,
-				'direction' : entity.physical.direction,
-				'color' : entity.physical.color,
-				'lastUpdated' : new Date()
-			},
-			'missiles' : entity.missiles
-		}
-	}));
-}
+const onConnectCallbacks = new Array();
 
 function sendToWebsocket(url, requestObject){
 	if(!wsConnected){
@@ -47,7 +30,7 @@ function connectToWebsocket( ... callBackObjects) {
 
 		// document.getElementById("ws-info").innerHTML =
 		// stompClients.ws._transport.ws.url;
-		for(let i =0;i<callBackObjects.length;i++){
+		for(let i =0; i < callBackObjects.length; i++){
 			const callBackObject = callBackObjects[i];
 			
 			if(callBackObject){ 
@@ -63,6 +46,12 @@ function connectToWebsocket( ... callBackObjects) {
 				});
 			}
 		}
+		
+		for (var i = 0; i < onConnectCallbacks.length; i++) {
+			const callback = onConnectCallbacks[i];
+			callback(frame);
+		}
+		
 
 	});
 

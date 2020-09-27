@@ -30,6 +30,7 @@
 <script type="text/javascript">
 	var ctxPath = "${contextPath}";
 	var websocketUrl = "<spring:url value="/realtime-app" />";
+	var websocketUrlv2 = "${ipAndPort}<spring:url value="/socket" />";
 </script>
 <style>
 .container {

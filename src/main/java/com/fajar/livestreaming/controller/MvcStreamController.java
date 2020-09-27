@@ -76,5 +76,30 @@ public class MvcStreamController extends BaseController{
 		}
 		return basePage;
 	} 
+	
+	@RequestMapping(value = { "/videocallv2/{partnerId}" })
+	public String videocallv2(Model model, @PathVariable String partnerId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException { 
+		
+		
+		RegisteredRequest partnerSession;
+		try {
+			partnerSession = streamingService.getPartnerSession(partnerId); 
+			
+			streamingService.setActive(request);
+		 
+			model.addAttribute("partnerId", partnerId);
+			
+			setTitle(model,  "Video Call");
+			setPageUrl(model,  "pages/video-call-v2");
+			
+			model.addAttribute("partnerInfo", partnerSession);
+			
+		} catch (Exception e) { 
+			 model.addAttribute("message", "Invalid Session");
+		}
+		return basePage;
+	} 
 
 }

@@ -22,6 +22,9 @@
 					<a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }">Video
 						Call</a>
+					<a class="btn btn-success"
+						href="<spring:url value="/stream/videocallv2" />/${session.requestId }">Video
+						Call v2</a>
 				</c:if> 
 				 
 			</div>
@@ -66,7 +69,7 @@
 		
 		if(registeredRequest.exist){
 			const htmlTag = generateHtmlTextForSession(registeredRequest);
-			sessionList.appendChild(htmlTag);
+			sessionList.appendChild(htmlTag); 
 		}else{
 			removeElementById(registeredRequest.requestId);
 		}
@@ -74,10 +77,12 @@
 
 	function generateHtmlTextForSession(newRegisteredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
+		const urlStreamv2 = "<spring:url value="/stream/videocallv2" />";
 		const requestId = newRegisteredRequest.requestId;
 		const isActive = newRegisteredRequest.active;
 		const createdDate = newRegisteredRequest.created;
 		const videoCallUrl = urlStream+"/"+requestId; 
+		const videoCallUrlv2 = urlStreamv2+"/"+requestId; 
 		
 		const htmlv2 = createHtmlTag({
 			'tagName':"div",
@@ -105,6 +110,12 @@
 				'class': "btn btn-success",
 				'href': videoCallUrl,
 				'innerHTML': "Video Call"
+			},
+			'ch5':{
+				'tagName': "a",
+				'class': "btn btn-success",
+				'href': videoCallUrlv2,
+				'innerHTML': "Video Call v2"
 			}
 		});
 		return htmlv2;

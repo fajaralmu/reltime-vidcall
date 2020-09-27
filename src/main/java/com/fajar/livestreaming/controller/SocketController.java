@@ -21,6 +21,7 @@ import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.service.RealtimeService;
+import com.fajar.livestreaming.service.WebRtcService;
 
 @CrossOrigin
 @RestController
@@ -30,6 +31,8 @@ public class SocketController extends BaseController{
 //	private SimpMessagingTemplate webSocket;
 	@Autowired
 	RealtimeService realtimeUserService;
+	@Autowired
+	private WebRtcService webRtcService;
 	 
 	
 	public SocketController() {
@@ -123,6 +126,12 @@ public class SocketController extends BaseController{
 	public WebResponse audiostream( WebRequest request) throws IOException {
 		
 		return realtimeUserService.audioStream(request);
+	}
+	
+	@MessageMapping("/webrtc") 
+	public WebResponse webRtc( WebRequest request) throws IOException {
+		
+		return webRtcService.webRtc(request);
 	}
 	
 	

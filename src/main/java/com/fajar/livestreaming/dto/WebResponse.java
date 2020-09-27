@@ -29,6 +29,8 @@ public class WebResponse implements Serializable {
 	private String imageData;
 	private String audioData;
 	private RegisteredRequest registeredRequest;
+	
+	private WebRtcObject webRtcObject;
  
 	 
 	public static WebResponse failedResponse() {
