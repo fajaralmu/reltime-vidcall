@@ -22,6 +22,15 @@ public class RealtimeService {
 		LogProxyFactory.setLoggers(this);
 		log.info("=======================REALTIME SERVICE 2======================="); 
 	}
+	
+	public void sendOnlineStatus(RegisteredRequest registeredRequest, boolean online) {
+		try {
+			WebResponse payload = WebResponse.builder().onlineStatus(online).build();
+			convertAndSend("/wsResp/partneronlineinfo/"+registeredRequest.getRequestId(), payload );
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 
 
 	public boolean sendUpdateSessionExistance(RegisteredRequest registeredRequest) {

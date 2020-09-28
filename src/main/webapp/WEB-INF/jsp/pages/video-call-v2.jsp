@@ -21,7 +21,7 @@
 		<div class="col-6 output-receiver"
 			style="padding: 10px; border: solid 1px green; text-align: center;">
 			<h2>
-				Partner <small id="partner-info">Online:
+				Partner <small id="partner-is-online">Online:
 					${partnerInfo.active }</small>
 			</h2>
 			<video style="visibility: hidden" height="200" width="200" controls
@@ -45,6 +45,7 @@ var width = 70;
 var height = 70;   
 
 var MIN_DELTA_TIME = 500; 
+const partnerOnlineInfo = _byId("partner-is-online");
 
 function init () {
 	const app = this;   
@@ -106,7 +107,16 @@ function initWebSocket(){
 			}
 			
 		};
-	connectToWebsocket( callbackWsMsg); 
+	const callbackPartnerOnline = {
+			subscribeUrl : "/wsResp/partneronlineinfo/${partnerId }",
+			callback : function(resp){
+				if(resp && resp.onlineStatus == true){
+					partnerOnlineInfo.innerHTML = "Online: true";
+				}
+			}
+			
+		};
+	connectToWebsocket( callbackWsMsg, callbackPartnerOnline); 
 	
 }
 

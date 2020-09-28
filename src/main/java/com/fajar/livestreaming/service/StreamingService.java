@@ -19,6 +19,8 @@ public class StreamingService {
 	
 	@Autowired
 	private UserSessionService userSessionService;
+	@Autowired
+	private RealtimeService realtimeService;
 	 
 	@PostConstruct
 	public void init() {
@@ -38,6 +40,7 @@ public class StreamingService {
  
 		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequest(request);
 		userSessionService.setActiveSession(registeredRequest.getRequestId(), true);
+		realtimeService.sendOnlineStatus(registeredRequest, true);
 		 
 	}
 

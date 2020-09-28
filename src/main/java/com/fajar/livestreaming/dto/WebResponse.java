@@ -28,6 +28,7 @@ public class WebResponse implements Serializable {
 	private String requestId;
 	private String imageData;
 	private String audioData;
+	private boolean onlineStatus;
 	private RegisteredRequest registeredRequest;
 	
 	private WebRtcObject webRtcObject;
