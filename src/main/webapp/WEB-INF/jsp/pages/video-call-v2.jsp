@@ -29,7 +29,7 @@
 		</div>
 		<div>
 			<button class="btn btn-info btn-lg" onclick="createOffer()">
-				<i class="fas fa-phone"></i>&nbsp;Call
+				<i class="fas fa-phone"></i>&nbsp;Begin Call
 			</button>
 		</div>
 	</div> 

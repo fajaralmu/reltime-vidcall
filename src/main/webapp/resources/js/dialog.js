@@ -35,7 +35,7 @@ function confirmDialog(msg, prop) {
 						tagName : 'div',
 						className : 'modal-content',
 						ch1 : modalHeader("Confirmation"),
-						ch2 : modalBody('<i class="'+ (property.dialogIcon ? property.dialogIcon: 'fas fa-exclamation-triangle') +'"></i>&nbsp;' + msg),
+						ch2 : modalBodyGrid('<h3><i class="'+ (property.dialogIcon ? property.dialogIcon: 'fas fa-exclamation-triangle') +'"></i></h3><p>' + msg + '</p>', '20% 75%'),
 						ch3 : {
 							tagName : 'div',
 							className : 'modal-footer',
@@ -213,15 +213,29 @@ function modalBackdropJson(){
 	}
 }
 
+function modalBodyGrid(htmlString, gridTemplateColumns){
+	const obj = {
+		tagName : 'div',
+		className : 'modal-body',
+	}
+	 
+	obj.innerHTML = htmlString;
+	obj.style = {
+		'display': 'grid',
+		'gird-template-columns': gridTemplateColumns?gridTemplateColumns:'auto'
+	}
+	  
+	return obj;
+}
+
 function modalBody(html){
 	const obj = {
 		tagName : 'div',
 		className : 'modal-body',
-		
 	}
 	
 	if(typeof(html) == "string"){
-		obj.innerHTML = html;
+		obj.innerHTML = html; 
 	}else{
 		obj.ch0 = html;
 	}
