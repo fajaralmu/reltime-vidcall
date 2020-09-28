@@ -1,4 +1,22 @@
-function confirmDialog(msg) {
+function confirmDialog(msg, prop) {
+	const property = prop?prop: {
+		yesIcon:null,
+		noIcon:null,
+		dialogIcon:null
+	};
+	
+	if(property.yesIcon){
+		property.yesHtml = "<i class=\""+property.yesIcon+"\"></i>";
+	}else{
+		property.yesHtml = "<span>Yes</span>";
+	}
+	
+	if(property.noIcon){
+		property.noHtml = "<i class=\""+property.noIcon+"\"></i>";
+	}else{
+		property.noHtml = "<span>No</span>";
+	}
+	
 	return new Promise(function(resolve, reject) {
 		const dialog = createHtmlTag({
 			tagName : 'div',
@@ -17,7 +35,7 @@ function confirmDialog(msg) {
 						tagName : 'div',
 						className : 'modal-content',
 						ch1 : modalHeader("Confirmation"),
-						ch2 : modalBody('<i class="fas fa-exclamation-triangle"></i>&nbsp;' + msg),
+						ch2 : modalBody('<i class="'+ (property.dialogIcon ? property.dialogIcon: 'fas fa-exclamation-triangle') +'"></i>&nbsp;' + msg),
 						ch3 : {
 							tagName : 'div',
 							className : 'modal-footer',
@@ -25,7 +43,7 @@ function confirmDialog(msg) {
 								style : { margin : 'auto', style:{width:'max-content'} },
 								ch1:{
 									tagName : 'button',
-									innerHTML : 'Yes',
+									innerHTML : property.yesHtml,
 									className : 'btn btn-primary',
 									style: {margin: '3px'},
 									onclick : function(e) {
@@ -35,9 +53,9 @@ function confirmDialog(msg) {
 								},
 								ch2:{
 									tagName : 'button',
-									innerHTML : 'No',
+									innerHTML : property.noHtml,
 									style: {margin: '3px'},
-									className : 'btn btn-secondary',
+									className : 'btn btn-danger',
 									onclick : function(e) {
 										resolve(false);
 										dialog.parentNode.removeChild(dialog);

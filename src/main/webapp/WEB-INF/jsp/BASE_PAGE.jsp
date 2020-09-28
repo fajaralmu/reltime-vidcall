@@ -95,7 +95,7 @@
 						const caller = resp.requestId;
 						const url = "<spring:url value="/stream/videocallv2/" />"+caller+"?referrer=calling";
 						
-						confirmDialog(caller+" want to call you.. ")
+						confirmDialog("&nbsp;<h4>"+caller+"</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", noIcon:"fa fa-phone"})
 						.then(function(ok){ 
 								sendToWebsocket("/app/acceptcall", { accept:ok, originId: requestId }); 
 								if(ok){
