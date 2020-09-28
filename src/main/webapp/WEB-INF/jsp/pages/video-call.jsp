@@ -84,12 +84,12 @@ var audioMetadataLoaded = false;
 
 
 const theCanvas = document.createElement("canvas");
-const btnTerminate = _byId("btn-terminate");
-const btnPause = _byId("btn-pause");
-const partnerInfo = _byId("partner-info");
-const audio = _byId("audio");
-const durationInfo = _byId("duration-info");  
-const audios = _byId("audios");
+const btnTerminate = byId("btn-terminate");
+const btnPause = byId("btn-pause");
+const partnerInfo = byId("partner-info");
+const audio = byId("audio");
+const durationInfo = byId("duration-info");  
+const audios = byId("audios");
 
 var MIN_DELTA_TIME = 500;
 
@@ -226,7 +226,7 @@ function sendAudio(base64data){
 	const _class = this;
  
 	return new Promise(function(resolve, reject) {
-		if( _class.terminated || _class.paused){
+		if( _class.terminated || _class.paused) {
 			//reject(1);
 	    } 
 		 //console.warn("Sending Audio at ", new Date().toString(), " length: ", base64data.length);
@@ -287,7 +287,7 @@ function handleAudioStream(response){
 	    	//partnerInfo.innerHTML = "Online: True "+ (new Date().getMilliseconds());
 	    	playAudioByBase64Data(response.audioData); 
 	    	resolve(0);
-	        //_byId("info-audio").value = response.audioData;
+	        //byId("info-audio").value = response.audioData;
 	    }else{
 	    	//partnerInfo.innerHTML = "Online: False";
 	    	//reject(1);
@@ -384,7 +384,7 @@ function handleLiveStream(response)  {
  }
  
  function setAudioInfo(info){
-	 //_byId("audio-play-info").innerHTML = info;
+	 //byId("audio-play-info").innerHTML = info;
  }
 
  function takepicture () {
@@ -449,14 +449,14 @@ function animate(){
 function initLiveStream(){
 	//console.info("START initLiveStream");
 	
-	 this.video = _byId('video');
+	 this.video = byId('video');
      //console.log("video:", this.video);
-     this.canvas = _byId('canvas'); 
-     this.photoReceiver = _byId("photo-receiver");
+     this.canvas = byId('canvas'); 
+     this.photoReceiver = byId("photo-receiver");
      this.init();
      this.initAnimation(this);
      this.initWebSocket();
-     this.myCapture = _byId("my-capture");
+     this.myCapture = byId("my-capture");
      //console.info("END initLiveStream");
      document.body.onunload = onClose;
 }
@@ -477,7 +477,18 @@ function initWebSocket(){
 			}
 			
 		};
-	connectToWebsocket(callbackObjectVideo, callbackObjectAudio);
+	const callbackPartnerOnline = {
+			subscribeUrl : "/wsResp/partneronlineinfo/${partnerId }",
+			callback : function(resp){
+				if(resp && resp.onlineStatus == true){
+					partnerInfo.innerHTML = "Online: true";
+				} else if(resp){
+					 
+				}
+			}
+			
+		};
+	connectToWebsocket(callbackObjectVideo, callbackObjectAudio, callbackPartnerOnline);
 }
 function onClose(){
 	/* postReq("<spring:url value="/api/stream/disconnect" />",

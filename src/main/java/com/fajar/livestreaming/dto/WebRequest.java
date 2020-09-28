@@ -28,5 +28,7 @@ public class WebRequest implements Serializable {
 	private String originId;
 	
 	private WebRtcObject webRtcObject;
+	
+	private boolean accept;
 
 }

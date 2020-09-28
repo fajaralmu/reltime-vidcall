@@ -46,7 +46,7 @@ var height = 70;
 
 var MIN_DELTA_TIME = 500; 
 var partnerIsOnline = ${partnerInfo.active };
-const partnerOnlineInfo = _byId("partner-is-online");
+const partnerOnlineInfo = byId("partner-is-online");
 
 function init () {
 	const app = this;   
@@ -81,8 +81,8 @@ function showVideoElement(){
 }
    
 function initLiveStream(){ 
-	this.myVideo = _byId("my-video");
-	this.video = _byId('video'); 
+	this.myVideo = byId("my-video");
+	this.video = byId('video'); 
     this.initWebSocket();
 }
 
@@ -106,20 +106,31 @@ function initWebSocket(){
 			callback : function(resp){
 				_class.handleWsMsg(resp.webRtcObject);
 			}
-			
 		};
 	const callbackPartnerOnline = {
 			subscribeUrl : "/wsResp/partneronlineinfo/${partnerId }",
 			callback : function(resp){
 				if(resp && resp.onlineStatus == true){
 					partnerOnlineInfo.innerHTML = "Online: true";
+					partnerIsOnline = true;
 				} else if(resp){
-					partnerIsOnline = resp.onlineStatus ;
+					partnerIsOnline = false;
 				}
+			}
+		};
+	const callbackPartnerAcceptCall = {
+			subscribeUrl : "/wsResp/partneracceptcall/${partnerId }",
+			callback : function(resp){
+				if(resp && resp.accept == true){
+					partnerOnlineInfo.innerHTML = "Online: Please Wait...."; 
+				} else if(resp){
+					partnerOnlineInfo.innerHTML = "Call rejected"; 
+				}
+				partnerIsOnline = false;
 			}
 			
 		};
-	connectToWebsocket( callbackWsMsg, callbackPartnerOnline); 
+	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall); 
 	
 }
 
@@ -214,8 +225,8 @@ function initDataChannel(ev){
 }
 
 function sendInputMessage(){
-	dataChannelSend(_byId("input-msg").value);
-	_byId("input-msg").value = "";
+	dataChannelSend(byId("input-msg").value);
+	byId("input-msg").value = "";
 }
 
 function dataChannelSend(msg){
@@ -229,15 +240,20 @@ function dataChannelSend(msg){
 	}
 }
 
-function createOffer(){
+function createOffer() {
 	if(!peerConnection){
-		alert("please try again...");
+		infoDialog("peerConnection not created please try again...").then(function(e){});
 		return;
 	}
 	if(!partnerIsOnline){
-		alert("Partner is not online");
+		infoDialog("partner is not online...").then(function(e){});
 		return;
 	}
+	doCreateOffer();
+}
+
+function doCreateOffer(){
+	  
 	peerConnection.createOffer(function(offer) {
 	    send({
 	        event : "offer",

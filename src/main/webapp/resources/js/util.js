@@ -1,79 +1,137 @@
-const tempComponent = document.createElement("div");
-function _byId(id){
+/** ********* CONSTANTS ********** */
+const tempComponent = document.createElement("div"); 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"
+	];
+
+function byId(id){
+	if(id==null || id == ""){
+		console.warn("ID IS EMPTY");
+	}
 	return document.getElementById(id);
 }
 
+const loadingDiv = createDiv('loading-div','loading_div');
+
 function infoLoading() {
-	document.getElementById("loading-div").innerHTML = 
-		"<img width='60px'  src=\""+ctxPath+"/res/img/loading-disk.gif\" />";
+	console.log("infoLoading..");
+	document.body.prepend(loadingDiv);
+	loadingDiv.style.zIndex = 10;
+	loadingDiv.innerHTML = `<button class="btn btn-info">
+		  <span class="spinner-border spinner-border-sm"></span>
+		  Loading..
+		</button>`;
 }
 
 function infoDone() {
-	document.getElementById("loading-div").innerHTML = "";
-}
-
-function removeElementById(id){
-	const element = _byId(id);
-	if(element != null){
-		element.parentNode.removeChild(element);
+	try{
+		loadingDiv.parentNode.removeChild(loadingDiv);
+	}catch(e){
+		
 	}
 }
 
 /** ***************COMPONENT*************** */
-function createAnchor(id, html, url){
-	var a = document.createElement("a");
-	a.id = id;
-	a.innerHTML = html;
-	a.href = url
-	return a;
+
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    html = html.trim(); // Never return a text node of whitespace as the result
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
+
+
+function createAnchor(id, html, url){ 
+	return createHtmlTag({tagName:"a", innerHTML: html, id: id, href: url}); 
+}
+
+function appendElements(parent, ...childs){
+	for (var i = 0; i < childs.length; i++) {
+		parent.appendChild(childs[i]);
+	}
+}
+function appendElementsArray(parent, childs){
+	for (var i = 0; i < childs.length; i++) {
+		parent.appendChild(childs[i]);
+	}
 }
 
 function createNavigationButton(id, html, callback){
-	var btn= createAnchor(id,html, "#");
+	const btn= createAnchor(id,html, "#");
 	btn.className = "page-link";
 	if(callback != null)
 		btn.onclick = function(){
 			callback(id);
 		}
-	var li = document.createElement("li");
-	li.className = "page-item";
+	const li = createHtmlTag({tagName:"li", class: "page-item" });  
 	li.append(btn);
 	return li;
 }
 
-function createButton(id, html){
-	var button = document.createElement("button");
-	button.id = id;
-	button.innerHTML = html;
-	return button;
+function createButton(id, html, onclick){
+	return createHtmlTag({tagName:"button", class: "btn btn-default", innerHTML: html, id: id, onclick: onclick}); 
 }
  
+function createButtonWarning(id, html, onclick){
+	const btn = createButton(id, html, onclick);
+	btn.setAttribute('class', 'btn btn-warning');
+	return btn;
+}
+
+function createButtonDanger(id, html, onclick){
+	const btn = createButton(id, html, onclick);
+	btn.setAttribute('class', 'btn btn-danger');
+	return btn;
+}
+
+function clearElement(...elements){
+	for (let i = 0; i < elements.length; i++) {
+		let element = elements[i];
+		if(!element){
+			continue;
+		}
+		
+		if(typeof(element) == "string"){
+			if(byId(element)){
+				element = byId(element);
+			}
+		}
+		
+		if(!element){
+			continue;
+		}
+		
+		if(element.tagName.toLowerCase() == "input" || element.tagName.toLowerCase() == "textarea"){
+			if(element.type.toLowerCase() == "number"){
+				element.value = 0;
+			}else{
+				element.value = "";
+			}
+			
+		}else{
+			element.innerHTML = "";
+		}
+	}
+}
 
 function createCell(val){
-	let column = document.createElement("td");
-	column.innerHTML = val;
-	return column;
+	return createHtmlTag({tagName:"td", innerHTML: val}); 
 }
 
 function createRow(val){
-	let column = document.createElement("tr");
-	column.innerHTML = val;
-	return column;
+	return createHtmlTag({tagName:"tr", innerHTML: val}); 
 }
 
 function createInputText(id, className){
-	let input = document.createElement("input");
-	input.id = id;
-	input.setAttribute("class",className);
-	return input;
+	return createInput(id, className, "text"); 
 }
 
 function hide(id){
-	document.getElementById(id).style.display = "none";
+	byId(id).style.display = "none";
 }
 
 function show(id){
-	document.getElementById(id).style.display = "block";
+	byId(id).style.display = "block";
 }
 	 
 
@@ -97,86 +155,153 @@ function toBase64(file, callback){
     }
 }
 
-function createDiv(id, className){
+function createEmptySpan(){
+	return createHtmlTag({tagName: "span", innerHTML: ""});
+}
+
+function createDiv(id, className, html){
 	let div = createElement("div", id, className); 
+	if(html){
+		div.innerHTML = html;
+	}
 	return div;
 }
 
 function createInput(id, className, type){
-	let div = createElement("input", id, className); 
-	div.type = type; 
-	return div;
+	const domObj = { tagName:"input",  id:id, class:className, type: type};
+	return createHtmlTag(domObj);
 }
 
-function createOption(value, html){
-	let option = createElement("option", null, null);
-	option.value = value;
-	option.innerHTML = html;
-	return option;
+function createOption(value, text){  
+	const domObj = { tagName:"option",  innerHTML:text, value: value   };
+	return createHtmlTag(domObj); 
 }
 
 function createLabel(text){
-	const html = createHtmlTag({
-		'tagName':'label',
-		'innerHTML': text
-	})
-	return html;
+	const domObj = { tagName:"label",  innerHTML:text   };
+	return createHtmlTag(domObj); 
 }
 
 function createHeading(tag ,id, className, html){
-	let option = createElement(tag,id, className);
-	option.innerHTML = html;
-	return option;
+	const heading = createElement(tag,id, className);
+	heading.innerHTML = html;
+	return heading;
 }
 
 function createElement(tag, id, className){
-	let div = document.createElement(tag);
+	const domObj = {tagName:tag};
 	if(className!=null)
-		div.className = className;
+		domObj.class = className;
 	if(id != null)
-		div.id  = id;
-	return div;
+		domObj.id  = id;
+	
+	return createHtmlTag(domObj);
 }
 
 function createImgTag(id, className, w, h, src){
-	let img = createElement("img", id, className);
-	img.width = w;
-	img.height = h;
 	
-	img.src = src;
-	
-	return img;
+	const domObj = {
+		tagName:"img", 
+		src:src, 
+		width: w, 
+		height:h, 
+		id: id, 
+		class: className
+	};
+	return createHtmlTag(domObj);
 }
 
 function createGridWrapper(cols, width){
-	let div = document.createElement("div");
-	div.style.display = "grid";
+	
+	let gridTemplateColumns;
 	
 	if(width == null){
-		div.style.gridTemplateColumns = "auto ".repeat(cols);
+		gridTemplateColumns = "auto ".repeat(cols);
 	}else{
-		div.style.gridTemplateColumns = (width+" ").repeat(cols);
+		gridTemplateColumns = (width+" ").repeat(cols);
 	}
-	return div;
+	const domObj = {tagName:"div", style:{display:'grid', 'grid-template-columns':gridTemplateColumns}}; 
+	return createHtmlTag(domObj);
 }
+
+/**
+ * 
+ * @returns <br/>
+ */
+function createBreakLine(){
+	return createHtmlTag({tagName:"br"});
+}
+ 
+/**
+ * 
+ * @param styleObject
+ * @returns string of ';' joined style items
+ */
+function stringifyStyleObject(styleObject){
+	const keyValueArrays = new Array();
+	
+	for(key in styleObject){
+		const keyValue  = key+":"+styleObject[key];
+		keyValueArrays.push(keyValue);
+	}
+	return keyValueArrays.join(';');
+}
+
+/**
+ * 
+ * @param object
+ * @returns <DOM>
+ */
 function createHtmlTag(object){
+	if(null == object){
+		object = { tagName: 'span', innerHTML: 'invalid DOM info', style:{color: 'red'}};
+	} 
 	const tag = document.createElement(object.tagName);
 	tag.innerHTML = object["innerHTML"] ? object["innerHTML"] : "";
 	
 	for(let key in object){
-		if(key == "innerHTML" ){
+		if(key == 'innerHTML' || key == 'tagName'){
 			continue;
-		} 
-		if(typeof(object[key]) ==  "object"){
-			const htmlObject = object[key];
-			const htmlTag = createHtmlTag(htmlObject);
-			tag.appendChild(htmlTag);
+		}  
+		const value = object[key];
+		const isNotNull = object[key] != null;
+		const isStyle = key == "style";
+		const isObject = isNotNull && typeof(value) ==  "object";
+		const isHtmlElement = isNotNull && value instanceof HTMLElement;
+		const isFunction = isNotNull && typeof(value) ==  "function";
+		const isArray = isNotNull && Array.isArray(value);
+		
+		if(isHtmlElement){
+			tag.appendChild(value);
+//		}else if(isArray){
+//			for (var i = 0; i < value.length; i++) {
+//				const htmlTag = createHtmlTag(value[i]);
+//				tag.appendChild(htmlTag);
+//			}
+		}else if(isObject && !isFunction){
+			if(isStyle){
+				tag.setAttribute(key, stringifyStyleObject(value));
+			}else{ // Html DOM
+				console.debug("will create HTML DOM of :", key);
+				const htmlObject = value;
+				const htmlTag = createHtmlTag(htmlObject);
+				tag.appendChild(htmlTag);
+			}
+		}else if(isFunction){
+			 
+			tag[key] = function(e){ value(e) };
+			 
 		}else{
-			tag.setAttribute(key, object[key]);
+			if(key == "className"){
+				key = "class";
+			}
+			tag.setAttribute(key, value);
 		}
 	}
+	tag.setAttribute("dynamictag", object.tagName);
 	return tag;
 }
+
 
 function domToString(dom){
 	tempComponent.innerHTML = "";
@@ -202,11 +327,26 @@ function createTableHeaderByColumns(columns, ignoreNumber){
 	return row;
 }
 
-// return array of TR !!!!
+/**
+ * 
+ * @param columns
+ * @param entities
+ * @param ignoreNumber
+ * @returns list of
+ *          <tr>
+ */
 function createTableBody(columns, entities ,ignoreNumber){
 	 createTableBody(columns, entities, 0,ignoreNumber);
 }
 
+/**
+ * 
+ * @param rows
+ *            list of
+ *            <tr>
+ * @param id
+ * @returns <table>
+ */
 function createTableFromRows(rows, id){
 	let table = createElement	("table", id, "table");
 	for (var i = 0; i < rows.length; i++) {
@@ -215,6 +355,15 @@ function createTableFromRows(rows, id){
 	return table;
 }
 
+/**
+ * 
+ * @param columns
+ * @param entities
+ * @param beginNumber
+ * @param ignoreNumber
+ * @returns list of
+ *          <tr>
+ */
 function createTableBody(columns, entities, beginNumber,ignoreNumber){
 	if(beginNumber == null){
 		beginNumber = 0;
@@ -270,46 +419,66 @@ function createTableBody(columns, entities, beginNumber,ignoreNumber){
 }
 
 /** END ENTITY DETAIL* */
+const inputFormClass = "filter-field form-control";
+const TYPE_DAY = "day";
+const TYPE_MONTH = "month";
+const TYPE_YEAR = "year";
 
-function createFilterInputDate(inputGroup, fieldName, callback){
+function createPeriodFilterInput(fieldName, type, callback){
+	const id = "filter-" + fieldName + "-" + type;
+	 
+	const inputDay = createHtmlTag({
+		'tagName': "input",
+		'id': id, 
+		'class': inputFormClass,
+		'type': "text",
+		'field': fieldName + "-"+ type,
+		'style': "width: 30%"
+	});
+	inputDay.onkeyup = function() { callback(); }
+	
+	return inputDay;
+}
+
+function createFilterInputDate(fieldName, callback){
+	const inputGroup = createDiv("input-group-"+fieldName,"input-group input-group-sm mb-3"); 
 	// input day
-	let inputDay = createInputText(
-			"filter-" + fieldName + "-day", "filter-field form-control"); 
-	inputDay.setAttribute("field", fieldName + "-day");
-	inputDay.style.width = "30%";
-	inputDay.onkeyup = function() {
-		callback();
-	}
+	let inputDay = createPeriodFilterInput(fieldName, TYPE_DAY, callback); 
 	// input month
-	let inputMonth = createInputText("filter-" + fieldName
-			+ "-month", "filter-field form-control");
-	inputMonth.setAttribute("field", fieldName + "-month");
-	inputMonth.style.width = "30%"; 
-	inputMonth.onkeyup = function() {
-		callback();
-	}
+	let inputMonth = createPeriodFilterInput(fieldName, TYPE_MONTH, callback); 
 	// input year
-	let inputYear = createInputText(
-			"filter-" + fieldName + "-year", "filter-field form-control");
-	inputYear.setAttribute("field", fieldName + "-year"); 
-	inputYear.style.width = "30%";
-	inputYear.onkeyup = function() {
-		callback();
-	}
+	let inputYear = createPeriodFilterInput(fieldName, TYPE_YEAR, callback); 
+	
 	inputGroup.append(inputDay);
 	inputGroup.append(inputMonth);
 	inputGroup.append(inputYear);
 	return inputGroup;
 }
+var index = 0;
+function randomID(){
+	 
+	let string = "";
+	string = new Date().getUTCMilliseconds();
+	index++;
+	return index + "-" + string;
+}
 
+/**
+ * 
+ * @param rowList
+ * @returns <tbody>
+ */
 function createTBodyWithGivenValue(rowList){
-	let tbody = createElement("tbody","id",null);
+	const tbody = createElement("tbody",randomID(),null);
+	
 	for (var i = 0; i < rowList.length; i++) {
-		var columns = rowList[i];
-		let row = document.createElement("tr");
+		const columns = rowList[i];
+		const row = createElement("tr");
+		
 		for (var j = 0; j < columns.length; j++) {
-			var cell = columns[j];
-			let column = document.createElement("td");
+			let cell = columns[j];
+			const column = createElement("td");
+			
 			if(null!=cell && typeof(cell) == "string" && cell.includes("setting=")){
 				var setting = cell.split("setting=")[1];
 				// colspan
@@ -338,6 +507,9 @@ function createTBodyWithGivenValue(rowList){
 }
 
 function beautifyNominal(val) {
+	if(!val || val == 0){
+		return "0";
+	}
 	let nominal = ""+val;
 	let result = "";
 	if (nominal.length > 3) {
@@ -358,22 +530,21 @@ function beautifyNominal(val) {
 	return result;
 }
 
-/** ******NAVIGATION******loadEntity** */
-function createNavigationButtons(navigationPanel,currentPage,totalData,limit,buttonClickCallback) {
+/** ******NAVIGATION******** */
+function createNavigationButtons(navigationPanel, currentPage, totalData, limit, buttonClickCallback) {
 	navigationPanel.innerHTML = "";
+	
 	var buttonCount = Math.ceil(totalData / limit);
-	let prevPage = currentPage == 0 ? 0 : currentPage - 1;
+	let prevPage = getPreviousPage(currentPage, buttonCount);
 	// prev and first button
-	navigationPanel.append(createNavigationButton(0, "|<",buttonClickCallback));
-	navigationPanel.append(createNavigationButton(prevPage, "<",buttonClickCallback));
+	const buttonFirstPage = createNavigationButton(0, "|<",buttonClickCallback);
+	const buttonPrevPage = createNavigationButton(prevPage, "<",buttonClickCallback);
+	
+	appendElements(navigationPanel, buttonFirstPage, buttonPrevPage);
 
 	/* DISPLAYED BUTTONS */
-	let displayed_buttons = new Array();
-	let min = currentPage - 2;
-	let max = currentPage + 2;
-	for (let i = min; i <= max; i++) {
-		displayed_buttons.push(i);
-	}
+	const displayed_buttons = getDisplayedButtonIndexes(currentPage); 
+	
 	let firstSeparated = false;
 	let lastSeparated = false;
 
@@ -385,19 +556,16 @@ function createNavigationButtons(navigationPanel,currentPage,totalData,limit,but
 				included = true;
 			}
 		}
-		if (!lastSeparated && currentPage < i - 2
-				&& (i * 1 + 1) == (buttonCount - 1)) {
+		if (!lastSeparated && currentPage < i - 2 && (i * 1 + 1) == (buttonCount - 1)) {
 			// console.log("btn id",btn.id,"MAX",max,"LAST",(jumlahTombol-1));
 			lastSeparated = true;
-			var lastSeparator = document.createElement("span");
-			lastSeparator.innerHTML = "...";
+			const lastSeparator = createEmptySpan();
 	// navigationPanel.appendChild(lastSeparator);
 
 		}
 		if (!included && i != 0 && !firstSeparated) {
 			firstSeparated = true;
-			var firstSeparator = document.createElement("span");
-			firstSeparator.innerHTML = "...";
+			var firstSeparator = createEmptySpan();
 		// navigationPanel.appendChild(firstSeparator);
 
 		}
@@ -405,7 +573,7 @@ function createNavigationButtons(navigationPanel,currentPage,totalData,limit,but
 			continue;
 		}
 
-		let button = createNavigationButton(i, buttonValue,buttonClickCallback);
+		const button = createNavigationButton(i, buttonValue, buttonClickCallback);
 		if (i == page) {
 			button.className = button.className.replace("active", "");
 			button.className = button.className + " active ";
@@ -413,14 +581,60 @@ function createNavigationButtons(navigationPanel,currentPage,totalData,limit,but
 		navigationPanel.append(button);
 	}
 
-	let nextPage = currentPage == buttonCount - 1 ? currentPage : currentPage + 1;
+	let nextPage = getNextPage(currentPage, buttonCount);
 	// next & last button
-	navigationPanel.append(createNavigationButton(nextPage, ">",buttonClickCallback));
-	navigationPanel.append(createNavigationButton(buttonCount - 1, ">|",buttonClickCallback));
+	const buttonNextPage = createNavigationButton(nextPage, ">",buttonClickCallback);
+	const buttonLastPage = createNavigationButton(buttonCount - 1, ">|",buttonClickCallback);
+
+	appendElements(navigationPanel, buttonNextPage, buttonLastPage); 
 	return navigationPanel;
 }
 
-/*********** CONSTANTS ***********/
-const monthNames = ["January", "February", "March", "April", "May", "June",
-	  "July", "August", "September", "October", "November", "December"
-	];
+function getDisplayedButtonIndexes( currentPage){
+	const displayed_buttons = new Array();
+	let min = currentPage - 2;
+	let max = currentPage + 2;
+	
+	for (let i = min; i <= max; i++) {
+		displayed_buttons.push(i);
+	}
+	return displayed_buttons;
+}
+
+function getPreviousPage(currentPage, buttonCount){
+	const currentPageIsFirstPage = currentPage == 0;
+	return currentPageIsFirstPage ? 0 : currentPage - 1;
+}
+
+function getNextPage(currentPage, buttonCount){
+	const currentPageIsLastPage =  currentPage == buttonCount - 1;
+	return currentPageIsLastPage ? currentPage : currentPage + 1;
+}
+
+function isOneOfInputFieldEmpty(...inputfields ){ 
+	for (var i = 0; i < inputfields.length; i++) {
+		const input = inputfields[i];
+		if(input.value == null || input.value.trim() == ""){
+			return true;
+		} 
+	} 
+	return false; 
+}
+
+
+
+function createBr() {
+	return document.createElement("br");
+}
+
+function getCookie(key){
+    try{
+       return document.cookie
+            .split('; ')
+            .find(row => row.startsWith(key))
+            .split('=')[1];
+    }catch(e){
+        return null;
+    }
+}
+

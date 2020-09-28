@@ -131,7 +131,13 @@ public class SocketController extends BaseController{
 	@MessageMapping("/webrtc") 
 	public WebResponse webRtc( WebRequest request) throws IOException {
 		
-		return webRtcService.webRtc(request);
+		return webRtcService.handshakeWebRtc(request);
+	}
+	
+	@MessageMapping("/acceptcall") 
+	public WebResponse acceptCall( WebRequest request) throws IOException {
+		
+		return webRtcService.acceptCall(request);
 	}
 	
 	

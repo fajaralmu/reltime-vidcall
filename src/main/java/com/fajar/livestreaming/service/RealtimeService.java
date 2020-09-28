@@ -95,6 +95,11 @@ public class RealtimeService {
 		 
 		convertAndSend("/wsResp/audiostream/"+response.getRequestId(), response);
 	}
- 
+
+	public void notifyPartner(RegisteredRequest userRequest, RegisteredRequest partnerSession) {
+		WebResponse response = WebResponse.builder().requestId(userRequest.getRequestId()).build();
+		convertAndSend("/wsResp/notifycall/"+partnerSession.getRequestId(), response);
+	}
+	
 
 }

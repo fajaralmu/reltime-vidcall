@@ -26,8 +26,10 @@
 <script src="<c:url value="/res/js/stomp.js"></c:url >"></script>
 <script src="<c:url value="/res/js/websocket-util.js"></c:url >"></script>
 <script src="<c:url value="/res/js/ajax.js?v=1"></c:url >"></script>
-<script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script>
+<script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script> 
+<script src="<c:url value="/res/js/dialog.js?v=1"></c:url >"></script>
 <script src="<c:url value="/res/js/time.js?v=1"></c:url >"></script>
+
 <script src="<c:url value="/res/fa/js/all.js?v=1"></c:url >"></script>
 <script type="text/javascript">
 	var ctxPath = "${contextPath}";
@@ -85,6 +87,32 @@
 			//initProgressWebsocket();
 
 		}
+		
+		function initCallbackCalling(requestId){
+			const callbackNofityCall = {
+					subscribeUrl : "/wsResp/notifycall/"+requestId,
+					callback : function(resp){
+						const caller = resp.requestId;
+						const url = "<spring:url value="/stream/videocallv2/" />"+caller+"?referrer=calling";
+						
+						confirmDialog(caller+" want to call you.. ")
+						.then(function(ok){ 
+								sendToWebsocket("/app/acceptcall", { accept:ok, originId: requestId }); 
+								if(ok){
+									window.location.href = url; 
+								}
+						})
+					}
+					
+				};
+			connectToWebsocket( callbackNofityCall); 
+		}
+		
 	</script>
+	<c:if test="${registeredRequest != null }">
+		<script type="text/javascript">
+			initCallbackCalling("${registeredRequest.requestId }");
+		</script>
+	</c:if>
 </body>
 </html>

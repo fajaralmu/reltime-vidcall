@@ -36,7 +36,8 @@
 					requestObject, function(xhr) {
 						infoDone();
 						var response = (xhr.data);
-						_byId("req-id-generated").innerHTML =  response.registeredRequest.requestId;
+						byId("req-id-generated").innerHTML =  response.registeredRequest.requestId;
+						initCallbackCalling(response.registeredRequest.requestId);
 					});
 		} 
 	

@@ -31,7 +31,7 @@
 	</div>
 </div>
 <script type="text/javascript">
-	const sessionList = _byId("session-list");
+	const sessionList = byId("session-list");
 
 	function initWebSocket() {
 		const _class = this;
@@ -56,7 +56,7 @@
 		const status = response.registeredRequest.active;
 		const requestId = response.registeredRequest.requestId;
 		
-		_byId("status-"+requestId).innerHTML = status;
+		byId("status-"+requestId).innerHTML = status;
 	}
 
 	function updateSessionList(response) {

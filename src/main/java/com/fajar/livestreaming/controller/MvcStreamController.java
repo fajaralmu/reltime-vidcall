@@ -88,6 +88,10 @@ public class MvcStreamController extends BaseController{
 			partnerSession = streamingService.getPartnerSession(partnerId); 
 			
 			streamingService.setActive(request);
+			
+			if(request.getParameter("referrer")==null || !request.getParameter("referrer").equals("calling")) {
+				streamingService.notifyPartner(request, partnerSession);
+			}
 		 
 			model.addAttribute("partnerId", partnerId);
 			
