@@ -65,9 +65,14 @@ public class SocketController extends BaseController{
 	}
 	
 	@GetMapping(value = "/api/stream/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse clearsession(  HttpServletRequest httpRequest,
-			HttpServletResponse httpResponse) { 
+	public WebResponse clearsession(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
 		return userSessionService.clearAllSession( httpRequest);
+	}
+	
+	@PostMapping(value = "/api/stream/callpartner", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse clearsession(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse) throws Exception { 
+		return webRtcService.callPartner(webRequest, httpRequest);
 	}
 	//@MessageMapping("/move")
 //	//@SendTo("/wsResp/players")

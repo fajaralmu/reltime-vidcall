@@ -40,8 +40,7 @@ public class StreamingService {
  
 		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequest(request);
 		userSessionService.setActiveSession(registeredRequest.getRequestId(), true);
-		realtimeService.sendOnlineStatus(registeredRequest, true);
-		 
+		realtimeService.sendOnlineStatus(registeredRequest, true); 
 	}
 
 	public List<RegisteredRequest> getSessionList(HttpServletRequest request) throws Exception {

@@ -51,15 +51,16 @@ const partnerOnlineInfo = byId("partner-is-online");
 function init () {
 	const app = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(function (stream) {
-	       	console.debug("START getUserMedia"); 
-	       	peerConnection.addStream(stream);
-	       	app.myVideo.srcObject = stream;
-			 
-            console.debug("END getUserMedia"); 
-        }).catch(function (err) {
-            //console.log("An error occurred: " + err);
-        });
+        .then(
+        	function (stream) {
+		       	console.debug("START getUserMedia"); 
+		       	peerConnection.addStream(stream);
+		       	app.myVideo.srcObject = stream;
+				 
+	            console.debug("END getUserMedia"); 
+	        }).catch(function (err) {
+	            //console.log("An error occurred: " + err);
+	        });
    
     this.video.addEventListener('canplay', function (ev) { 
     		app.updateVideoDom();  
@@ -124,14 +125,23 @@ function initWebSocket(){
 				if(resp && resp.accept == true){
 					partnerOnlineInfo.innerHTML = "Online: Please Wait...."; 
 				} else if(resp){
-					partnerOnlineInfo.innerHTML = "Call rejected"; 
+					partnerOnlineInfo.innerHTML = "Call rejected <button class=\"btn btn-info\" onclick=\"callPartner()\">Call again</button>"; 
 				}
 				partnerIsOnline = false;
 			}
 			
 		};
-	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall); 
-	
+	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall);  
+}
+
+function callPartner(){
+	const requestObject = {
+			destination:  "${partnerId }"
+	};
+	postReq("<spring:url value="/api/stream/callpartner" />",
+			requestObject, function(xhr) {
+				
+			});
 }
 
 function handleWsMsg(webRtcObject){ 

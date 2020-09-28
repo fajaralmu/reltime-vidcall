@@ -57,17 +57,15 @@ public class MvcStreamController extends BaseController{
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException { 
 		
-		
 		RegisteredRequest partnerSession;
 		try {
-			partnerSession = streamingService.getPartnerSession(partnerId); 
-			
+			partnerSession = streamingService.getPartnerSession(partnerId);  
 			streamingService.setActive(request);
-		 
+			
 			model.addAttribute("partnerId", partnerId);
 			
-			setTitle(model,  "Video Call");
-			setPageUrl(model,  "pages/video-call");
+			setTitle(model, "Video Call");
+			setPageUrl(model, "pages/video-call");
 			
 			model.addAttribute("partnerInfo", partnerSession);
 			
@@ -80,16 +78,14 @@ public class MvcStreamController extends BaseController{
 	@RequestMapping(value = { "/videocallv2/{partnerId}" })
 	public String videocallv2(Model model, @PathVariable String partnerId,
 			HttpServletRequest request, HttpServletResponse response)
-			throws IOException { 
-		
+			throws IOException {
 		
 		RegisteredRequest partnerSession;
 		try {
-			partnerSession = streamingService.getPartnerSession(partnerId); 
-			
+			partnerSession = streamingService.getPartnerSession(partnerId);
 			streamingService.setActive(request);
 			
-			if(request.getParameter("referrer")==null || !request.getParameter("referrer").equals("calling")) {
+			if(request.getParameter("referrer") == null || !request.getParameter("referrer").equals("calling")) {
 				streamingService.notifyPartner(request, partnerSession);
 			}
 		 

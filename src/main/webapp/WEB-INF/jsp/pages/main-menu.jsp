@@ -6,7 +6,6 @@
 
 <div>
 <h2>Main Menu Page</h2>
-
 <h3>Request Information</h3>
 
 <p>Current Request ID : <b><span id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId } </span></b></p>
