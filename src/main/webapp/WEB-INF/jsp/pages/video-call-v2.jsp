@@ -45,6 +45,7 @@ var width = 70;
 var height = 70;   
 
 var MIN_DELTA_TIME = 500; 
+var partnerIsOnline = ${partnerInfo.active };
 const partnerOnlineInfo = _byId("partner-is-online");
 
 function init () {
@@ -112,6 +113,8 @@ function initWebSocket(){
 			callback : function(resp){
 				if(resp && resp.onlineStatus == true){
 					partnerOnlineInfo.innerHTML = "Online: true";
+				} else if(resp){
+					partnerIsOnline = resp.onlineStatus ;
 				}
 			}
 			
@@ -229,6 +232,10 @@ function dataChannelSend(msg){
 function createOffer(){
 	if(!peerConnection){
 		alert("please try again...");
+		return;
+	}
+	if(!partnerIsOnline){
+		alert("Partner is not online");
 		return;
 	}
 	peerConnection.createOffer(function(offer) {
