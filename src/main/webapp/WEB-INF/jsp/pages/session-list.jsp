@@ -17,8 +17,8 @@
 					<b>Your session</b>
 				</c:if>
 				<p>Created: ${session.created }</p>
-				<p>Active: <span id="status-${registeredRequest.requestId }">${registeredRequest.active}</span></p>
-				
+				<%-- <p>Active: <span id="status-${registeredRequest.requestId }">${registeredRequest.active}</span></p>
+				 --%>
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<%-- <a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }"><i class="fas fa-phone"></i> Call v1 (WebSocket)</a>
@@ -100,7 +100,7 @@
 				'tagName': "p",
 				'innerHTML': "Created: "+createdDate
 			},
-			'ch4':{
+			/* 'ch4':{
 				'tagName': "p",
 				'innerHTML' :"Active: ",
 				'ch1':{
@@ -108,7 +108,7 @@
 					'innerHTML': ""+isActive,
 					'id': "status-"+requestId,
 				}
-			},
+			}, */
 		/* 	'ch5':{
 				'tagName': "a",
 				'class': "btn btn-success",

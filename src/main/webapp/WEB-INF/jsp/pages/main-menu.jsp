@@ -60,6 +60,14 @@
 	const buttonRegister = byId("btn-register");
 
 	function invalidate() {
+		confirmDialog("Do you want to invalidate session?").then(function(ok){
+			if(ok){
+				doInvalidate();
+			}
+		})
+	}
+	
+	function doInvalidate() {
 		const requestObject = {};
 		postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
 				function(xhr) {
