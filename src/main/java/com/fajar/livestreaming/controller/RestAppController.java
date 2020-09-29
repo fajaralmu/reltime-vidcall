@@ -46,16 +46,16 @@ public class RestAppController extends BaseController{
 		realtimeUserService.disconnectLiveStream(request);
 		return new WebResponse();
 	}
+	
 	@PostMapping(value = "/api/stream/register", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse register(@RequestBody WebRequest request, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
-		
 		RegisteredRequest registeredRequest = userSessionService.registerSession(request, httpRequest);;
 		return WebResponse.builder().registeredRequest(registeredRequest).build();
 	}
+	
 	@PostMapping(value = "/api/stream/invalidate", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse invalidate( HttpServletRequest httpRequest,
-			HttpServletResponse httpResponse) { 
+	public WebResponse invalidate(HttpServletRequest httpRequest,	HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
 	}
@@ -66,8 +66,7 @@ public class RestAppController extends BaseController{
 	}
 	
 	@PostMapping(value = "/api/stream/callpartner", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse clearsession(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest,
-			HttpServletResponse httpResponse) throws Exception {
+	public WebResponse callPartner(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		return webRtcService.notityCallPartner(webRequest, httpRequest);
 	} 
 	

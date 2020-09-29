@@ -87,7 +87,7 @@
 						
 						confirmDialog("&nbsp;<h4>"+username+"("+caller+")</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", yesText:"Accept", noIcon:"fa fa-phone", noText:"Decline"})
 						.then(function(ok){ 
-								sendToWebsocket("/app/acceptcall", { accept:ok, originId: requestId }); 
+								sendToWebsocket("/app/acceptcall", { accept:ok, destination: caller, originId: requestId }); 
 								if(ok){
 									window.location.href = url; 
 								}

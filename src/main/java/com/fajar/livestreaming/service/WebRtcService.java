@@ -32,7 +32,7 @@ public class WebRtcService {
 		log.info("acceptcall: {} ", request);
 		String origin = request.getOriginId();
 		WebResponse response = WebResponse.builder().accept(request.isAccept()).build();
-		webSocket.convertAndSend("/wsResp/partneracceptcall/" + origin, response);
+		webSocket.convertAndSend("/wsResp/partneracceptcall/"+request.getDestination()+"/" + origin, response);
 		return response;
 	}
 

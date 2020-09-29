@@ -31,8 +31,8 @@ public class WebSocketController extends BaseController{
 	}
 	
 	@PostConstruct
-	public void init() {
-//		LogProxyFactory.setLoggers(this);
+	public void init() {//		LogProxyFactory.setLoggers(this); 
+		
 	}
 	 
 	/////////////////////////////////////// WEbsocket //////////////////////////////////////////

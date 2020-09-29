@@ -52,42 +52,32 @@ const partnerOnlineInfo = byId("partner-is-online");
 function init () {
 	const app = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(
-        	function (stream) {
+        .then(function (stream) {
 		       	console.debug("START getUserMedia"); 
+		       
 		       	peerConnection.addStream(stream);
 		       	app.myVideo.srcObject = stream;
 				 
 	            console.debug("END getUserMedia"); 
 	        }).catch(function (err) {  });
    
-    this.video.addEventListener('canplay', function (ev) { 
+    	this.video.addEventListener('canplay', function (ev) { 
     		app.updateVideoDom();  
-         
-    }, false);  
- 
+    	}, false);
 }  
 
 function closePeerConnection(){
-	
 	confirmDialog("Leave the call?").then(function(ok){
 		if(ok){
-			try{
-				if(peerConnection){
-					peerConnection.close();
-					send({ 	event: "leave", data: {} });
-				}
-			}catch(e){
-				 
-			}
+			if(peerConnection){
+				peerConnection.close();
+				send({ 	event: "leave", data: {} });
+			} 
 		}
-	});
-	
-	
+	});	
 }
 
-function updateVideoDom(){ 
-} 
+function updateVideoDom(){ } 
 
 function showVideoElement(){
 	if(this.video){
@@ -132,7 +122,7 @@ function initWebSocket(){
 			}
 		};
 	const callbackPartnerAcceptCall = {
-			subscribeUrl : "/wsResp/partneracceptcall/${partnerId }",
+			subscribeUrl : "/wsResp/partneracceptcall/${registeredRequest.requestId }/${partnerId }",
 			callback : function(resp){
 				if(resp && resp.accept == true){
 					partnerOnlineInfo.innerHTML = "Online: Please Wait...."; 
@@ -141,22 +131,16 @@ function initWebSocket(){
 				}
 				partnerIsOnline = false;
 			}
-			
 		};
 	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall);  
 }
 
 function callPartner(){
-	const requestObject = {
-			destination:  "${partnerId }"
-	};
-	postReq("<spring:url value="/api/stream/callpartner" />",
-			requestObject, function(xhr) {
-				
-			});
+	const requestObject = {destination: "${partnerId }"};
+	postReq("<spring:url value="/api/stream/callpartner" />", requestObject, function(xhr) { });
 }
 
-function handleWsMsg(webRtcObject){ 
+function handleWsMsg(webRtcObject){
 	console.debug("handleWsMsg : ", webRtcObject);
     var data =  (webRtcObject.data);
     switch (webRtcObject.event) {
@@ -180,7 +164,7 @@ function handleWsMsg(webRtcObject){
 }
 
 function initWebRtc(){
-	var configuration = {
+	/* var configuration = {
 		    "iceServers" : [ 
 		    	{
 		    	//	"url":"stun:stun2.1.google.com:19302"
@@ -192,7 +176,7 @@ function initWebRtc(){
 			      'username': 'testuser'
 			    } 
 		    ]
-		};
+		}; */
 	var configuration2 = {
 		    "iceServers" : [ 
 		    	{
@@ -270,7 +254,6 @@ function dataChannelSend(msg){
 		}catch(e){
 			console.warn("Error send message: ", e);
 		}
-		
 	}
 }
 
@@ -315,6 +298,7 @@ function handleOffer(offer){
 	    console.error("error handle offer: ", error);
 	});
 }
+
 function handleCandidate(candidate){
 	console.debug("handleCandidate: ", candidate);
 	peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
