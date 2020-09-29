@@ -90,6 +90,7 @@ public class MvcStreamController extends BaseController{
 			}
 		 
 			model.addAttribute("partnerId", partnerId);
+			model.addAttribute("partnerUsername", partnerSession.getUsername());
 			
 			setTitle(model,  "Video Call");
 			setPageUrl(model,  "pages/video-call-v2");

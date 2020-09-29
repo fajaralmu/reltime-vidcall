@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%><!DOCTYPE html>
 
 <div class="content">
-	<h2>Video Call With</h2>
+	<h2>Video Call With ${partnerUsername }</h2>
 	<h3>Partner ID: ${partnerId }</h3>
 	<a href="<spring:url value="/admin/home" />">Back</a>
 
@@ -69,10 +69,7 @@ function init () {
  
 }  
 
-function updateVideoDom(){
-	if ( this.streaming) { 
-		return; 
-	} 
+function updateVideoDom(){ 
 } 
 
 function showVideoElement(){
