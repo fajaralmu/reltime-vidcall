@@ -20,6 +20,8 @@ public class RegisteredRequest implements Serializable{/**
 	private static final long serialVersionUID = -2584171097698972770L; 
 	 
 	private String requestId;
+	
+	private String username;
 	 
 	private String value;
 	 

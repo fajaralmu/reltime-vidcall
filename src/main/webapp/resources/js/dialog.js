@@ -35,7 +35,7 @@ function confirmDialog(msg, prop) {
 						tagName : 'div',
 						className : 'modal-content',
 						ch1 : modalHeader("Confirmation"),
-						ch2 : modalBodyGrid('<h3><i class="'+ (property.dialogIcon ? property.dialogIcon: 'fas fa-exclamation-triangle') +'"></i></h3><p>' + msg + '</p>', '20% 75%'),
+						ch2 : modalBodyGrid('<h3><i class="'+ (property.dialogIcon ? property.dialogIcon: 'fas fa-exclamation-triangle') +'"></i></h3><p>' + msg + '</p>', '20% 70%'),
 						ch3 : {
 							tagName : 'div',
 							className : 'modal-footer',

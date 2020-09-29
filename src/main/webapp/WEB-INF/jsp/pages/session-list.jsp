@@ -11,7 +11,8 @@
 
 			<c:if test="${registeredRequest.requestId != session.requestId }"></c:if>
 			<div class="session-item" id="${session.requestId }">
-				<h3><i class="fa fa-user-circle"></i> ${session.requestId }</h3>
+				<h3><i class="fa fa-user-circle"></i> ${session.username}</h3>
+				<p>ID: ${session.requestId }</p>
 				<c:if test="${registeredRequest.requestId == session.requestId }">
 					<b>Your session</b>
 				</c:if>
@@ -77,6 +78,7 @@
 		const urlStream = "<spring:url value="/stream/videocall" />";
 		const urlStreamv2 = "<spring:url value="/stream/videocallv2" />";
 		const requestId = newRegisteredRequest.requestId;
+		const username = newRegisteredRequest.username;
 		const isActive = newRegisteredRequest.active;
 		const createdDate = newRegisteredRequest.created;
 		const videoCallUrl = urlStream+"/"+requestId; 
@@ -88,13 +90,17 @@
 			'id':requestId,
 			'ch1':{
 				'tagName': "h3",
-				'innerHTML': "<i class=\"fa fa-user-circle\"></i> "+requestId
+				'innerHTML': "<i class=\"fa fa-user-circle\"></i> "+username
 			},
 			'ch2':{
 				'tagName': "p",
-				'innerHTML': "Created: "+createdDate
+				'innerHTML': "ID: "+requestId
 			},
 			'ch3':{
+				'tagName': "p",
+				'innerHTML': "Created: "+createdDate
+			},
+			'ch4':{
 				'tagName': "p",
 				'innerHTML' :"Active: ",
 				'ch1':{
@@ -103,13 +109,13 @@
 					'id': "status-"+requestId,
 				}
 			},
-			'ch4':{
+			'ch5':{
 				'tagName': "a",
 				'class': "btn btn-success",
 				'href': videoCallUrl,
 				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v1 (WebSocket)"
 			},
-			'ch5':{
+			'ch6':{
 				'tagName': "a",
 				'class': "btn btn-success",
 				'href': videoCallUrlv2,

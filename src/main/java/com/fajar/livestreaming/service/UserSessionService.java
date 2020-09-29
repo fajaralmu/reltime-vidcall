@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
+import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.util.MapUtil;
 import com.fajar.livestreaming.util.StringUtil;
@@ -126,8 +127,8 @@ public class UserSessionService {
 		}
 	}
 
-	public RegisteredRequest registerSession(HttpServletRequest httpRequest) {
-		RegisteredRequest newRegisteredRequest = createNewRequest(httpRequest);
+	public RegisteredRequest registerSession(WebRequest request, HttpServletRequest httpRequest) {
+		RegisteredRequest newRegisteredRequest = createNewRequest(request.getUsername(), httpRequest);
 		setSessionAttributeSessionData(httpRequest, newRegisteredRequest);
 		addRequestId(newRegisteredRequest);
 		realtimeService.sendUpdateSessionExistance(newRegisteredRequest);
@@ -139,8 +140,9 @@ public class UserSessionService {
 		request.getSession(true).setAttribute(SESSION_ATTR_SESS_DATA, newRequest);
 	}
 
-	private RegisteredRequest createNewRequest(HttpServletRequest httpRequest) {
+	private RegisteredRequest createNewRequest(String username, HttpServletRequest httpRequest) {
 		RegisteredRequest registeredRequest = new RegisteredRequest();
+		registeredRequest.setUsername(username);
 		registeredRequest.setActive(false);
 		registeredRequest.setCreated(new Date());
 		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));

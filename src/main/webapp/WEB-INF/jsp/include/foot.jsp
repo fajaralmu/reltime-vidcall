@@ -4,5 +4,5 @@
 			$('[data-toggle="tooltip"]').tooltip()
 		})
 	</script>
-	<p align="center">Fajar AM ${year }</p>
+	<p align="center"><i class="fa fa-coffee" ></i>&nbsp;Fajar AM ${year }</p>
 </div>
