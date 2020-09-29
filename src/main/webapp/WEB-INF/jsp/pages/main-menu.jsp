@@ -19,6 +19,7 @@
 			<p>Alias:</p>
 			<input class="form-control" id="input-username"
 				placeholder="type username"
+				${registeredRequest == null? "" : "disabled" }
 				value="${registeredRequest == null? null : registeredRequest.username }" />
 
 		</div>
@@ -27,7 +28,7 @@
 				href="<spring:url value="/stream/sessionlist" /> "><i
 				class="fa fa-list-ul" aria-hidden="true"></i> Available Sessions</a>
 			<c:if test="${registeredRequest == null }">
-				<button class="btn btn-info" onclick="registerSession()">Register</button>
+				<button id="btn-register" class="btn btn-info" onclick="registerSession()">Register</button>
 			</c:if>
 			<button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
 		</div>
@@ -36,6 +37,9 @@
 
 
 <script type="text/javascript">
+	const inputUserName = byId("input-username");
+	const buttonRegister = byId("btn-register");
+	
 	function invalidate() {
 		const requestObject = {};
 		postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
@@ -49,14 +53,13 @@
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
 		function registerSession() {
-			if (byId("input-username").value == null
-					|| byId("input-username").value.trim() == "") {
+			if (inputUserName.value == null || inputUserName.value.trim() == "") {
 				infoDialog("Please specify username!").then(function(E) {
 				});
 				return;
 			}
 			const requestObject = {
-				username : byId("input-username").value
+				username : inputUserName.value
 			};
 			postReq(
 					"<spring:url value="/api/stream/register" />",
@@ -64,8 +67,13 @@
 					function(xhr) {
 						infoDone();
 						var response = (xhr.data);
-						byId("req-id-generated").innerHTML = response.registeredRequest.requestId;
-						initCallbackCalling(response.registeredRequest.requestId);
+						if(response.code == "00"){
+							byId("req-id-generated").innerHTML = response.registeredRequest.requestId;
+							initCallbackCalling(response.registeredRequest.requestId);
+							buttonRegister.style.display = "none";
+							inputUserName.setAttribute("disabled", "disabled");
+						}
+						
 					});
 		}
 	</script>
