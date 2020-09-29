@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div>
-	<h2>Main Menu Page</h2>
+	<h2>Main Menu</h2>
 	<div class="row">
 		<div class="col-6">
 			<div class="card">
