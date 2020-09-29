@@ -141,12 +141,13 @@ public class UserSessionService {
 	}
 
 	private RegisteredRequest createNewRequest(String username, HttpServletRequest httpRequest) {
+		final String requestId = randomRequestId();
 		RegisteredRequest registeredRequest = new RegisteredRequest();
-		registeredRequest.setUsername(username);
+		registeredRequest.setUsername(username+"_"+requestId);
 		registeredRequest.setActive(false);
 		registeredRequest.setCreated(new Date());
 		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));
-		registeredRequest.setRequestId(randomRequestId());
+		registeredRequest.setRequestId(requestId);
 		return registeredRequest;
 	}
 
