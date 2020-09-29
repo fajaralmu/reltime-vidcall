@@ -1,7 +1,5 @@
 package com.fajar.livestreaming.controller;
 
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,18 +22,17 @@ import com.fajar.livestreaming.service.WebRtcService;
 
 @CrossOrigin
 @RestController
-public class SocketController extends BaseController{
-	Logger log = LoggerFactory.getLogger(SocketController.class);
-//	@Autowired
-//	private SimpMessagingTemplate webSocket;
+public class RestAppController extends BaseController{
+	Logger log = LoggerFactory.getLogger(RestAppController.class); 
+	
 	@Autowired
-	RealtimeService realtimeUserService;
+	private RealtimeService realtimeUserService;
 	@Autowired
 	private WebRtcService webRtcService;
 	 
 	
-	public SocketController() {
-		log.info("------------------SOCKET CONTROLLER #1-----------------");
+	public RestAppController() {
+		log.info("------------------RestAppController #1-----------------");
 	}
 	
 	@PostConstruct
@@ -73,32 +69,6 @@ public class SocketController extends BaseController{
 	public WebResponse clearsession(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) throws Exception {
 		return webRtcService.callPartner(webRequest, httpRequest);
-	}
-	 
-	/////////////////////////////////////// WEbsocket //////////////////////////////////////////
-	
-	@MessageMapping("/stream") 
-	public WebResponse stream( WebRequest request) throws IOException {
-		
-		return realtimeUserService.stream(request);
-	}
-	@MessageMapping("/audiostream") 
-	public WebResponse audiostream( WebRequest request) throws IOException {
-		
-		return realtimeUserService.audioStream(request);
-	}
-	
-	@MessageMapping("/webrtc") 
-	public WebResponse webRtc( WebRequest request) throws IOException {
-		
-		return webRtcService.handshakeWebRtc(request);
-	}
-	
-	@MessageMapping("/acceptcall") 
-	public WebResponse acceptCall( WebRequest request) throws IOException {
-		
-		return webRtcService.acceptCall(request);
-	}
-	
+	} 
 	
 }

@@ -46,6 +46,7 @@
 						<li>Register Username</li>
 						<li>Check Available Sessions</li>
 						<li>Call The User</li>
+						<li>Invalidate Session If You're Done</li>
 					</ol>
 				</div>
 			</div>
