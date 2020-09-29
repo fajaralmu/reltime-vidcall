@@ -7,10 +7,10 @@
 <div class="content">
 	<h2>Video Call With ${partnerUsername }</h2>
 	<h3>Partner ID: ${partnerId }</h3>
-	<a href="<spring:url value="/admin/home" />">Back</a>
-
-	<h2>Live Streaming</h2>
-	<p>Stream ID: ${registeredRequest.requestId}</p>
+	<a class="btn btn-outline-secondary" href="<spring:url value="/stream/sessionlist" /> ">Back</a> 
+	<p>Your Id: ${registeredRequest.requestId}</p>
+	<p><i>*begin Call to start video call</i></p>
+	
 	<div class="row" style="grid-row-gap: 5px">
 		<div class="col-6 camera"
 			style="padding: 10px; border: solid 1px green; text-align: center">

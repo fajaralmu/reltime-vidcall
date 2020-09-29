@@ -82,6 +82,14 @@
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
 		function registerSession() {
+			confirmDialog("Do you want to Register Session?").then(function(ok){
+				if(ok){
+					doRegisterSession();
+				}
+			})
+		}
+	
+		function doRegisterSession() {
 			if (inputUserName.value == null || inputUserName.value.trim() == "") {
 				infoDialog("Please specify username!").then(function(E) {
 				});
