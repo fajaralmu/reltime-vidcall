@@ -127,7 +127,7 @@ function initWebSocket(){
 				if(resp && resp.accept == true){
 					partnerOnlineInfo.innerHTML = "Online: Please Wait...."; 
 				} else if(resp){
-					partnerOnlineInfo.innerHTML = "Call rejected <button class=\"btn btn-info\" onclick=\"callPartner()\">Call again</button>"; 
+					partnerOnlineInfo.innerHTML = "Call rejected <button class=\"btn btn-info\" onclick=\"reCallPartner()\">Call again</button>"; 
 				}
 				partnerIsOnline = false;
 			}
@@ -135,7 +135,7 @@ function initWebSocket(){
 	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall);  
 }
 
-function callPartner(){
+function reCallPartner(){
 	const requestObject = {destination: "${partnerId }"};
 	postReq("<spring:url value="/api/stream/callpartner" />", requestObject, function(xhr) { });
 }

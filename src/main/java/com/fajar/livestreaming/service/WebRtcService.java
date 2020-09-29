@@ -37,9 +37,13 @@ public class WebRtcService {
 	}
 
 	public WebResponse notityCallPartner(WebRequest webRequest, HttpServletRequest httpRequest) throws Exception {
-		RegisteredRequest partnerSession = streamingService.getPartnerSession(webRequest.getDestination());
-		streamingService.notifyCallingPartner(httpRequest, partnerSession);
-		return new WebResponse();
+		try {
+			RegisteredRequest partnerSession = streamingService.getPartnerSession(webRequest.getDestination());
+			streamingService.notifyCallingPartner(httpRequest, partnerSession);
+			return new WebResponse();
+		}catch (Exception e) {
+			return WebResponse.failed(e.getMessage());
+		}
 	}
 
 }

@@ -22,8 +22,8 @@
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<%-- <a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }"><i class="fas fa-phone"></i> Call v1 (WebSocket)</a>
-					 --%><a class="btn btn-success"
-						href="<spring:url value="/stream/videocallv2" />/${session.requestId }"><i class="fas fa-phone"></i> Call v2 (WebRTC)</a>
+					 --%><button onclick="call(this, '${session.requestId }')" class="btn btn-success"
+						location="<spring:url value="/stream/videocallv2" />/${session.requestId }"><i class="fas fa-phone"></i> Call v2 (WebRTC)</button>
 				</c:if> 
 				 
 			</div>
@@ -116,9 +116,12 @@
 				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v1 (WebSocket)"
 			}, */
 			'ch6':{
-				'tagName': "a",
+				'tagName': "button",
 				'class': "btn btn-success",
-				'href': videoCallUrlv2,
+				'location': videoCallUrlv2,
+				'onclick': function(e){
+					call(e.target, requestId);
+				},
 				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v2 (WebRTC)"
 			}
 		});
@@ -127,6 +130,18 @@
 	}
 	
 	function buildHtmlTag(tagObj){
+		
+	}
+	
+	function call(button, partnerId){
+		postReq("<spring:url value="/api/stream/callpartner" />", { destination: partnerId },
+				function(xhr) {
+					infoDone();
+					var response = (xhr.data);
+					if(response && response.code == "00"){
+						window.location.href = button.getAttribute("location");
+					}
+				});
 		
 	}
 
