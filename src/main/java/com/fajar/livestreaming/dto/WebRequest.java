@@ -25,7 +25,7 @@ public class WebRequest implements Serializable {
 	private String imageData;
 	private String audioData;
 	private String partnerId;
-	private String originId;
+	private String originId; 
 	
 	private WebRtcObject webRtcObject;
 	

@@ -59,10 +59,11 @@ public class StreamingService {
 		}
 		return sessionList;
 	}
-	public void notifyPartner(HttpServletRequest request, RegisteredRequest partnerSession) {
+	public void notifyCallingPartner(HttpServletRequest request, RegisteredRequest partnerSession) {
 		 
 		RegisteredRequest userRequest = userSessionService.getRegisteredRequest(request);
-		realtimeService.notifyPartner(userRequest, partnerSession);
+		realtimeService.notifyCallingPartner(userRequest, partnerSession);
 	}
+	 
 
 }

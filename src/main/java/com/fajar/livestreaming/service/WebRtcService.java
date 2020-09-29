@@ -19,7 +19,7 @@ public class WebRtcService {
 	@Autowired
 	private SimpMessagingTemplate webSocket;
 	@Autowired
-	private StreamingService streamingService;
+	private StreamingService streamingService; 
 
 	public WebResponse handshakeWebRtc(WebRequest request) {
 		String partner = request.getPartnerId();
@@ -36,9 +36,9 @@ public class WebRtcService {
 		return response;
 	}
 
-	public WebResponse callPartner(WebRequest webRequest, HttpServletRequest httpRequest) throws Exception {
+	public WebResponse notityCallPartner(WebRequest webRequest, HttpServletRequest httpRequest) throws Exception {
 		RegisteredRequest partnerSession = streamingService.getPartnerSession(webRequest.getDestination());
-		streamingService.notifyPartner(httpRequest, partnerSession);
+		streamingService.notifyCallingPartner(httpRequest, partnerSession);
 		return new WebResponse();
 	}
 

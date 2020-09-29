@@ -20,16 +20,17 @@
 		</div>
 		<div class="col-6 output-receiver"
 			style="padding: 10px; border: solid 1px green; text-align: center;">
-			<h2>
-				Partner <small id="partner-is-online">Online:
-					${partnerInfo.active }</small>
-			</h2>
+			<h2>Partner <small id="partner-is-online">Online:
+					${partnerInfo.active }</small></h2>
 			<video style="visibility: hidden" height="200" width="200" controls
 				id="video"></video>
 		</div>
 		<div>
 			<button class="btn btn-info btn-lg" onclick="createOffer()">
 				<i class="fas fa-phone"></i>&nbsp;Begin Call
+			</button>
+			<button class="btn btn-danger btn-lg" onclick="closePeerConnection()">
+				<i class="fas fa-phone"></i>&nbsp;End Call
 			</button>
 		</div>
 	</div> 
@@ -58,9 +59,7 @@ function init () {
 		       	app.myVideo.srcObject = stream;
 				 
 	            console.debug("END getUserMedia"); 
-	        }).catch(function (err) {
-	            //console.log("An error occurred: " + err);
-	        });
+	        }).catch(function (err) {  });
    
     this.video.addEventListener('canplay', function (ev) { 
     		app.updateVideoDom();  
@@ -68,6 +67,24 @@ function init () {
     }, false);  
  
 }  
+
+function closePeerConnection(){
+	
+	confirmDialog("Leave the call?").then(function(ok){
+		if(ok){
+			try{
+				if(peerConnection){
+					peerConnection.close();
+					send({ 	event: "leave", data: {} });
+				}
+			}catch(e){
+				 
+			}
+		}
+	});
+	
+	
+}
 
 function updateVideoDom(){ 
 } 
@@ -89,7 +106,6 @@ var conn = null;
 var peerConnection = null;
 var dataChannel = null;
 
-
 function initWebSocket(){
 	const _class = this;
 	
@@ -97,7 +113,6 @@ function initWebSocket(){
 		console.log("Connected to signaling server-", frame);
 		_class.initWebRtc(); 
 	});
-			
 		 
 	const callbackWsMsg = {
 			subscribeUrl : "/wsResp/webrtc/${registeredRequest.requestId }",
@@ -156,10 +171,12 @@ function handleWsMsg(webRtcObject){
     case "candidate":
         handleCandidate(data);
         break;
+    case "leave":
+        handlePartnerLeave(data);
+        break;
     default:
         break;
     }
-	 
 }
 
 function initWebRtc(){
@@ -235,7 +252,10 @@ function initDataChannel(ev){
 	dataChannel.onclose = function(closed) {
 	    console.debug("#####Data channel is closed ", closed);
 	};
-	 
+}
+
+function handlePartnerLeave(data){
+	infoDialog("partner left the call").then(function(e){});
 }
 
 function sendInputMessage(){
@@ -287,10 +307,10 @@ function handleOffer(offer){
 	peerConnection.createAnswer(function(answer) {
 		console.debug("createAnswer: ", answer);
 	    peerConnection.setLocalDescription(answer);
-	        send({
-	            event : "answer",
-	            data : answer
-	        });
+        send({
+            event : "answer",
+            data : answer
+        });
 	}, function(error) {
 	    console.error("error handle offer: ", error);
 	});
@@ -301,17 +321,17 @@ function handleCandidate(candidate){
 	showVideoElement();
 }
 
-function handleAnswer(answer){
+function handleAnswer(answer) {
 	console.debug("handleAnswer: ", answer);
 	peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 }
 
-function send(msg){
-	 console.debug("SEND WEBSOCKET, event: ", msg.event);
+function send(msg) {
+	console.debug("SEND WEBSOCKET, event: ", msg.event);
 	//console.info("Send Audio Data");
 	sendToWebsocket("/app/webrtc", {
 		partnerId : "${partnerId}",
-	 	webRtcObject:	 (msg) 
+	 	webRtcObject: (msg) 
 	});
 }
 

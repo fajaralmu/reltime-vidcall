@@ -24,7 +24,7 @@
 }
 </style>
 	<div class="page-header" style="color:blue">
-		<h1>Real Time Video Conference</h1>
+		<h1>Nuswantoro Conference</h1>
 		<a href="<spring:url value="/app/"></spring:url>"><h2><i class="fas fa-home"></i></h2>&nbsp;Main Menu</a>
 	</div>
 

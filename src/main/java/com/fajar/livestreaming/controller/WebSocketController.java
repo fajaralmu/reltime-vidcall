@@ -49,7 +49,7 @@ public class WebSocketController extends BaseController{
 	}
 	
 	@MessageMapping("/webrtc") 
-	public WebResponse webRtc( WebRequest request) throws IOException {
+	public WebResponse webrtc( WebRequest request) throws IOException {
 		
 		return webRtcService.handshakeWebRtc(request);
 	}
