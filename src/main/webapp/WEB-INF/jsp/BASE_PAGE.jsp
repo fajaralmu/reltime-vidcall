@@ -93,9 +93,10 @@
 					subscribeUrl : "/wsResp/notifycall/"+requestId,
 					callback : function(resp){
 						const caller = resp.requestId;
+						const username = resp.username;
 						const url = "<spring:url value="/stream/videocallv2/" />"+caller+"?referrer=calling";
 						
-						confirmDialog("&nbsp;<h4>"+caller+"</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", noIcon:"fa fa-phone"})
+						confirmDialog("&nbsp;<h4>"+username+"("+caller+")</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", yesText:"Accept", noIcon:"fa fa-phone", noText:"Decline"})
 						.then(function(ok){ 
 								sendToWebsocket("/app/acceptcall", { accept:ok, originId: requestId }); 
 								if(ok){

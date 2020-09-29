@@ -97,7 +97,7 @@ public class RealtimeService {
 	}
 
 	public void notifyPartner(RegisteredRequest userRequest, RegisteredRequest partnerSession) {
-		WebResponse response = WebResponse.builder().requestId(userRequest.getRequestId()).build();
+		WebResponse response = WebResponse.builder().requestId(userRequest.getRequestId()).username(userRequest.getUsername()).build();
 		convertAndSend("/wsResp/notifycall/"+partnerSession.getRequestId(), response);
 	}
 	

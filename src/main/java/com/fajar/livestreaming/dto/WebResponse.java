@@ -26,6 +26,7 @@ public class WebResponse implements Serializable {
 	@Builder.Default
 	private String message = "success";
 	private String requestId;
+	private String username;
 	private String imageData;
 	private String audioData;
 	

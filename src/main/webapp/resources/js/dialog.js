@@ -1,18 +1,20 @@
 function confirmDialog(msg, prop) {
 	const property = prop?prop: {
-		yesIcon:null,
-		noIcon:null,
-		dialogIcon:null
+		yesIcon: null,
+		noIcon: null,
+		yesText: 'Yes',
+		noText: 'No',
+		dialogIcon: null
 	};
 	
-	if(property.yesIcon){
-		property.yesHtml = "<i class=\""+property.yesIcon+"\"></i>";
+	if(property.yesIcon && property.yesText){
+		property.yesHtml = "<i class=\""+property.yesIcon+"\"></i>&nbsp;"+ property.yesText;
 	}else{
 		property.yesHtml = "<span>Yes</span>";
 	}
 	
-	if(property.noIcon){
-		property.noHtml = "<i class=\""+property.noIcon+"\"></i>";
+	if(property.noIcon && property.noText){
+		property.noHtml = "<i class=\""+property.noIcon+"\"></i>&nbsp;"+ property.noText;
 	}else{
 		property.noHtml = "<span>No</span>";
 	}
