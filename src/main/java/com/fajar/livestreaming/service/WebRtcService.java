@@ -31,7 +31,7 @@ public class WebRtcService {
 	public WebResponse acceptCall(WebRequest request) {
 		log.info("acceptcall: {} ", request);
 		String origin = request.getOriginId();
-		WebResponse response = WebResponse.builder().accept(request.isAccept()).build();
+		WebResponse response = WebResponse.builder().accept(request.isAccept()).message(request.getMessage()).build();
 		webSocket.convertAndSend("/wsResp/partneracceptcall/"+request.getDestination()+"/" + origin, response);
 		return response;
 	}

@@ -37,7 +37,7 @@
 
 </div>
 <script type="text/javascript">
-
+inCalling = true;
 var paused = false;
 var video;
 var myVideo; 

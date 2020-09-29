@@ -35,6 +35,7 @@
 	var ctxPath = "${contextPath}";
 	var websocketUrl = "<spring:url value="/realtime-app" />";
 	var websocketUrlv2 = "${ipAndPort}<spring:url value="/socket" />";
+	var inCalling = false;
 </script>
 <style>  
 .centered-align {
@@ -85,13 +86,20 @@
 						const username = resp.username;
 						const url = "<spring:url value="/stream/videocallv2/" />"+caller+"?referrer=calling";
 						
-						confirmDialog("&nbsp;<h4>"+username+"("+caller+")</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", yesText:"Accept", noIcon:"fa fa-phone", noText:"Decline"})
-						.then(function(ok){ 
-								sendToWebsocket("/app/acceptcall", { accept:ok, destination: caller, originId: requestId }); 
-								if(ok){
-									window.location.href = url; 
-								}
-						})
+						if(inCalling){
+							sendToWebsocket("/app/acceptcall", { accept:false, destination: caller, message: 'busy', originId: requestId }); 
+							
+						}else{
+							confirmDialog("&nbsp;<h4>"+username+"("+caller+")</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", yesText:"Accept", noIcon:"fa fa-phone", noText:"Decline"})
+							.then(function(ok){ 
+									sendToWebsocket("/app/acceptcall", { accept:ok, destination: caller, originId: requestId }); 
+									if(ok){
+										window.location.href = url; 
+									}
+							})
+						}
+						
+						
 					}
 					
 				};
