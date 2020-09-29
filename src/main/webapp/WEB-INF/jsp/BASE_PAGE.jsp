@@ -36,18 +36,7 @@
 	var websocketUrl = "<spring:url value="/realtime-app" />";
 	var websocketUrlv2 = "${ipAndPort}<spring:url value="/socket" />";
 </script>
-<style>
-.container {
-	display: grid;
-	grid-template-columns: 20% 80%
-}
-/**
-		active menu when using vertical aligment
-	**/
-.active {
-	font-weight: bold;
-}
-
+<style>  
 .centered-align {
 	text-align: center;
 	width: 100%;
@@ -75,7 +64,7 @@
 		<div>
 			<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
 		</div>
-		<div></div>
+		
 		<div>
 			<jsp:include page="include/foot.jsp"></jsp:include>
 		</div>
