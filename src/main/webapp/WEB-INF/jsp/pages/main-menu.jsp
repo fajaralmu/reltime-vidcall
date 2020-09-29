@@ -50,7 +50,7 @@
 	<script type="text/javascript">
 		function registerSession() {
 			if (byId("input-username").value == null
-					|| byId("input-username").trim().value == "") {
+					|| byId("input-username").value.trim() == "") {
 				infoDialog("Please specify username!").then(function(E) {
 				});
 				return;
