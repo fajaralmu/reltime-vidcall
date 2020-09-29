@@ -3,85 +3,82 @@ body {
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
-	margin:0;
+	margin: 0;
 	background-color: teal;
-	width:100%;
+	width: 100%;
 	height: 100%
 }
 
-
-#loading-div{
-
-	position:fixed;
-		margin:auto
+#loading-div {
+	width: 100%;
+	margin: auto;
+	position: fixed;
+	text-align: center;
 }
-
 
 .container {
 	margin: auto;
 	width: 80%;
 	height: auto;
 	/*  border: solid 1px; */
-	padding:0;
+	padding: 0;
 	background-color: white
 }
 
-a :hover{
-	cursor:pointer;
+a :hover {
+	cursor: pointer;
 }
 
 .header {
 	width: 100%;
 	height: 100px;
-	margin:0;
-	padding:0;/* 
+	margin: 0;
+	padding: 0; /* 
 	border: solid 1px; */
 }
 
 .footer {
-	width: 100%; 
+	width: 100%;
 	margin-top: 10px;
-	padding:0;
+	padding: 0;
 	/*  border: solid 1px; */
 }
-  
-.box-shadow{
+
+.box-shadow {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
 		rgba(0, 0, 0, 0.19);
 	z-index: 2;
-} 
+}
 
-.session-item{
-	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 15px 0px rgba(0, 0, 0, 0.19);
+.session-item {
+	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 15px 0px
+		rgba(0, 0, 0, 0.19);
 	margin-top: 10px;
-	padding: 15px; 
+	padding: 15px;
 	border-radius: 10px;
 }
 
 /******* COMMON **********/
-
-.clickable:hover{
+.clickable:hover {
 	cursor: pointer;
 	background-color: gray;
 }
 
-.center-aligned{
+.center-aligned {
 	text-align: center;
 }
 
-.left-aligned{
+.left-aligned {
 	text-align: left;
 }
 
 /******MENUS*******/
- 
-ul#menu-1 li{
+ul#menu-1 li {
 	display: inline;
 }
 
 /******* REPORT *******/
-
 .chart-item-hr {
-	
-	margin:5px; height: 15px;
+	margin: 5px;
+	height: 15px;
 }
