@@ -71,7 +71,7 @@ public class SocketController extends BaseController{
 	
 	@PostMapping(value = "/api/stream/callpartner", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse clearsession(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest,
-			HttpServletResponse httpResponse) throws Exception { 
+			HttpServletResponse httpResponse) throws Exception {
 		return webRtcService.callPartner(webRequest, httpRequest);
 	}
 	//@MessageMapping("/move")

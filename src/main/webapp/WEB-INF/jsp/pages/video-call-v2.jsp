@@ -179,12 +179,19 @@ function initWebRtc(){
 			    } 
 		    ]
 		};
+	var configuration2 = {
+		    "iceServers" : [ 
+		    	{
+		    	 	"url":"stun:stun2.1.google.com:19302" 
+		    	} 
+		    ]
+		};
 	/* peerConnection = new RTCPeerConnection(configuration, {
 	    optional : [ {
 	        RtpDataChannels : true
 	    } ]
 	}); */
-	peerConnection = new RTCPeerConnection(null, {
+	peerConnection = new RTCPeerConnection(configuration2, {
 	    optional : [ {
 	        RtpDataChannels : true
 	    } ]
