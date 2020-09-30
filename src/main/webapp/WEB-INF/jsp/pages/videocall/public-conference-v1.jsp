@@ -6,8 +6,10 @@
 
 <div>
 	<h2>Public Conference ${roomId }</h2>
-	<div class="border">
-		<video height="200" width="200" muted="muted" controls id="my-video"></video>
+	<div class="border" class="row">
+		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
+		<h3>${registeredRequest.requestId }</h3>
+		<button class="btn btn-secondary" onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
 	</div>
 	<div class="row">
 		<div class="col-6">
@@ -59,8 +61,13 @@
 				_class.removeMemberItem(resp.username, resp.requestId, resp.date);
 			}
 		};
-
-		connectToWebsocket(callbackMemberJoin, callbackMemberLeave);
+		const callbackWebRtcHandshake = {
+				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
+				callback : function(resp){
+					_class.handleWebRtcHandshake(resp.requestId, resp.webRtcObject);
+				}
+			};
+		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake);
 	}
 
 	function addMemberList(username, requestId, date) {
@@ -102,8 +109,12 @@
 	function updateEventLog(log) {
 	//	log = new Date() + ' ' + log;
 		const line = createHtmlTag({
-			tagName : 'code',
-			innerHTML : log
+			tagName: 'p',
+			ch1:{
+				tagName : 'code',
+				innerHTML : log
+			}
+			
 		});
 		eventLog.appendChild(line);
 	}
@@ -221,19 +232,21 @@
 	function initWebSocketConference(){
 		const _class = this; 
 		
-		const callbackWebRtcHandshake = {
+	/* 	const callbackWebRtcHandshake = {
 				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
 				callback : function(resp){
 					_class.handleWebRtcHandshake(resp.requestId, resp.webRtcObject);
 				}
 			};
 		 
-		connectToWebsocket( callbackWebRtcHandshake );  
+		connectToWebsocket( callbackWebRtcHandshake );   */
 	}
 	
 	
 	function handleWebRtcHandshake(requestId, webRtcObject){
 		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
+		updateEventLog(webRtcObject.event.toUpperCase()+" HANDSHAKE "+requestId);
+		
 		if(matchCurrentReqId(requestId)){
    			return;
    		}
