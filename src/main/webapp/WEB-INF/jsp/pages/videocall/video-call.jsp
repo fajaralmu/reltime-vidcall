@@ -7,7 +7,7 @@
 <div class="content" onload="initLiveStream()">
 	<h2>Video Call With</h2>
 	<h3>Partner ID: ${partnerId }</h3>
-	<a href="<spring:url value="/admin/home" />">Back</a>
+	<a href="<spring:url value="/dashboard/sessionlist" />">Back</a>
 
 	<h2>Live Streaming</h2>
 	<p>Stream ID: ${registeredRequest.requestId}</p>

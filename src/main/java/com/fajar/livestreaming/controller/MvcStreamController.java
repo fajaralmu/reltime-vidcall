@@ -38,7 +38,7 @@ public class MvcStreamController extends BaseController {
 	}
 
 	@RequestMapping(value = { "/videocall/{partnerId}" })
-	@CustomRequestInfo(title = "Video Call", pageUrl = "pages/video-call")
+	@CustomRequestInfo(title = "Video Call", pageUrl = "pages/videocall/video-call")
 	public String videocall(Model model, @PathVariable String partnerId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -53,7 +53,7 @@ public class MvcStreamController extends BaseController {
 	}
 
 	@RequestMapping(value = { "/videocallv2/{partnerId}" })
-	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/video-call-v2")
+	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/video-call-v2")
 	public String videocallv2(Model model, @PathVariable String partnerId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 

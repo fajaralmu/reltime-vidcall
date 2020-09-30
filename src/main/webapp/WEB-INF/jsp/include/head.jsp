@@ -26,7 +26,7 @@
 	<div class="page-header" style="color: blue">
 		<h1>Nuswantoro Conference</h1>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div  id="navbarNavAltMarkup">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item "><a
 						href="<spring:url value="/app/"></spring:url>"><i

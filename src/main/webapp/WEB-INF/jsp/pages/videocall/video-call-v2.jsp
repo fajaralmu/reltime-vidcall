@@ -7,7 +7,7 @@
 <div class="content">
 	<h2>Video Call With ${partnerUsername }</h2>
 	<h3>Partner ID: ${partnerId }</h3>
-	<a class="btn btn-outline-secondary" href="<spring:url value="/stream/sessionlist" /> ">Back</a> 
+	<a class="btn btn-outline-secondary" href="<spring:url value="/dashboard/sessionlist" /> ">Back</a> 
 	<p>Your Id: ${registeredRequest.requestId}</p>
 	<p><i>*begin Call to start video call</i></p>
 	
