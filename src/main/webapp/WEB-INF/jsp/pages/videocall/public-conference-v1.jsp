@@ -93,6 +93,7 @@
 				tagName: 'video',
 				id: 'video-member-'+requestId,
 				muted: 'muted',
+				controls: '',
 				height: 150,
 				width: 150,
 				style: {visibility: 'hidden'}
@@ -296,19 +297,20 @@
 			    "iceServers" : [ 
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
 			    ]
-			}; 
-		const peerConnection = new RTCPeerConnection(null, {
+			};
+		const peerConnection = new RTCPeerConnection(configuration2, {
 		    optional : [ {
 		        RtpDataChannels : true
 		    } ]
 		} );
 		peerConnection.onaddstream  = function(event) {
-			updateEventLog("PeerConnection Start Add Track => "+ requestId);
+			updateEventLog("PeerConnection Start Add Stream => "+ requestId);
 			const vid = byId("video-member-"+requestId);
 			if(vid){
 				vid.srcObject = event.stream;
+				vid.style.visibiity = "visible";
 			}
-			updateEventLog("PeerConnection End Add Track => "+ requestId);
+			updateEventLog("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
 			
 		};
 		peerConnection.ontrack  = function(event) {
@@ -316,6 +318,7 @@
 			const vid = byId("video-member-"+requestId);
 			if(vid){
 				vid.srcObject = event.stream;
+				vid.style.visibiity = "visible";
 			}
 			updateEventLog("PeerConnection End Add Track => "+ requestId);
 			
@@ -439,10 +442,10 @@
 		console.debug(requestId, "handleAnswer: ", answer);
 		updateEventLog(requestId+" handleAnswer");
 		
-		  if(peerConnection.signalingState == "stable" && this.videoStream) {
-			updateEventLog("Cannot handle answer beacuse state is stable");
+		  if(peerConnection.signalingState == "stable"){ // && this.videoStream) {
+			updateEventLog("WILL ERROR? handle answer beacuse state is stable");
 			//peerConnections[requestId]['connection'].addStream(this.videoStream); 
-			return;
+			//return;
 		} 
 		
 		peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
