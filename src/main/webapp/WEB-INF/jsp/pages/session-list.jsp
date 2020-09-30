@@ -134,7 +134,7 @@
 	}
 	
 	function call(button, partnerId){
-		postReq("<spring:url value="/api/stream/callpartner" />", { destination: partnerId },
+		postReq("<spring:url value="/api/webrtc2/callpartner" />", { destination: partnerId },
 				function(xhr) {
 					infoDone();
 					var response = (xhr.data);

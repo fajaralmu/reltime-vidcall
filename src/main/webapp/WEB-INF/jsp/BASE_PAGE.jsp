@@ -104,10 +104,8 @@
 		}
 		
 		function leaveCalling(callback){
-			postReq(
-					"<spring:url value="/api/stream/leavecall" />",
-					{},
-					function(xhr) { if(callback){callback(xhr.data);} });
+			postReq("<spring:url value="/api/webrtc2/leavecall" />",
+					{}, function(xhr) { if(callback){callback(xhr.data);} });
 		}
 		
 		

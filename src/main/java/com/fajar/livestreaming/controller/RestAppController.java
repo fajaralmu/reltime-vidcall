@@ -20,7 +20,6 @@ import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.service.RealtimeService;
-import com.fajar.livestreaming.service.WebRtcService;
 
 @CrossOrigin
 @RestController
@@ -28,9 +27,7 @@ public class RestAppController extends BaseController{
 	Logger log = LoggerFactory.getLogger(RestAppController.class); 
 	
 	@Autowired
-	private RealtimeService realtimeUserService;
-	@Autowired
-	private WebRtcService webRtcService;
+	private RealtimeService realtimeUserService; 
 	 
 	
 	public RestAppController() {
@@ -60,17 +57,7 @@ public class RestAppController extends BaseController{
 	public WebResponse invalidate(HttpServletRequest httpRequest,	HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
-	} 
-	
-	@PostMapping(value = "/api/stream/callpartner", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse callPartner(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		return webRtcService.notityCallPartner(webRequest, httpRequest);
-	}
-	
-	@PostMapping(value = "/api/stream/leavecall", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse leavecall(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
-		return userSessionService.leavecall( httpRequest);
-	}
+	}  
 	
 	/////////////////////////////////////////// Utility //////////////////////////////////////////////
 	@GetMapping(value = "/api/util/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
