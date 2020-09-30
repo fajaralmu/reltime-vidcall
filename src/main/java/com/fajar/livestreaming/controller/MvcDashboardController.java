@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.fajar.livestreaming.annotation.Authenticated;
 import com.fajar.livestreaming.annotation.CustomRequestInfo;
 import com.fajar.livestreaming.dto.RegisteredRequest;
+import com.fajar.livestreaming.service.PublicConference1Service;
 import com.fajar.livestreaming.service.StreamingService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class MvcDashboardController extends BaseController {
 
 	@Autowired
 	private StreamingService streamingService;
+	@Autowired
+	private PublicConference1Service publicConference1Service;
 
 	public MvcDashboardController() {
 		log.info("-----------------Mvc App Controller------------------");
@@ -39,7 +42,7 @@ public class MvcDashboardController extends BaseController {
 	@CustomRequestInfo(title = "Dashboard", pageUrl = "pages/dashboard/index")
 	public String index(Model model, HttpServletRequest request, HttpServletResponse response) {
 
-		model.addAttribute("roomId", userSessionService.getRoomIdOfUser(request));
+		model.addAttribute("roomId", publicConference1Service.getRoomIdOfUser(request));
 		return basePage;
 	}
 

@@ -32,7 +32,6 @@ public class UserSessionService {
 	private static final String SESSION_TRIAL_ONE = "1";
 	private static final String SESSION_ATTR_SESS_DATA = "session-data";
 	private final HashMap<String, Object> activeCalls = new HashMap<>();
-	private final HashMap<String, String> activeRoomId = new HashMap<>();
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -56,7 +55,7 @@ public class UserSessionService {
 		SESSION_MAP.get(SESSION_TRIAL_ONE).addNewApp(request);
 	}
 
-	private RegisteredRequest getRequestFromSessionMap(String requestId) {
+	public RegisteredRequest getRequestFromSessionMap(String requestId) {
 		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
 	}
 
@@ -198,34 +197,6 @@ public class UserSessionService {
 		activeCalls.clear();
 	}
 	
-	public String getRoomIdOfUser(HttpServletRequest httpRequest) {
-		RegisteredRequest session = getRegisteredRequest(httpRequest);
-		if(session == null) {
-			return null;
-		}
-		 
-		return activeRoomId.get(session.getRequestId()); 
-	}
-
-	public String generateRoomId(HttpServletRequest httpRequest) {
-		RegisteredRequest session = getRegisteredRequest(httpRequest);
-		if(session == null) {
-			return null;
-		}
-		String roomIdRandom = StringUtil.generateRandomChar(20);
-		activeRoomId.put(session.getRequestId(), roomIdRandom);
-		
-		return roomIdRandom;
-	}
-
-	public boolean validateCode(String roomId) {
-		 
-		for (String key : activeRoomId.keySet()) {
-			if(activeRoomId.get(key).equals(roomId)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 
 }

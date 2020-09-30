@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.fajar.livestreaming.annotation.Authenticated;
 import com.fajar.livestreaming.annotation.CustomRequestInfo;
 import com.fajar.livestreaming.dto.RegisteredRequest;
+import com.fajar.livestreaming.service.PublicConference1Service;
 import com.fajar.livestreaming.service.StreamingService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class MvcConferenceController extends BaseController {
 
 	@Autowired
 	private StreamingService streamingService;
+	@Autowired
+	private PublicConference1Service publicConference1Service;
 
 	public MvcConferenceController() {
 		log.info("-----------------Mvc Conference Controller------------------");
@@ -77,11 +80,12 @@ public class MvcConferenceController extends BaseController {
 	public String publicconference(Model model, @PathVariable(name="roomId") String roomId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		boolean codeIsValid = userSessionService.validateCode(roomId);
+		boolean codeIsValid = publicConference1Service.validateCode(roomId);
 		if(!codeIsValid) {
 			throw new Exception("Invalid Code");
 		}
 		model.addAttribute("roomId", roomId);
+		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
 		return basePage;
 	}
 

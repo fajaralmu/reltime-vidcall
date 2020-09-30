@@ -28,6 +28,8 @@ public class WebRequest implements Serializable {
 	private String originId; 
 	private String message;
 	
+	private String roomId;
+	
 	private WebRtcObject webRtcObject;
 	
 	private boolean accept;

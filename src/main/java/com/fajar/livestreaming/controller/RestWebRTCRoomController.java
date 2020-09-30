@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fajar.livestreaming.annotation.Authenticated;
-import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.service.WebRtcRoomService;
+import com.fajar.livestreaming.service.PublicConference1Service;
 
 @CrossOrigin
 @RestController 
@@ -25,7 +23,7 @@ public class RestWebRTCRoomController extends BaseController{
 	Logger log = LoggerFactory.getLogger(RestWebRTCRoomController.class); 
 	 
 	@Autowired
-	private WebRtcRoomService webRtcRoomService;
+	private PublicConference1Service publicConference1Service;
 	 
 	
 	public RestWebRTCRoomController() {
@@ -39,7 +37,7 @@ public class RestWebRTCRoomController extends BaseController{
 	 
 	@PostMapping(value = "/api/webrtcroom/generateroomid", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse generateroomid( HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		return webRtcRoomService.generateRoomId( httpRequest);
+		return publicConference1Service.generateRoomId( httpRequest);
 	}
 	
 	 

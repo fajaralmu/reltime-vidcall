@@ -40,7 +40,7 @@ public class RealtimeService {
 		return true;
 	}
 
-	private void convertAndSend(String url, Object payload) {
+	public void convertAndSend(String url, WebResponse payload) {
 		webSocket.convertAndSend(url, payload); 
 		
 	}

@@ -11,11 +11,8 @@
 			<div class="card">
 				<div class="card-header">Generate Room Id</div>
 				<div class="card-body">
-					<p>
-						Current Room Id: <span id="room-id">${roomId}</span>
-						
-					</p>
-					<p>Link <span id="room-link"></span></p>
+					<p><i class="fas fa-key"></i>&nbsp;Room Id <span id="room-id">${roomId == null ? "Not Generated" : roomId}</span></p>
+					<p><i class="fas fa-link"></i>&nbsp;Link <a class="badge badge-info" id="room-link"></a></p>
 					<button class="btn btn-primary" onclick="generateRoomId()">Generate</button>
 				</div>
 				<div class="card-footer">
@@ -39,7 +36,8 @@
 					if(response && response.code == "00"){
 						footerInfo.innerHTML = 'Update Room Id';
 						roomId.innerHTML = response.message;
-						roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/"+(response.message);
+						const link = "https://"+ ipAndPort+ctxPath +"/stream/publicconference/"+(response.message);
+						updateLink(link);
 					}else if(response){
 						infoDialog(response.message).then(function(e){});
 					}else{
@@ -48,9 +46,14 @@
 				});
 	}
 	
+	function updateLink(link){
+		roomLink.setAttribute("href", link);
+		roomLink.innerHTML = link;
+	}
+	
 </script>
 <c:if test="${roomId != null }" >
 <script>
-	roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/${roomId}";
+	updateLink("https://"+  ipAndPort+ctxPath +"/stream/publicconference/${roomId}");
 </script>
 </c:if>
