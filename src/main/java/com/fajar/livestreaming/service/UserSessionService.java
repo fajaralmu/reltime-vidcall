@@ -193,4 +193,8 @@ public class UserSessionService {
 		return requestId != null && activeCalls.containsKey(requestId);
 	}
 
+	public void clearActiveCalls() {
+		activeCalls.clear();
+	}
+
 }

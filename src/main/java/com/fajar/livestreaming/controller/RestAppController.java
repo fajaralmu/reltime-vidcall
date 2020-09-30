@@ -81,5 +81,10 @@ public class RestAppController extends BaseController{
 	public HashMap<String, Object> activecalls(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
 		return userSessionService.getActiveCalls();
 	}
+	@GetMapping(value = "/api/util/clearactivecalls", produces = MediaType.APPLICATION_JSON_VALUE)
+	public HashMap<String, Object> clearactivecalls(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
+		userSessionService.clearActiveCalls();
+		return userSessionService.getActiveCalls();
+	}
 	
 }
