@@ -218,10 +218,10 @@ public class UserSessionService {
 		return roomIdRandom;
 	}
 
-	public boolean validateCode(String code) {
+	public boolean validateCode(String roomId) {
 		 
 		for (String key : activeRoomId.keySet()) {
-			if(activeRoomId.get(key).equals(code)) {
+			if(activeRoomId.get(key).equals(roomId)) {
 				return true;
 			}
 		}

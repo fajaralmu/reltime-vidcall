@@ -39,7 +39,7 @@
 					if(response && response.code == "00"){
 						footerInfo.innerHTML = 'Update Room Id';
 						roomId.innerHTML = response.message;
-						roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/"+roomId;
+						roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/"+(response.message);
 					}else if(response){
 						infoDialog(response.message).then(function(e){});
 					}else{

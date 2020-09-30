@@ -72,16 +72,16 @@ public class MvcConferenceController extends BaseController {
 		return basePage;
 	}
 	
-	@RequestMapping(value = { "/publicconference/{code}" })
+	@RequestMapping(value = { "/publicconference/{roomId}" })
 	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/public-conference-v1")
-	public String publicconference(Model model, @PathVariable String code, HttpServletRequest request,
+	public String publicconference(Model model, @PathVariable(name="roomId") String roomId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		boolean codeIsValid = userSessionService.validateCode(code);
+		boolean codeIsValid = userSessionService.validateCode(roomId);
 		if(!codeIsValid) {
 			throw new Exception("Invalid Code");
 		}
-		model.addAttribute("roomId", code);
+		model.addAttribute("roomId", roomId);
 		return basePage;
 	}
 
