@@ -26,8 +26,11 @@
 
 		</div>
 		<div class="col-6">
-			<div class="border border-primary rounded bg-dark" id="event-log">
+			<div class="border border-primary rounded bg-dark"  >
 				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3>
+				<button onclick="clearLog()" class="btn btn-outline-secondary">Clear Log</button>
+				<div id="event-log" >
+				</div>
 			</div>
 		</div>
 	</div>
@@ -37,6 +40,10 @@
 	const memberList = byId("member-list");
 	const eventLog = byId("event-log");
 
+	function clearLog(){
+		eventLog.innerHTML = "";
+	}
+	
 	function prepare() {
 		const _class = this;
 
@@ -156,22 +163,23 @@
 			       	updateEventLog("Start handle user media");
 			       	
 			       	app.myVideo.srcObject = stream;
-			       	
+			       	var peerCount = 0;
 			       	for (var key in peerConnections ) {
 			       		
 			       		if(matchCurrentReqId(key)){
 			       			 
 			       		}else{
-			       			updateEventLog("Add Track" +key);
+			       			 
 			       			const entry = peerConnections[key];
 				       		const peerConnection = entry['connection'];
-				       		peerConnection.addStream(stream);
-				       		updateEventLog("End Add Track" +key);
-				       		updatePeerConnection(key, peerConnection);
+				       		peerConnections[key]['connection'].addStream(stream); 
+				       		//updatePeerConnection(key, peerConnection);
+				       		peerCount++;
 			       		} 
+			       		
 					}  
 		            console.debug("END getUserMedia"); 
-		            updateEventLog("End handle user media");
+		            updateEventLog("End HandleMedia peerCount: "+peerCount);
 		        }).catch(function (err) {  });
 	   
 	    	
@@ -301,7 +309,8 @@
 			
 		};
 		peerConnection.onicecandidate = function(event) {
-			console.debug("peerConnection onICE_Candidate: ", event.candidate)
+			console.debug("peerConnection on ICE Candidate: ", event.candidate);
+			updateEventLog("Peer IceCandidate ("+ requestId +")");
 		    if (event.candidate) {
 		        send(requestId, {
 		            event : "candidate",
@@ -309,10 +318,13 @@
 		        }); 
 		    }else{
 		    	console.warn("Candiate is NULL: ", event);
+		    	updateEventLog("Peer IceCandidate IS NULL ("+ requestId +")");
 		    }
 		};
 		peerConnection.onsignalingstatechange = function(e){
-			console.debug("PEER CONNECTION Signaling state: ", peerConnection.signalingState);
+			const state = peerConnection.signalingState;
+			console.debug("PEER CONNECTION Signaling state: ", state);
+			updateEventLog("Peer SignalingState ("+ requestId +") | "+state);
 		}
 		
 		peerConnection.ondatachannel = function(ev){
