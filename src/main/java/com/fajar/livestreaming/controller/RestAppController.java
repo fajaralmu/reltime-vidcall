@@ -1,7 +1,5 @@
 package com.fajar.livestreaming.controller;
 
-import java.util.HashMap;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,20 +55,6 @@ public class RestAppController extends BaseController{
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
 	}  
-	
-	/////////////////////////////////////////// Utility //////////////////////////////////////////////
-	@GetMapping(value = "/api/util/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse clearsession(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
-		return userSessionService.clearAllSession( httpRequest);
-	}
-	@GetMapping(value = "/api/util/activecalls", produces = MediaType.APPLICATION_JSON_VALUE)
-	public HashMap<String, Object> activecalls(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
-		return userSessionService.getActiveCalls();
-	}
-	@GetMapping(value = "/api/util/clearactivecalls", produces = MediaType.APPLICATION_JSON_VALUE)
-	public HashMap<String, Object> clearactivecalls(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
-		userSessionService.clearActiveCalls();
-		return userSessionService.getActiveCalls();
-	}
+	 
 	
 }

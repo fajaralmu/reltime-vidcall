@@ -326,13 +326,7 @@ function sendToWebsocketV2(message){
 	 conn.send(JSON.stringify(message));
 }
 
-
-
  
-initLiveStream();
-window.onunload = function () {
-    
-    leaveCalling();
-}
+initLiveStream(); 
 </script>
 
