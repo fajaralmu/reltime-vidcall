@@ -13,7 +13,9 @@
 				<div class="card-body">
 					<p>
 						Current Room Id: <span id="room-id">${roomId}</span>
+						
 					</p>
+					<p>Link <span id="room-link"></span></p>
 					<button class="btn btn-primary" onclick="generateRoomId()">Generate</button>
 				</div>
 				<div class="card-footer">
@@ -27,6 +29,7 @@
 	
 	const footerInfo = byId("footer-info");
 	const roomId = byId("room-id");
+	const roomLink = byId("room-link");
 		
 	function generateRoomId(){
 		postReq("<spring:url value="/api/webrtcroom/generateroomid" />", {},
@@ -36,6 +39,7 @@
 					if(response && response.code == "00"){
 						footerInfo.innerHTML = 'Update Room Id';
 						roomId.innerHTML = response.message;
+						roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/"+roomId;
 					}else if(response){
 						infoDialog(response.message).then(function(e){});
 					}else{
@@ -45,3 +49,8 @@
 	}
 	
 </script>
+<c:if test="${roomId != null }" >
+<script>
+	roomLink.innerHTML = ipAndPort+ctxPath +"/stream/publicconference/${roomId}";
+</script>
+</c:if>

@@ -32,6 +32,8 @@
 
 <script src="<c:url value="/res/fa/js/all.js?v=1"></c:url >"></script>
 <script type="text/javascript">
+
+	var ipAndPort = "${ipAndPort}";
 	var ctxPath = "${contextPath}";
 	var websocketUrl = "<spring:url value="/realtime-app" />";
 	var websocketUrlv2 = "${ipAndPort}<spring:url value="/socket" />";

@@ -73,7 +73,7 @@ public class MvcConferenceController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/publicconference/{code}" })
-	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/video-call-v2")
+	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/public-conference-v1")
 	public String publicconference(Model model, @PathVariable String code, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -81,7 +81,7 @@ public class MvcConferenceController extends BaseController {
 		if(!codeIsValid) {
 			throw new Exception("Invalid Code");
 		}
-		 
+		model.addAttribute("roomId", code);
 		return basePage;
 	}
 
