@@ -297,7 +297,7 @@
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
 			    ]
 			}; 
-		const peerConnection = new RTCPeerConnection(configuration2, {
+		const peerConnection = new RTCPeerConnection(null, {
 		    optional : [ {
 		        RtpDataChannels : true
 		    } ]
@@ -439,11 +439,11 @@
 		console.debug(requestId, "handleAnswer: ", answer);
 		updateEventLog(requestId+" handleAnswer");
 		
-		/* if(peerConnection.signalingState == "stable" && this.videoStream) {
+		  if(peerConnection.signalingState == "stable" && this.videoStream) {
 			updateEventLog("Cannot handle answer beacuse state is stable");
 			//peerConnections[requestId]['connection'].addStream(this.videoStream); 
 			return;
-		} */
+		} 
 		
 		peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 		updatePeerConnection(requestId,peerConnection );

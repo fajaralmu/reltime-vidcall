@@ -282,7 +282,7 @@ function createHtmlTag(object){
 			if(isStyle){
 				tag.setAttribute(key, stringifyStyleObject(value));
 			}else{ // Html DOM
-				console.debug("will create HTML DOM of :", key);
+			//	console.debug("will create HTML DOM of :", key);
 				const htmlObject = value;
 				const htmlTag = createHtmlTag(htmlObject);
 				tag.appendChild(htmlTag);
