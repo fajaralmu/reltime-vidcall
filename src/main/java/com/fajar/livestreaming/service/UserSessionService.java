@@ -218,4 +218,14 @@ public class UserSessionService {
 		return roomIdRandom;
 	}
 
+	public boolean validateCode(String code) {
+		 
+		for (String key : activeRoomId.keySet()) {
+			if(activeRoomId.get(key).equals(code)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

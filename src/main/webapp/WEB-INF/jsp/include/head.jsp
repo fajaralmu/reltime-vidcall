@@ -6,28 +6,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div class="header" style="height: auto">
-	<style>
-.menu-spoiler {
-	text-align: left;
-	font-size: 0.7em;
-	background-color: gray;
-	z-index: 1;
-	position: absolute;
-}
-
-.menu-spoiler>a {
-	color: white;
-}
-
-#header-wrapper {
-	height: 100%;
-}
-</style>
+  
 	<div class="page-header" style="color: blue">
 		<h1>Nuswantoro Conference</h1>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<div  id="navbarNavAltMarkup">
-				<ul class="navbar-nav mr-auto">
+		<nav class="navbar  navbar-expand-lg ">
+			<div>
+				<ul class="navbar-nav ">
 					<li class="nav-item "><a
 						href="<spring:url value="/app/"></spring:url>"><i
 							class="fas fa-home"></i>&nbsp;Main Menu </a></li>

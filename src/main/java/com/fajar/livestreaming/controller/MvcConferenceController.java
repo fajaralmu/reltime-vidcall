@@ -28,13 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("stream")
 @Authenticated
-public class MvcStreamController extends BaseController {
+public class MvcConferenceController extends BaseController {
 
 	@Autowired
 	private StreamingService streamingService;
 
-	public MvcStreamController() {
-		log.info("-----------------Mvc Stram Controller------------------");
+	public MvcConferenceController() {
+		log.info("-----------------Mvc Conference Controller------------------");
 	}
 
 	@RequestMapping(value = { "/videocall/{partnerId}" })
@@ -69,6 +69,19 @@ public class MvcStreamController extends BaseController {
 		model.addAttribute("partnerUsername", partnerSession.getUsername());
 
 		model.addAttribute("partnerInfo", partnerSession);
+		return basePage;
+	}
+	
+	@RequestMapping(value = { "/publicconference/{code}" })
+	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/video-call-v2")
+	public String publicconference(Model model, @PathVariable String code, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		boolean codeIsValid = userSessionService.validateCode(code);
+		if(!codeIsValid) {
+			throw new Exception("Invalid Code");
+		}
+		 
 		return basePage;
 	}
 
