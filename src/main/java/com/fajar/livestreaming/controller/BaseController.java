@@ -41,24 +41,34 @@ public class BaseController {
 	public String getContextPath(HttpServletRequest request) {
 		return request.getContextPath();
 	}
-	
+
+	@ModelAttribute("inActiveCall")
+	public boolean inActiveCall(HttpServletRequest request) {
+		RegisteredRequest session = getPublicRequestId(request);
+		if (session != null) {
+			return userSessionService.isInActiveCall(session.getRequestId());
+		}
+		return false;
+	}
+
 	@ModelAttribute("year")
 	public int getCurrentYear(HttpServletRequest request) {
 		return DateUtil.getCalendarItem(new Date(), Calendar.YEAR);
 	}
-	
+
 	@ModelAttribute("ipAndPort")
 	public String getIpAddressAndPort(HttpServletRequest request) {
-		
+
 		String remoteAddress = request.getRemoteAddr();
 		int port = request.getServerPort();
-		
-		return remoteAddress +":"+ port;
+
+		return remoteAddress + ":" + port;
 	}
-	 
+
 	protected static void setTitle(Model model, String title) {
 		model.addAttribute(MODEL_ATTR_TITLE, title);
 	}
+
 	protected static void setPageUrl(Model model, String pageUrl) {
 		model.addAttribute(MODEL_ATTR_PAGE_URL, pageUrl);
 	}

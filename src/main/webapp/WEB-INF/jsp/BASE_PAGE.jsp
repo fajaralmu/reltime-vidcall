@@ -103,6 +103,13 @@
 			connectToWebsocket( callbackNofityCall); 
 		}
 		
+		function leaveCalling(callback){
+			postReq(
+					"<spring:url value="/api/stream/leavecall" />",
+					{},
+					function(xhr) { if(callback){callback(xhr.data);} });
+		}
+		
 		
 	</script>
 	<c:if test="${registeredRequest != null }">

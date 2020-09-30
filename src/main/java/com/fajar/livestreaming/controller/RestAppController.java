@@ -67,7 +67,7 @@ public class RestAppController extends BaseController{
 		return webRtcService.notityCallPartner(webRequest, httpRequest);
 	}
 	
-	@GetMapping(value = "/api/stream/leavecall", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/api/stream/leavecall", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse leavecall(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
 		return userSessionService.leavecall( httpRequest);
 	}
