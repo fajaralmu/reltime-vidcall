@@ -55,9 +55,9 @@ public class WebSocketController extends BaseController{
 	}
 	
 	@MessageMapping("/acceptcall") 
-	public WebResponse acceptCall( WebRequest request) throws IOException {
+	public WebResponse responseCall( WebRequest request) throws IOException {
 		
-		return webRtcService.acceptCall(request);
+		return webRtcService.responseCall(request);
 	}
 	
 	

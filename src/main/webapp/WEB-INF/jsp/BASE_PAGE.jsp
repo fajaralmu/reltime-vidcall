@@ -98,13 +98,11 @@
 									}
 							})
 						}
-						
-						
-					}
-					
+					}					
 				};
 			connectToWebsocket( callbackNofityCall); 
 		}
+		
 		
 	</script>
 	<c:if test="${registeredRequest != null }">

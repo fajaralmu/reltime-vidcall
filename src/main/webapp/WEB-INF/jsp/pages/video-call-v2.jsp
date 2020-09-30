@@ -326,7 +326,18 @@ function sendToWebsocketV2(message){
 	 conn.send(JSON.stringify(message));
 }
 
+
+function leaveCalling(){
+	postReq(
+			"<spring:url value="/api/stream/leavecall" />",
+			{},
+			function(xhr) { });
+}
  
 initLiveStream();
+window.onunload = function () {
+    
+    leaveCalling();
+}
 </script>
 

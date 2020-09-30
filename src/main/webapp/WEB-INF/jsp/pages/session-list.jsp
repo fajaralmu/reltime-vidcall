@@ -140,6 +140,10 @@
 					var response = (xhr.data);
 					if(response && response.code == "00"){
 						window.location.href = button.getAttribute("location");
+					}else if(response){
+						infoDialog(response.message).then(function(e){});
+					}else{
+						alert("Server Error");
 					}
 				});
 		

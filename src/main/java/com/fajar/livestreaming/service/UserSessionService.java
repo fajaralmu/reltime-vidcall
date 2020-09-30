@@ -2,6 +2,7 @@ package com.fajar.livestreaming.service;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class UserSessionService {
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
 	private static final String SESSION_TRIAL_ONE = "1";
 	private static final String SESSION_ATTR_SESS_DATA = "session-data";
+	private HashMap<String, Object> activeCalls = new HashMap<>();
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -52,25 +54,25 @@ public class UserSessionService {
 
 		SESSION_MAP.get(SESSION_TRIAL_ONE).addNewApp(request);
 	}
-	
+
 	private RegisteredRequest getRequestFromSessionMap(String requestId) {
 		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
 	}
-	
+
 	private void removeSessionById(String requestId) {
 		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
-		
+
 		try {
 			RegisteredRequest registeredRequest = getRegisteredRequest(request);
 
 			removeSessionById(registeredRequest.getRequestId());
 
 		} catch (Exception e) {
-			
-			log.error("Error Removing Session" );
+
+			log.error("Error Removing Session");
 			e.printStackTrace();
 		} finally {
 			request.getSession().invalidate();
@@ -103,24 +105,30 @@ public class UserSessionService {
 			return;
 		}
 		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
+		if (active) {
+			activeCalls.put(requestId, new Date());
+		}
+
 		realtimeService.sendUpdateSessionStatus(existingReqId);
 	}
 
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {
 		try {
-			RegisteredRequest storedInHttpSession = (RegisteredRequest) request.getSession(false).getAttribute(SESSION_ATTR_SESS_DATA);
-			if(null != storedInHttpSession) {
+			RegisteredRequest storedInHttpSession = (RegisteredRequest) request.getSession(false)
+					.getAttribute(SESSION_ATTR_SESS_DATA);
+			if (null != storedInHttpSession) {
 				RegisteredRequest storedInSessionMap = getRequestFromSessionMap(storedInHttpSession.getRequestId());
 				return storedInSessionMap;
 			}
-			 
-		} catch (Exception e) { }
+
+		} catch (Exception e) {
+		}
 		return null;
 	}
 
 	public void removeSessioon(HttpServletRequest request) {
 		RegisteredRequest currentRequest = getRegisteredRequest(request);
-		if(null != currentRequest) {
+		if (null != currentRequest) {
 			removeRegisteredRequest(request);
 			currentRequest.setExist(false);
 			realtimeService.sendUpdateSessionExistance(currentRequest);
@@ -135,7 +143,7 @@ public class UserSessionService {
 
 		return newRegisteredRequest;
 	}
-	
+
 	private static void setSessionAttributeSessionData(HttpServletRequest request, RegisteredRequest newRequest) {
 		request.getSession(true).setAttribute(SESSION_ATTR_SESS_DATA, newRequest);
 	}
@@ -143,7 +151,7 @@ public class UserSessionService {
 	private RegisteredRequest createNewRequest(String username, HttpServletRequest httpRequest) {
 		final String requestId = randomRequestId();
 		RegisteredRequest registeredRequest = new RegisteredRequest();
-		registeredRequest.setUsername(username+"_"+requestId);
+		registeredRequest.setUsername(username + "_" + requestId);
 		registeredRequest.setActive(false);
 		registeredRequest.setCreated(new Date());
 		registeredRequest.setUserAgent(httpRequest.getHeader("user-agent"));
@@ -151,21 +159,38 @@ public class UserSessionService {
 		return registeredRequest;
 	}
 
-	private String randomRequestId() { 
+	private String randomRequestId() {
 		return StringUtil.generateRandomChar(8);
 	}
 
 	public WebResponse clearAllSession(HttpServletRequest request) {
 		try {
-			List<RegisteredRequest> requests = (List<RegisteredRequest>)SerializationUtils.clone((Serializable) getAvaliableRequests());
+			List<RegisteredRequest> requests = (List<RegisteredRequest>) SerializationUtils
+					.clone((Serializable) getAvaliableRequests());
 			for (RegisteredRequest registeredRequest : requests) {
 				removeSessionById(registeredRequest.getRequestId());
-			}		
+			}
 			return new WebResponse();
-		}catch (Exception e) {
-			 
+		} catch (Exception e) {
+
 			return WebResponse.failed(e.getMessage());
 		}
+	}
+
+	public WebResponse leavecall(HttpServletRequest httpRequest) {
+		RegisteredRequest userSession = getRegisteredRequest(httpRequest);
+		if (null != userSession) {
+			activeCalls.remove(userSession.getRequestId());
+		}
+		return new WebResponse();
+	}
+
+	public HashMap<String, Object> getActiveCalls() {
+		return activeCalls;
+	}
+
+	public boolean isInActiveCall(String requestId) {
+		return requestId != null && activeCalls.containsKey(requestId);
 	}
 
 }

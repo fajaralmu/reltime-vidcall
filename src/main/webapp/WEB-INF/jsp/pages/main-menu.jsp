@@ -110,7 +110,6 @@
 							buttonRegister.style.display = "none";
 							inputUserName.setAttribute("disabled", "disabled");
 						}
-
 					});
 		}
 	</script>

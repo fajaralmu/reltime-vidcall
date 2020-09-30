@@ -20,6 +20,8 @@ public class WebRtcService {
 	private SimpMessagingTemplate webSocket;
 	@Autowired
 	private StreamingService streamingService; 
+	@Autowired
+	private UserSessionService sessionService;
 
 	public WebResponse handshakeWebRtc(WebRequest request) {
 		String partner = request.getPartnerId();
@@ -28,7 +30,7 @@ public class WebRtcService {
 		return response;
 	}
 
-	public WebResponse acceptCall(WebRequest request) {
+	public WebResponse responseCall(WebRequest request) {
 		log.info("acceptcall: {} ", request);
 		String origin = request.getOriginId();
 		WebResponse response = WebResponse.builder().accept(request.isAccept()).message(request.getMessage()).build();
@@ -39,6 +41,11 @@ public class WebRtcService {
 	public WebResponse notityCallPartner(WebRequest webRequest, HttpServletRequest httpRequest) throws Exception {
 		try {
 			RegisteredRequest partnerSession = streamingService.getPartnerSession(webRequest.getDestination());
+			
+			if(sessionService.isInActiveCall(partnerSession.getRequestId())) {
+				throw new Exception("Partner is busy!");
+			}
+			
 			streamingService.notifyCallingPartner(httpRequest, partnerSession);
 			return new WebResponse();
 		}catch (Exception e) {

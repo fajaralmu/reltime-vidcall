@@ -1,5 +1,7 @@
 package com.fajar.livestreaming.controller;
 
+import java.util.HashMap;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,16 +60,26 @@ public class RestAppController extends BaseController{
 	public WebResponse invalidate(HttpServletRequest httpRequest,	HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
-	}
-	
-	@GetMapping(value = "/api/stream/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse clearsession(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
-		return userSessionService.clearAllSession( httpRequest);
-	}
+	} 
 	
 	@PostMapping(value = "/api/stream/callpartner", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse callPartner(@RequestBody WebRequest webRequest, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		return webRtcService.notityCallPartner(webRequest, httpRequest);
-	} 
+	}
+	
+	@GetMapping(value = "/api/stream/leavecall", produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse leavecall(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
+		return userSessionService.leavecall( httpRequest);
+	}
+	
+	/////////////////////////////////////////// Utility //////////////////////////////////////////////
+	@GetMapping(value = "/api/util/clearsession", produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse clearsession(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
+		return userSessionService.clearAllSession( httpRequest);
+	}
+	@GetMapping(value = "/api/util/activecalls", produces = MediaType.APPLICATION_JSON_VALUE)
+	public HashMap<String, Object> activecalls(HttpServletRequest httpRequest, HttpServletResponse httpResponse) { 
+		return userSessionService.getActiveCalls();
+	}
 	
 }
