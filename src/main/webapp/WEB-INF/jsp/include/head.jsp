@@ -25,33 +25,46 @@
 </style>
 	<div class="page-header" style="color: blue">
 		<h1>Nuswantoro Conference</h1>
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item "><a
-				href="<spring:url value="/app/"></spring:url>">
-						<i class="fas fa-home"></i>
-					 &nbsp;Main Menu</a></li>
-			<c:if test="${registeredRequest != null && inActiveCall}">
-				<li class="nav-item "><a href="#" onclick="handleLeaveCalling()"><span id="active-call-info">
-							<i class="fas fa-phone"></i>
-						&nbsp;Click to Enable Calling</span></a></li>
-			</c:if>
-		</ul>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item "><a
+						href="<spring:url value="/app/"></spring:url>"><i
+							class="fas fa-home"></i>&nbsp;Main Menu </a></li>
+					<c:if test="${registeredRequest != null && inActiveCall}">
+						<li class="nav-item "><a href="#"
+							onclick="handleLeaveCalling()"><span id="active-call-info">
+									<i class="fas fa-phone"></i>&nbsp;Click to Enable Calling
+							</span></a></li>
+					</c:if>
+					<c:if test="${registeredRequest != null }">
+						<li class="nav-item "><a
+							href="<spring:url value="/dashboard/"></spring:url>"> <i
+								class="fas fa-cog"></i>&nbsp;Dashboard
+						</a></li>
+						<li class="nav-item "><a
+							href="<spring:url value="/dashboard/sessionlist" /> "><i
+								class="fa fa-list-ul" aria-hidden="true"></i>&nbsp;Available
+								Sessions</a></li>
+					</c:if>
+				</ul>
+			</div>
+		</nav>
 	</div>
 
 	<div></div>
 </div>
 <script>
 	const activeInfo = byId("active-call-info");
-	var activeCall = ${inActiveCall};
-	
-	function handleLeaveCalling(){
-		if(!activeInfo || activeCall == false){
+	var activeCall = "${inActiveCall}" == "true";
+
+	function handleLeaveCalling() {
+		if (!activeInfo || activeCall == false) {
 			return;
 		}
-		leaveCalling(function(response){
+		leaveCalling(function(response) {
 			activeInfo.innerHTML = "<i class=\"fas fa-phone\"></i>&nbsp;Calling Enabled";
 			activeCall = false;
 		});
 	}
-
 </script>

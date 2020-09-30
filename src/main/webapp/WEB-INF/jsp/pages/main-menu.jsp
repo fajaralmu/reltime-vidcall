@@ -26,7 +26,7 @@
 				</div>
 				<div class="card-footer">
 					<a class="btn btn-success"
-						href="<spring:url value="/stream/sessionlist" /> "><i
+						href="<spring:url value="/dashboard/sessionlist" /> "><i
 						class="fa fa-list-ul" aria-hidden="true"></i> Available Sessions</a>
 					<c:if test="${registeredRequest == null }">
 						<button id="btn-register" class="btn btn-info"

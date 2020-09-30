@@ -32,7 +32,7 @@ public class RegisteredRequest implements Serializable{/**
 	 
 	private String userAgent;
 	 
-	private String ipAddress;
+	private String ipAddress; 
 	 
 //	private  List<? extends BaseEntity> messages;
 	 

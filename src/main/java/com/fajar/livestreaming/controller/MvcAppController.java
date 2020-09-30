@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fajar.livestreaming.annotation.CustomRequestInfo;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,18 +27,11 @@ public class MvcAppController extends BaseController{
 	}
 
 	@RequestMapping(value = { "/" })
+	@CustomRequestInfo(pageUrl = "pages/main-menu", title = "Nuswantoro Conference")
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
 		 
-		try { 
-			
-			setTitle(model, "Welcome"); 
-			setPageUrl(model, "pages/main-menu");
-			
-		}catch (Exception e) {
-			setTitle(model, "Invalid Session");
-			model.addAttribute("message", "Invalid Session");
-		}
+		 
 		return basePage;
 	}
 

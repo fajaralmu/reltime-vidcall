@@ -146,7 +146,6 @@
 						alert("Server Error");
 					}
 				});
-		
 	}
 
 	initWebSocket();

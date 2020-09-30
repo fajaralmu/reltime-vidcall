@@ -29,6 +29,10 @@ a :hover {
 	cursor: pointer;
 }
 
+.nav-item {
+	margin-right: 10px;
+}
+
 .header {
 	width: 100%;
 	height: 100px;

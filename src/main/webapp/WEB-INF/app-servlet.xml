@@ -17,7 +17,10 @@
 		mapping="/WebAsset/**"></mvc:resources>
 	<!-- <jpa:repositories base-package="com.fajar.shoppingmart.repository" 
 		/> -->
-
+	<mvc:interceptors>
+		<bean id="handlerInterceptor"
+			class="com.fajar.livestreaming.config.requestfilter.MyHandlerInterceptor" />
+	</mvc:interceptors>
 	<context:component-scan
 		base-package="com.fajar.livestreaming" />
 
@@ -79,14 +82,16 @@
 		<bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean> </property> 
 		</bean> <bean id="persistenceProvider" class="org.hibernate.jpa.HibernatePersistenceProvider" 
 		/> -->
+	<bean id="objectMapper"
+		class="com.fasterxml.jackson.databind.ObjectMapper" />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="locations">
-        <list>
-            <value>classpath:config.properties</value>
-        </list>
-    </property>
-    
-</bean>
+	</bean>
 
 </beans>
