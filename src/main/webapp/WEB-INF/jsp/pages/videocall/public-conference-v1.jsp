@@ -6,22 +6,26 @@
 
 <div>
 	<h2>Public Conference ${roomId }</h2>
+	<div class="border">
+		<video height="200" width="200" muted="muted" controls id="my-video"></video>
+	</div>
 	<div class="row">
 		<div class="col-6">
 			<div class="border border-primary rounded" id="member-list">
-				<h3>Member List</h3>
+				<h3 style="text-align: center;">Member List</h3>
 				<c:forEach var="member" items="${members}">
-					<div id="member-item-{member.requestId}">
+					<div id="member-item-${member.requestId}">
 					<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
 					<p>${member.created }</p>
+					<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
 					</div>
 				</c:forEach>
 			</div>
 
 		</div>
 		<div class="col-6">
-			<div class="border border-primary rounded" id="event-log">
-				<h3>Log</h3>
+			<div class="border border-primary rounded bg-dark" id="event-log">
+				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3>
 			</div>
 		</div>
 	</div>
@@ -36,20 +40,23 @@
 
 		onConnectCallbacks.push(function(frame) {
 			console.log("Connected to signaling server-", frame);
-			_class.init();
+			_class.join();
 		});
 
 		const callbackMemberJoin = {
 			subscribeUrl : "/wsResp/joinroom/${roomId }",
 			callback : function(resp) {
+				_class.initWebRtc(resp.requestId);
+				if(byId("member-item-"+resp.requestId)){ 
+					_class.removeMemberItem(resp.username, resp.requestId, resp.date);
+				}
 				_class.addMemberList(resp.username, resp.requestId, resp.date);
 			}
 		};
 		const callbackMemberLeave = {
 			subscribeUrl : "/wsResp/leaveroom/${roomId }",
 			callback : function(resp) {
-				_class.removeMemberItem(resp.username, resp.requestId,
-						resp.date);
+				_class.removeMemberItem(resp.username, resp.requestId, resp.date);
 			}
 		};
 
@@ -67,6 +74,14 @@
 			ch2 : {
 				tagName : 'p',
 				innerHTML : 'Date: ' + date
+			},
+			ch3: {
+				tagName: 'video',
+				id: 'video-member-'+requestId,
+				muted: 'muted',
+				height: 150,
+				width: 150,
+				style: {visibility: 'hidden'}
 			}
 
 		};
@@ -85,17 +100,14 @@
 	}
 
 	function updateEventLog(log) {
-		log = new Date() + ' ' + log;
-		const p = createHtmlTag({
-			tagName : 'p',
+	//	log = new Date() + ' ' + log;
+		const line = createHtmlTag({
+			tagName : 'code',
 			innerHTML : log
 		});
-		eventLog.appendChild(p);
+		eventLog.appendChild(line);
 	}
-
-	function init() {
-		join();
-	}
+ 
 
 	function join() {
 		sendToWebsocket("/app/publicconf1/join", {
@@ -113,3 +125,304 @@
 
 	prepare();
 </script>
+<script type="text/javascript">
+	inCalling = true;
+	var paused = false;
+	var video;
+	var myVideo = byId("my-video"); 
+	     
+	const peerConnections = {};
+	
+	function matchCurrentReqId(requestId){
+		return requestId == "${registeredRequest.requestId}";
+	}
+	
+	function updateVideoEvent() {
+		const app = this;   
+	    window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+	        .then(function (stream) {
+			       	console.debug("START getUserMedia"); 
+			       
+			       	for (var key in peerConnections ) {
+			       		
+			       		if(matchCurrentReqId(key)){
+			       			continue;
+			       		}
+			       		
+			       		const entry = peerConnections[key];
+			       		const peerConnection = entry['connection'];
+			       		peerConnection.addStream(stream);
+			       		updatePeerConnection(requestId, peerConnection);
+					} 
+			       	
+			       	app.myVideo.srcObject = stream;
+					 
+		            console.debug("END getUserMedia"); 
+		        }).catch(function (err) {  });
+	   
+	    	
+	}  
+	
+	function getPeerConnection(requestId){
+		if(!peerConnections[requestId]){
+			return null;
+		}
+		return peerConnections[requestId]['connection'];
+	}
+	
+	function updatePeerConnection(requestId, obj){
+		if(!getPeerConnection(requestId)) {
+			peerConnections[requestId] = {
+					'date' : new Date()
+			};
+		}
+		peerConnections[requestId]['connection'] = obj;
+		peerConnections[requestId]['updated'] = new Date();
+	}
+	
+	function closePeerConnection(requestId){
+		const peerConnection = getPeerConnection(requestId);
+		if(!peerConnection){
+			return;
+		}
+		
+		confirmDialog("Leave the call?").then(function(ok){
+			if(ok){
+				if(peerConnection){
+					peerConnection.close();
+					send(requestId, { 	event: "leave", data: {} });
+					updatePeerConnection(requestId,peerConnection );
+				} 
+			}
+		});	
+	}
+	
+	function updateVideoDom(){ } 
+	
+	function showVideoElement(requestId){
+		const vid = byId("video-member-"+requestId)
+		if(vid){
+			vid.style.visibility = 'visible';
+		}
+	}
+	   
+	function initLiveStream(){ 
+		this.myVideo = byId("my-video");
+		this.video = byId('video'); 
+	    this.initWebSocketConference();
+	}
+	 
+	
+	//////////////////////////// websocket stuff //////////////////////////
+	
+	var conn = null; 
+	var dataChannel = null;
+	
+	function initWebSocketConference(){
+		const _class = this; 
+		
+		const callbackWebRtcHandshake = {
+				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
+				callback : function(resp){
+					_class.handleWebRtcHandshake(resp.requestId, resp.webRtcObject);
+				}
+			};
+		 
+		connectToWebsocket( callbackWebRtcHandshake );  
+	}
+	
+	
+	function handleWebRtcHandshake(requestId, webRtcObject){
+		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
+		if(matchCurrentReqId(requestId)){
+   			return;
+   		}
+	    var data =  (webRtcObject.data); 
+	    switch (webRtcObject.event) {
+	    // when somebody wants to call us
+	    case "offer":
+	        handleOffer(requestId, data);
+	        break;
+	    case "answer":
+	        handleAnswer(requestId, data);
+	        break;
+	    // when a remote peer sends an ice candidate to us
+	    case "candidate":
+	        handleCandidate(requestId, data);
+	        break;
+	    case "leave":
+	        handlePartnerLeave(data);
+	        break;
+	    default:
+	        break;
+	    }
+	}
+	
+	function initWebRtc(requestId){ 
+		var configuration2 = {
+			    "iceServers" : [ 
+			    	{ "url":"stun:stun2.1.google.com:19302"  } 
+			    ]
+			}; 
+		const peerConnection = new RTCPeerConnection(configuration2, {
+		    optional : [ {
+		        RtpDataChannels : true
+		    } ]
+		} );
+		peerConnection.onaddstream = function(event) {
+			const vid = byId("video-member-"+requestId);
+			vid.srcObject = event.stream;
+		};
+		peerConnection.onicecandidate = function(event) {
+			console.debug("peerConnection onICE_Candidate: ", event.candidate)
+		    if (event.candidate) {
+		        send(requestId, {
+		            event : "candidate",
+		            data : event.candidate
+		        }); 
+		    }else{
+		    	console.warn("Candiate is NULL: ", event);
+		    }
+		};
+		peerConnection.onsignalingstatechange = function(e){
+			console.debug("PEER CONNECTION Signaling state: ", peerConnection.signalingState);
+		}
+		
+		peerConnection.ondatachannel = function(ev){
+			console.debug("ondatachannel: ", ev);
+			//initDataChannel(ev);
+		}
+
+		updatePeerConnection(requestId,peerConnection ); 
+		updateVideoEvent(); 
+		createOffer(requestId);
+	}
+	
+	function initDataChannel(ev){
+	/* 	dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true }); 
+	
+		dataChannel.onopen = function(event){ console.debug("DATA CHANNEL ON OPEN ", event); } 
+		dataChannel.onmessage = function(event) { console.debug("#####dataChannel Message:", event ); };
+		dataChannel.onerror = function(error) { console.debug("#####dataChannel Error:", error); };
+		dataChannel.onclose = function(closed) { onsole.debug("#####Data channel is closed ", closed); }; */
+	}
+	
+	function handlePartnerLeave(data){
+	//	infoDialog("partner left the call").then(function(e){});
+	}
+	 
+	function createOffer(requestId) {
+		const peerConnection = getPeerConnection(requestId);
+		if(!peerConnection){
+			infoDialog("peerConnection not created please try again...").then(function(e){});
+			return;
+		}
+		 
+		doCreateOffer(requestId);
+	}
+	
+	function doCreateOffer(requestId){
+		if(matchCurrentReqId(requestId)){
+   			return;
+   		}
+		
+		const peerConnection = getPeerConnection(requestId);
+		const _class = this;
+		peerConnection.createOffer(function(offer) {
+		    send(requestId, {
+		        event : "offer",
+		        data : offer
+		    });
+		    peerConnection.setLocalDescription(offer);
+		    _class.updatePeerConnection(requestId,peerConnection );
+		}, function(error) {
+		    console.error("Error create offer...", error);
+		});
+		
+		updatePeerConnection(requestId,peerConnection );
+	}
+	
+	function handleOffer(requestId, offer){
+		const peerConnection = getPeerConnection(requestId);
+		const _class = this;
+		
+		updateEventLog(requestId+" handleOffer");
+		console.debug(requestId, "handleOffer: ", offer);
+		
+		peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+		
+		console.debug("Will create answer");
+		peerConnection.createAnswer(function(answer) {
+			
+			console.debug("createAnswer: ", answer);
+			updateEventLog(requestId+" createAnswer");
+			
+		    peerConnection.setLocalDescription(answer);
+	        send(requestId, {
+	            event : "answer",
+	            data : answer
+	        });
+	        _class.updatePeerConnection(requestId,peerConnection );
+		}, function(error) {
+		    console.error("error handle offer: ", error);
+		});
+		
+		updatePeerConnection(requestId,peerConnection );
+	}
+	
+	function handleCandidate(requestId, candidate){
+		const peerConnection = getPeerConnection(requestId);
+		
+		console.debug(requestId, "handleCandidate: ", candidate);
+		updateEventLog(requestId+" handleCandidate");
+		
+		peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+		updatePeerConnection(requestId,peerConnection );
+		showVideoElement(requestId);
+	}
+	
+	function handleAnswer(requestId, answer) {
+		const peerConnection = getPeerConnection(requestId);
+		
+		console.debug(requestId, "handleAnswer: ", answer);
+		updateEventLog(requestId+" handleAnswer");
+		
+		peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+		updatePeerConnection(requestId,peerConnection );
+	}
+	
+	function send(requestId, msg) {
+		console.debug("SEND WEBSOCKET, event: ", msg.event);
+		updateEventLog(requestId+" SEND WEBSOCKET "+msg.event);
+		//console.info("Send Audio Data");
+		sendToWebsocket("/app/publicconf1/webrtc", {
+			originId : requestId,
+			roomId: '${roomId}',
+		 	webRtcObject: (msg) 
+		});
+	}
+	
+	function sendToWebsocketV2(message){
+		 if(!conn){
+			 return;
+		 }
+		 conn.send(JSON.stringify(message));
+	}
+	
+	function redial(){
+		for (var key in peerConnections) {
+			if(matchCurrentReqId(key)){
+	   			continue;
+	   		}
+			initWebRtc(key);
+		}
+	}
+	
+	 
+	initLiveStream(); 
+</script>
+<c:forEach var="member" items="${members}">
+	<script>
+		initWebRtc("${member.requestId}");
+	</script>
+</c:forEach>

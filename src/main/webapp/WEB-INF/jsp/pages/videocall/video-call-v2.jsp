@@ -41,15 +41,11 @@ inCalling = true;
 var paused = false;
 var video;
 var myVideo; 
- 
-var width = 70;
-var height = 70;   
-
-var MIN_DELTA_TIME = 500; 
+    
 var partnerIsOnline = ${partnerInfo.active };
 const partnerOnlineInfo = byId("partner-is-online");
 
-function init () {
+function init() {
 	const app = this;   
     window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(function (stream) {
@@ -91,6 +87,12 @@ function initLiveStream(){
     this.initWebSocket();
 }
 
+function reCallPartner(){
+	const requestObject = {destination: "${partnerId }"};
+	postReq("<spring:url value="/api/stream/callpartner" />", requestObject, function(xhr) { });
+}
+
+
 //////////////////////////// websocket stuff //////////////////////////
 var conn = null;
 var peerConnection = null;
@@ -104,10 +106,10 @@ function initWebSocket(){
 		_class.initWebRtc(); 
 	});
 		 
-	const callbackWsMsg = {
+	const callbackWebRtcHandshake = {
 			subscribeUrl : "/wsResp/webrtc/${registeredRequest.requestId }",
 			callback : function(resp){
-				_class.handleWsMsg(resp.webRtcObject);
+				_class.handleWebRtcHandshake(resp.webRtcObject);
 			}
 		};
 	const callbackPartnerOnline = {
@@ -132,16 +134,12 @@ function initWebSocket(){
 				partnerIsOnline = false;
 			}
 		};
-	connectToWebsocket( callbackWsMsg, callbackPartnerOnline, callbackPartnerAcceptCall);  
+	connectToWebsocket( callbackWebRtcHandshake, callbackPartnerOnline, callbackPartnerAcceptCall);  
 }
 
-function reCallPartner(){
-	const requestObject = {destination: "${partnerId }"};
-	postReq("<spring:url value="/api/stream/callpartner" />", requestObject, function(xhr) { });
-}
 
-function handleWsMsg(webRtcObject){
-	console.debug("handleWsMsg : ", webRtcObject);
+function handleWebRtcHandshake(webRtcObject){
+	console.debug("handleWebRtcHandshake : ", webRtcObject);
     var data =  (webRtcObject.data);
     switch (webRtcObject.event) {
     // when somebody wants to call us
@@ -166,22 +164,13 @@ function handleWsMsg(webRtcObject){
 function initWebRtc(){
 	/* var configuration = {
 		    "iceServers" : [ 
-		    	{
-		    	//	"url":"stun:stun2.1.google.com:19302"
-		      		"urls" : "stun:127.0.0.1:3478"
-		    	},
-		    	{
-			      'urls': 'turn:127.0.0.1:8888',
-			      'credential': 'superpwd',
-			      'username': 'testuser'
-			    } 
+		    	{ //	"url":"stun:stun2.1.google.com:19302" "urls" : "stun:127.0.0.1:3478" },
+		    	{  'urls': 'turn:127.0.0.1:8888',  'credential': 'superpwd',  'username': 'testuser' } 
 		    ]
 		}; */
 	var configuration2 = {
 		    "iceServers" : [ 
-		    	{
-		    	 	"url":"stun:stun2.1.google.com:19302" 
-		    	} 
+		    	{ "url":"stun:stun2.1.google.com:19302"  } 
 		    ]
 		};
 	/* peerConnection = new RTCPeerConnection(configuration, {
@@ -223,19 +212,10 @@ function initWebRtc(){
 function initDataChannel(ev){
 	dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true }); 
 
-	dataChannel.onopen = function(event){
-		console.debug("DATA CHANNEL ON OPEN ", event);
-	}
-	
-	dataChannel.onmessage = function(event) {
-	    console.debug("#####dataChannel Message:", event );
-	};
-	dataChannel.onerror = function(error) {
-	    console.debug("#####dataChannel Error:", error);
-	};
-	dataChannel.onclose = function(closed) {
-	    console.debug("#####Data channel is closed ", closed);
-	};
+	dataChannel.onopen = function(event){ console.debug("DATA CHANNEL ON OPEN ", event); } 
+	dataChannel.onmessage = function(event) { console.debug("#####dataChannel Message:", event ); };
+	dataChannel.onerror = function(error) { console.debug("#####dataChannel Error:", error); };
+	dataChannel.onclose = function(closed) { onsole.debug("#####Data channel is closed ", closed); };
 }
 
 function handlePartnerLeave(data){

@@ -112,4 +112,14 @@ public class PublicConference1Service {
 		return members;
 	}
 
+	////////////////////////////// HANDSHAKE ///////////////////////////////////////////////////
+	
+	public WebResponse handshakeWebRtc(WebRequest request) {
+		String roomId = request.getRoomId();
+		String originId = request.getOriginId();
+		WebResponse response = WebResponse.builder().requestId(originId).webRtcObject(request.getWebRtcObject()).build();
+		realtimeService.convertAndSend("/wsResp/webrtcpublicconference/"+roomId , response); 
+		return response;
+	}
+
 }

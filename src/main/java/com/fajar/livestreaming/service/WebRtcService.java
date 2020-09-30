@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WebRtcService {
 
 	@Autowired
-	private SimpMessagingTemplate webSocket;
+	private RealtimeService realtimeService;
 	@Autowired
 	private StreamingService streamingService; 
 	@Autowired
@@ -26,7 +26,7 @@ public class WebRtcService {
 	public WebResponse handshakeWebRtc(WebRequest request) {
 		String partner = request.getPartnerId();
 		WebResponse response = WebResponse.builder().webRtcObject(request.getWebRtcObject()).build();
-		webSocket.convertAndSend("/wsResp/webrtc/" + partner, response); 
+		realtimeService.convertAndSend("/wsResp/webrtc/" + partner, response); 
 		return response;
 	}
 
@@ -34,7 +34,7 @@ public class WebRtcService {
 		log.info("acceptcall: {} ", request);
 		String origin = request.getOriginId();
 		WebResponse response = WebResponse.builder().accept(request.isAccept()).message(request.getMessage()).build();
-		webSocket.convertAndSend("/wsResp/partneracceptcall/"+request.getDestination()+"/" + origin, response);
+		realtimeService.convertAndSend("/wsResp/partneracceptcall/"+request.getDestination()+"/" + origin, response);
 		return response;
 	}
 

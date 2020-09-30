@@ -15,7 +15,6 @@ import com.fajar.livestreaming.controller.BaseController;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.service.PublicConference1Service;
-import com.fajar.livestreaming.service.RealtimeService;
 
 @CrossOrigin
 @RestController
@@ -36,6 +35,11 @@ public class WebSocketPublicConf1Controller extends BaseController {
 
 	/////////////////////////////////////// WEbsocket
 	/////////////////////////////////////// //////////////////////////////////////////
+	
+	@MessageMapping("/publicconf1/webrtc")
+	public WebResponse webrtc(WebRequest request) throws IOException {
+		return publicConference1Service.handshakeWebRtc(request);
+	}
 
 	@MessageMapping("/publicconf1/join")
 	public WebResponse join(WebRequest request) throws IOException { 
