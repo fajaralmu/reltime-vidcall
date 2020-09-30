@@ -12,7 +12,7 @@
 				<h3>Member List</h3>
 				<c:forEach var="member" items="${members}">
 					<div id="member-item-{member.requestId}">
-					<h3>${member.username }<small>${member.requestId }</small></h3>
+					<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
 					<p>${member.created }</p>
 					</div>
 				</c:forEach>
@@ -62,11 +62,7 @@
 			id : "member-item-" + requestId,
 			ch1 : {
 				tagName : 'h3',
-				innerHTML : username,
-				ch1: {
-					tagName: 'small',
-					innerHTML : requestId
-				}
+				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username, 
 			},
 			ch2 : {
 				tagName : 'p',
@@ -78,14 +74,14 @@
 		const memberElement = createHtmlTag(memberElementObject);
 		memberList.appendChild(memberElement);
 
-		updateEventLog(username + '_' + requestId + ' Joined');
+		updateEventLog(username  + ' Joined');
 	}
 
 	function removeMemberItem(username, requestId, date) {
 		const memberElement = byId("member-item-" + requestId);
 		memberElement.remove();
 
-		updateEventLog(username + '_' + requestId + ' Leave');
+		updateEventLog(username  + ' Leave');
 	}
 
 	function updateEventLog(log) {
