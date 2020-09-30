@@ -82,7 +82,7 @@ public class MvcConferenceController extends BaseController {
 
 		boolean codeIsValid = publicConference1Service.validateCode(roomId);
 		if(!codeIsValid) {
-			throw new Exception("Invalid Code");
+			sendRedirect(response, "/app/");
 		}
 		model.addAttribute("roomId", roomId);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));

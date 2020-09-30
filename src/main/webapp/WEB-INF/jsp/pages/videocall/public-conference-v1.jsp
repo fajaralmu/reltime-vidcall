@@ -153,22 +153,25 @@
 	    window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 	        .then(function (stream) {
 			       	console.debug("START getUserMedia"); 
-			       
+			       	updateEventLog("Start handle user media");
+			       	
+			       	app.myVideo.srcObject = stream;
+			       	
 			       	for (var key in peerConnections ) {
 			       		
 			       		if(matchCurrentReqId(key)){
-			       			continue;
-			       		}
-			       		
-			       		const entry = peerConnections[key];
-			       		const peerConnection = entry['connection'];
-			       		peerConnection.addStream(stream);
-			       		updatePeerConnection(requestId, peerConnection);
-					} 
-			       	
-			       	app.myVideo.srcObject = stream;
-					 
+			       			 
+			       		}else{
+			       			updateEventLog("Add Track" +key);
+			       			const entry = peerConnections[key];
+				       		const peerConnection = entry['connection'];
+				       		peerConnection.addStream(stream);
+				       		updateEventLog("End Add Track" +key);
+				       		updatePeerConnection(key, peerConnection);
+			       		} 
+					}  
 		            console.debug("END getUserMedia"); 
+		            updateEventLog("End handle user media");
 		        }).catch(function (err) {  });
 	   
 	    	
@@ -272,6 +275,12 @@
 	}
 	
 	function initWebRtc(requestId){ 
+		
+		if(matchCurrentReqId(requestId)){
+			updateVideoEvent(); 
+			return;
+		}
+		
 		var configuration2 = {
 			    "iceServers" : [ 
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
@@ -282,9 +291,14 @@
 		        RtpDataChannels : true
 		    } ]
 		} );
-		peerConnection.onaddstream = function(event) {
+		peerConnection.onaddstream  = function(event) {
+			updateEventLog("PeerConnection Start Add Track => "+ requestId);
 			const vid = byId("video-member-"+requestId);
-			vid.srcObject = event.stream;
+			if(vid){
+				vid.srcObject = event.stream;
+			}
+			updateEventLog("PeerConnection End Add Track => "+ requestId);
+			
 		};
 		peerConnection.onicecandidate = function(event) {
 			console.debug("peerConnection onICE_Candidate: ", event.candidate)
@@ -436,6 +450,11 @@
 </script>
 <c:forEach var="member" items="${members}">
 	<script>
+	if("${member.requestId}" == "${registeredRequest.requestId}"){
+		
+	}else{
 		initWebRtc("${member.requestId}");
+	}
+		
 	</script>
 </c:forEach>
