@@ -137,7 +137,7 @@
 				role: 'group',
 				ch1: {
 					tagName: 'button',
-					innerHTML : '<i class="fas fa-play"></i>',
+					innerHTML : '<i class="fas fa-pause"></i>',
 					className: 'btn',
 					onclick: function(e){
 						toggleVideoPlay('video-member-'+requestId, e.target); 
@@ -145,7 +145,7 @@
 				},
 				ch2: {
 					tagName: 'button',
-					innerHTML : "<i class=\"fas fa-volume-pause\"></i>",
+					innerHTML : "<i class=\"fas fa-volume-mute\"></i>",
 					className: 'btn',
 					onclick: function(e){
 						toggleVideoMute('video-member-'+requestId, e.target);
