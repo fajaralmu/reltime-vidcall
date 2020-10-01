@@ -12,7 +12,7 @@
 				<div class="card-header">Generate Room Id</div>
 				<div class="card-body">
 					<p><i class="fas fa-key"></i>&nbsp;Room Id <span id="room-id">${roomId == null ? "Not Generated" : roomId}</span></p>
-					<p><i class="fas fa-link"></i>&nbsp;Link <a class="badge badge-info" id="room-link"></a></p> 
+					<p><i class="fas fa-link"></i>&nbsp;Link <a  id="room-link"></a></p> 
 				</div>
 				<div class="card-footer">
 					<button class="btn btn-primary" onclick="generateRoomId()" id="footer-info">

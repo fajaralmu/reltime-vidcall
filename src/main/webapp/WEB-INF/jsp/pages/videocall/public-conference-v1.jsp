@@ -32,7 +32,7 @@
 		<div class="col-6">
 			<div class="border border-primary rounded bg-dark"  >
 				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3>
-				<button onclick="clearLog()" class="btn btn-outline-secondary">Clear Log</button>
+				<button onclick="clearLog()" class="btn btn-secondary btn-sm"><i class="fas fa-trash-alt"></i>Clear Log</button>
 				<div id="event-log" >
 				</div>
 			</div>
@@ -103,8 +103,12 @@
 				height: 150,
 				width: 150,
 				style: {visibility: 'hidden'}
-			},
-			ch4: {
+			}
+
+		};
+		
+		if(requestId != "${registeredRequest.requestId}"){
+			memberElementObject['ch4'] = {
 				tagName: 'button',
 				className: 'btn btn-info btn-sm',
 				onclick: function(e){
@@ -112,8 +116,7 @@
 				},
 				innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
 			}
-
-		};
+		}
 
 		const memberElement = createHtmlTag(memberElementObject);
 		memberList.appendChild(memberElement);
@@ -197,7 +200,10 @@
 			       			 
 			       			const entry = peerConnections[key];
 				       		const peerConnection = entry['connection'];
-				       		peerConnections[key]['connection'].addStream(stream); 
+				       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
+				       			peerConnections[key]['connection'].addStream(stream); 
+				       		}
+				       		
 				       		//updatePeerConnection(key, peerConnection);
 				       		peerCount++;
 			       		} 
@@ -380,9 +386,9 @@
 			mustUpdate = true;
 		}
 		
-		
-		updatePeerConnection(requestId,peerConnection ); 
+		updatePeerConnection(requestId, peerConnection); 
 		if(mustUpdate){
+			updateEventLog("# Will Update Video Event ");
 			updateVideoEvent(); 
 		}
 		//updateVideoEvent(); 
@@ -418,7 +424,7 @@
 		if(matchCurrentReqId(requestId)){
    			return;
    		}
-		
+		updateEventLog("doCreateOffer to "+requestId);
 		const peerConnection = getPeerConnection(requestId);
 		const _class = this;
 		peerConnection.createOffer(function(offer) {
