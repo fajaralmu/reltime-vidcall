@@ -71,7 +71,7 @@
 		const callbackWebRtcHandshake = {
 				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
 				callback : function(resp){
-					_class.handleWebRtcHandshake(resp.requestId, resp.webRtcObject);
+					_class.handleWebRtcHandshake(resp.eventId, resp.requestId, resp.webRtcObject);
 				}
 			};
 		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake);
@@ -93,6 +93,7 @@
 				tagName: 'video',
 				id: 'video-member-'+requestId,
 				muted: 'muted',
+				className: 'border',
 				controls: '',
 				height: 150,
 				width: 150,
@@ -258,13 +259,15 @@
 	}
 	
 	
-	function handleWebRtcHandshake(requestId, webRtcObject){
+	function handleWebRtcHandshake(eventId, requestId, webRtcObject){
 		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
-		updateEventLog("## HANDSHAKE "+webRtcObject.event.toUpperCase()+"|"+requestId);
 		
 		if(matchCurrentReqId(requestId)){
+			updateEventLog("## HANDSHAKE ABORTED "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
    			return;
    		}
+		updateEventLog("## HANDSHAKE "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
+		
 	    var data =  (webRtcObject.data); 
 	    switch (webRtcObject.event) {
 	    // when somebody wants to call us
@@ -344,19 +347,29 @@
 		
 		peerConnection.ondatachannel = function(ev){
 			console.debug("ondatachannel: ", ev);
-			//initDataChannel(ev);
+			initDataChannel(ev);
 		}
-		peerConnection.addStream(this.videoStream);
+		
+		var mustUpdate = false;
+		if(this.videoStream){
+			peerConnection.addStream(this.videoStream);
+			mustUpdate = true;
+		}
+		
+		
 		updatePeerConnection(requestId,peerConnection ); 
+		if(mustUpdate){
+			updateVideoEvent(); 
+		}
 		//updateVideoEvent(); 
 		if(handleNewMemberJoin)
 			createOffer(requestId);
 	}
 	
 	function initDataChannel(ev){
-	/* 	dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true }); 
+		dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true }); 
 	
-		dataChannel.onopen = function(event){ console.debug("DATA CHANNEL ON OPEN ", event); } 
+		/* dataChannel.onopen = function(event){ console.debug("DATA CHANNEL ON OPEN ", event); } 
 		dataChannel.onmessage = function(event) { console.debug("#####dataChannel Message:", event ); };
 		dataChannel.onerror = function(error) { console.debug("#####dataChannel Error:", error); };
 		dataChannel.onclose = function(closed) { onsole.debug("#####Data channel is closed ", closed); }; */
@@ -409,15 +422,16 @@
 		console.debug("Will create answer");
 		peerConnection.createAnswer(function(answer) {
 			
+			const peerConnection2 = getPeerConnection(requestId);
 			console.debug("createAnswer: ", answer);
 			updateEventLog(requestId+" createAnswer");
 			
-		    peerConnection.setLocalDescription(answer);
+			peerConnection2.setLocalDescription(answer);
 	        send(requestId, {
 	            event : "answer",
 	            data : answer
 	        });
-	        _class.updatePeerConnection(requestId,peerConnection );
+	        _class.updatePeerConnection(requestId,peerConnection2 );
 		}, function(error) {
 		    console.error("error handle offer: ", error);
 		});
@@ -453,12 +467,15 @@
 	}
 	
 	function send(requestId, msg) {
+		const eventId = randomNumber();
 		console.debug("SEND WEBSOCKET, event: ", msg.event);
-		updateEventLog(">> SEND WEBSOCKET to "+requestId+":"+msg.event);
+		updateEventLog(">> SEND WEBSOCKET to "+requestId+" | "+eventId+" :"+msg.event);
 		//console.info("Send Audio Data");
 		sendToWebsocket("/app/publicconf1/webrtc", {
-			originId : requestId,
+//			originId : requestId,
+			originId : "${registeredRequest.requestId}",
 			roomId: '${roomId}',
+			eventId: eventId,
 		 	webRtcObject: (msg) 
 		});
 	}

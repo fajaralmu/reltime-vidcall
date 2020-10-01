@@ -29,6 +29,7 @@ public class WebResponse implements Serializable {
 	private String username;
 	private String imageData;
 	private String audioData;
+	private String eventId;
 	
 	private boolean onlineStatus;
 	private boolean accept;

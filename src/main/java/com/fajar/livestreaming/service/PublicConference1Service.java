@@ -117,7 +117,9 @@ public class PublicConference1Service {
 	public WebResponse handshakeWebRtc(WebRequest request) {
 		String roomId = request.getRoomId();
 		String originId = request.getOriginId();
-		WebResponse response = WebResponse.builder().requestId(originId).webRtcObject(request.getWebRtcObject()).build();
+		String eventId = request.getEventId();
+		
+		WebResponse response = WebResponse.builder().requestId(originId).eventId(eventId).webRtcObject(request.getWebRtcObject()).build();
 		realtimeService.convertAndSend("/wsResp/webrtcpublicconference/"+roomId , response); 
 		return response;
 	}

@@ -29,6 +29,7 @@ public class WebRequest implements Serializable {
 	private String message;
 	
 	private String roomId;
+	private String eventId;
 	
 	private WebRtcObject webRtcObject;
 	
