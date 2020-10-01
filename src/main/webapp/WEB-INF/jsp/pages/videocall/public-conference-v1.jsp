@@ -22,7 +22,7 @@
 						<p>${member.created }</p>
 						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
 						<div class="btn-group" role="group" id="video-control-${member.requestId }">
-							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-play"></i></button>
+							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-pause"></i></button>
 							<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
 						 
 							<c:if test="${member.requestId != registeredRequest.requestId }" >
@@ -37,7 +37,7 @@
 		<div class="col-6">
 			<div class="border border-primary rounded bg-dark"  >
 				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3>
-				<button onclick="clearLog()" class="btn btn-secondary btn-sm"><i class="fas fa-trash-alt"></i>Clear Log</button>
+				<button onclick="clearLog()" class="btn btn-secondary btn-sm"><i class="fas fa-trash-alt"></i></button>
 				<div id="event-log" >
 				</div>
 			</div>
@@ -124,7 +124,7 @@
 				},
 				ch2: {
 					tagName: 'button',
-					innerHTML : 'UnMute',
+					innerHTML : "<i class=\"fas fa-volume-pause\"></i>",
 					className: 'btn',
 					onclick: function(e){
 						toggleVideoMute('video-member-'+requestId, e.target);

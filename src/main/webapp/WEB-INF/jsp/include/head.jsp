@@ -8,7 +8,7 @@
 <div class="header" style="height: auto">
   
 	<div class="page-header" style="color: blue">
-		<h1>Nuswantoro Conference</h1>
+		<h1>Nuswantoro.conf</h1>
 		<nav class="navbar  navbar-expand-lg ">
 			<div>
 				<ul class="navbar-nav ">
