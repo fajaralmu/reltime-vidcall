@@ -44,27 +44,25 @@
 				<div class="card-body">
 					<ol>
 						<li>Register Username</li>
-						<li>
-							<p>One to One Video Call</p>
-							<ol>
+						<li><span>One to One Video Call</span>
+							<ul>
 								<li>Check Available Sessions</li>
 								<li>Call The User</li>
-
-							</ol>
-						</li>
-						<li>
-							<p>Public Video Call</p>
-							<ol>
+							</ul></li>
+						<li><span>Public Video Call</span>
+							<ul>
 								<li>Go To Dashboard</li>
 								<li>Generate Room Id</li>
 								<li>Enter Using Generated Room Id To Join</li>
-							</ol>
-						</li>
+							</ul></li>
 						<li>Invalidate Session If You're Done</li>
+
 					</ol>
-					<p>Source Code&nbsp;<a href="https://github.com/fajaralmu/reltime-vidcall"><i
-						class="fab fa-github"></i>&nbsp;Github</a></p>
-					
+					<p>Source Code</p>
+					<a href="https://github.com/fajaralmu/reltime-vidcall"><i
+						class="fab fa-github"></i>&nbsp;Github</a>
+
+
 				</div>
 			</div>
 		</div>
