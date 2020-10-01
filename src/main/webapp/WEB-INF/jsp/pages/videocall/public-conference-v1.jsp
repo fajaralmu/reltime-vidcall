@@ -5,12 +5,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div>
-	<h2>Public Conference | ${roomId }</h2>
+	<h2>Public Conference</h2>
 	<div class="border row">
 		<div class="col-6">
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 		</div>
 		<div class="col-6">
+			<h3>Room ID: ${roomId }</h3>
 			<h3>Your ID: ${registeredRequest.requestId }</h3>
 			<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>

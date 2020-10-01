@@ -109,6 +109,7 @@
 							initCallbackCalling(response.registeredRequest.requestId);
 							buttonRegister.style.display = "none";
 							inputUserName.setAttribute("disabled", "disabled");
+							window.location.reload();
 						}
 					});
 		}
