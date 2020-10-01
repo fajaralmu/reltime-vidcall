@@ -49,7 +49,7 @@
 							<ol>
 								<li>Check Available Sessions</li>
 								<li>Call The User</li>
-								<li>Invalidate Session If You're Done</li>
+
 							</ol>
 						</li>
 						<li>
@@ -57,14 +57,14 @@
 							<ol>
 								<li>Go To Dashboard</li>
 								<li>Generate Room Id</li>
-								<li>Enter Using Generated Room Id To Join</li> 
+								<li>Enter Using Generated Room Id To Join</li>
 							</ol>
 						</li>
-
+						<li>Invalidate Session If You're Done</li>
 					</ol>
-					<p>Source Code</p>
-					<a href="https://github.com/fajaralmu/reltime-vidcall"><i
-						class="fab fa-github"></i>&nbsp;Github</a>
+					<p>Source Code&nbsp;<a href="https://github.com/fajaralmu/reltime-vidcall"><i
+						class="fab fa-github"></i>&nbsp;Github</a></p>
+					
 				</div>
 			</div>
 		</div>
