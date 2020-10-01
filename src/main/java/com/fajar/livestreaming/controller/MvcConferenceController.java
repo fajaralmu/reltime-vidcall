@@ -76,7 +76,7 @@ public class MvcConferenceController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/publicconference/{roomId}" })
-	@CustomRequestInfo(title = "Video Call v2", pageUrl = "pages/videocall/public-conference-v1")
+	@CustomRequestInfo(title = "Public Conference v1", pageUrl = "pages/videocall/public-conference-v1")
 	public String publicconference(Model model, @PathVariable(name="roomId") String roomId, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 

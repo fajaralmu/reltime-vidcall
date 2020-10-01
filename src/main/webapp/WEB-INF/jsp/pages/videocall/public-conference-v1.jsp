@@ -10,6 +10,7 @@
 		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
 		<h3>${registeredRequest.requestId }</h3>
 		<button class="btn btn-secondary" onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
+		<button class="btn btn-danger" onclick="leave()"><i class="fas fa-sign-oute"></i>&nbsp;Leave</button>
 	</div>
 	<div class="row">
 		<div class="col-6">
@@ -65,6 +66,7 @@
 		const callbackMemberLeave = {
 			subscribeUrl : "/wsResp/leaveroom/${roomId }",
 			callback : function(resp) {
+				peerConnections[resp.requestId] = null;
 				_class.removeMemberItem(resp.username, resp.requestId, resp.date);
 			}
 		};
@@ -137,10 +139,18 @@
 	}
 
 	function leave() {
-		sendToWebsocket("/app/publicconf1/leave", {
-			originId : "${registeredRequest.requestId}",
-			roomId : "${roomId}"
-		});
+		
+		confirmDialog("Want to leave ?").then(function(ok){
+			if(ok){
+				sendToWebsocket("/app/publicconf1/leave", {
+					originId : "${registeredRequest.requestId}",
+					roomId : "${roomId}"
+				});
+				window.location.href = "<spring:url value="/dashboard/" /> ";
+			}
+		})
+		
+		
 	}
 
 	prepare();
@@ -312,11 +322,14 @@
 			if(vid){
 				vid.srcObject = event.stream;
 				vid.style.visibiity = "visible";
+				vid.addEventListener('canplay', function (ev) { 
+					vid.play();
+		    	}, false);
 			}
 			updateEventLog("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
 			
 		};
-		peerConnection.ontrack  = function(event) {
+		/* peerConnection.ontrack  = function(event) {
 			updateEventLog("PeerConnection Start Add Track => "+ requestId);
 			const vid = byId("video-member-"+requestId);
 			if(vid){
@@ -324,8 +337,8 @@
 				vid.style.visibiity = "visible";
 			}
 			updateEventLog("PeerConnection End Add Track => "+ requestId);
-			
-		};
+			 
+		};*/
 		peerConnection.onicecandidate = function(event) {
 			console.debug("peerConnection on ICE Candidate: ", event.candidate);
 			updateEventLog("Peer IceCandidate ("+ requestId +")");
