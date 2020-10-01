@@ -20,15 +20,19 @@
 					<div id="member-item-${member.requestId}">
 						<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
 						<p>${member.created }</p>
-						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
-						<div class="btn-group" role="group" id="video-control-${member.requestId }">
-							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-pause"></i></button>
-							<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
-						 
-							<c:if test="${member.requestId != registeredRequest.requestId }" >
-								<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
-							</c:if>
-						</div>
+						<c:if test="${member.requestId != registeredRequest.requestId }" >
+							<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
+						
+							<div class="btn-group" role="group" id="video-control-${member.requestId }">
+								<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-pause"></i></button>
+								<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
+							 	<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
+							
+							</div>
+						</c:if>
+						<c:if test="${member.requestId == registeredRequest.requestId }" >
+							<h3>You</h3>
+						</c:if>
 					</div>
 				</c:forEach>
 			</div>
@@ -129,20 +133,24 @@
 					onclick: function(e){
 						toggleVideoMute('video-member-'+requestId, e.target);
 					}
+				},
+				ch3: {
+					tagName: 'button',
+					className: 'btn btn-info btn-sm',
+					onclick: function(e){
+						initWebRtc(requestId, true);
+					},
+					innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
 				}
 			
 			}
 		};
 		
-		if(requestId != "${registeredRequest.requestId}"){
-			memberElementObject['ch4']['ch3'] = {
-				tagName: 'button',
-				className: 'btn btn-info btn-sm',
-				onclick: function(e){
-					initWebRtc(requestId, true);
-				},
-				innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
+		if(requestId == "${registeredRequest.requestId}"){
+			memberElementObject['ch3'] = {
+					tagName:'h3', innerHTML: 'YOU'
 			}
+			memberElementObject['ch4'] = null;
 		}
 
 		const memberElement = createHtmlTag(memberElementObject);
@@ -237,6 +245,29 @@
 	
 	function updateVideoEvent() {
 		const app = this;   
+		if(app.videoStream){
+			updateEventLog("videoStream IS EXIST");
+			peerCount = 0;
+			for (var key in peerConnections ) {
+	       		
+	       		if(matchCurrentReqId(key)){
+	       			 
+	       		}else{
+	       			 
+	       			const entry = peerConnections[key];
+		       		const peerConnection = entry['connection'];
+		       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
+		       			peerConnections[key]['connection'].addStream(this.videoStream); 
+		       		} 
+		       		peerCount++;
+	       		} 
+	       		
+			}  
+			updateEventLog("Peer Count: "+peerCount);
+			return;
+		}
+		
+		
 	    window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 	        .then(function (stream) {
 	        		app.videoStream = stream;
