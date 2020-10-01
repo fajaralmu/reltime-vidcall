@@ -639,6 +639,6 @@ function getCookie(key){
 }
 
 function randomNumber(){
-	return  Math.random()*10000000000000000;
+	return  Math.random().toString().replace(".", ""); 
 }
 

@@ -40,7 +40,7 @@ public class PublicConference1Service {
 		if (session == null) {
 			return null;
 		}
-		String newRoomId = StringUtil.generateRandomChar(4).toLowerCase();
+		String newRoomId = StringUtil.generateRandomNumber(1)+StringUtil.generateRandomChar(4).toLowerCase();
 		String oldRoomId = activeRoomId.get(session.getRequestId());
 		activeRoomId.put(session.getRequestId(), newRoomId);
 		updateRoomMembers(oldRoomId, newRoomId);		

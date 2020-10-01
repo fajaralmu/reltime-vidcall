@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fajar.livestreaming.annotation.CustomRequestInfo;
+import com.fajar.livestreaming.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,8 +31,7 @@ public class MvcAppController extends BaseController{
 	@CustomRequestInfo(pageUrl = "pages/main-menu", title = "Nuswantoro.conf")
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
-		 
-		 
+		  
 		return basePage;
 	}
 

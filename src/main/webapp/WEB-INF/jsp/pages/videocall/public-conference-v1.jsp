@@ -11,15 +11,26 @@
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 		</div>
 		<div class="col-6">
-			<h3>Room ID: ${roomId }</h3>
-			<h3>Your ID: ${registeredRequest.requestId }</h3>
-			<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
+			<div class="input-group mb-3">
+			  <div class="input-group-prepend">
+			    <span class="input-group-text" id="basic-addon1">Room ID</span>
+			  </div>
+			  <input value="${roomId }" type="text" disabled="disabled" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+			</div>
+			<div class="input-group mb-3">
+			  <div class="input-group-prepend">
+			    <span class="input-group-text" id="basic-addon1">Your ID</span>
+			  </div>
+			  <input value="${registeredRequest.requestId }" type="text" disabled="disabled" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+			</div>
+			
+			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
 			<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-6">
+		<div class="col-4">
 			<div class="border border-primary rounded" id="member-list">
 				<h3 style="text-align: center;">Member List</h3>
 				<c:forEach var="member" items="${members}">
@@ -44,7 +55,7 @@
 			</div>
 
 		</div>
-		<div class="col-6">
+		<div class="col-8">
 			<div class="border border-primary rounded bg-dark"  >
 				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
 				<div id="event-log" >
@@ -72,12 +83,9 @@
 
 		const callbackMemberJoin = {
 			subscribeUrl : "/wsResp/joinroom/${roomId }",
-			callback : function(resp) {
+			callback : function(response) {
 				//_class.initWebRtc(resp.requestId, true);
-				if(byId("member-item-"+resp.requestId)){ 
-					_class.removeMemberItem(resp.username, resp.requestId, resp.date);
-				}
-				_class.addMemberList(resp.username, resp.requestId, resp.date);
+				_class.handleMemberJoin(response);
 			}
 		};
 		const callbackMemberLeave = {
@@ -94,6 +102,19 @@
 				}
 			};
 		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake);
+	}
+	
+	function handleMemberJoin(resp){
+		if(isUserRequestId(resp.requestId)) {
+			//TODO: update...
+			window.location.reload();
+			return;
+		}
+		
+		if(byId("member-item-"+resp.requestId)){ 
+			removeMemberItem(resp.username, resp.requestId, resp.date);
+		}
+		addMemberList(resp.username, resp.requestId, resp.date);
 	}
 
 	function addMemberList(username, requestId, date) {
@@ -244,7 +265,7 @@
 	     
 	const peerConnections = {};
 	
-	function matchCurrentReqId(requestId){
+	function isUserRequestId(requestId){
 		return requestId == "${registeredRequest.requestId}";
 	}
 	
@@ -256,7 +277,7 @@
 			var totalPeer = 0;
 			for (var key in peerConnections ) {
 	       		
-	       		if(matchCurrentReqId(key)){
+	       		if(isUserRequestId(key)){
 	       			 
 	       		}else{
 	       			 
@@ -287,7 +308,7 @@
 			       	var peerCount = 0;
 			       	for (var key in peerConnections ) {
 			       		
-			       		if(matchCurrentReqId(key)){
+			       		if(isUserRequestId(key)){
 			       			 
 			       		}else{
 			       			 
@@ -382,7 +403,7 @@
 	function handleWebRtcHandshake(eventId, requestId, webRtcObject){
 		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
 		
-		if(matchCurrentReqId(requestId)){
+		if(isUserRequestId(requestId)){
 			updateEventLog("## HANDSHAKE ABORTED "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
    			return;
    		}
@@ -411,7 +432,7 @@
 	
 	function initWebRtc(requestId, handleNewMemberJoin){ 
 		
-		if(matchCurrentReqId(requestId)){
+		if(isUserRequestId(requestId)){
 			updateVideoEvent(); 
 			return;
 		}
@@ -509,7 +530,7 @@
 	}
 	
 	function doCreateOffer(requestId){
-		if(matchCurrentReqId(requestId)){
+		if(isUserRequestId(requestId)){
    			return;
    		}
 		updateEventLog("doCreateOffer to "+requestId);
@@ -609,7 +630,7 @@
 	
 	function redial(){
 		for (var key in peerConnections) {
-			if(matchCurrentReqId(key)){
+			if(isUserRequestId(key)){
 	   			continue;
 	   		}
 			initWebRtc(key, true);
