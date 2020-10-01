@@ -21,13 +21,14 @@
 						<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
 						<p>${member.created }</p>
 						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
-						<div id="video-control-${member.requestId }">
-							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);">Play</button>
-							<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);">UnMute</button>
+						<div class="btn-group" role="group" id="video-control-${member.requestId }">
+							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-play"></i></button>
+							<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
+						 
+							<c:if test="${member.requestId != registeredRequest.requestId }" >
+								<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
+							</c:if>
 						</div>
-						<c:if test="${member.requestId != registeredRequest.requestId }" >
-							<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
-						</c:if>
 					</div>
 				</c:forEach>
 			</div>
@@ -111,9 +112,11 @@
 			ch4: {
 				tagName: 'div',
 				id: 'video-controls-'+requestId,
+				className: 'btn-group',
+				role: 'group',
 				ch1: {
 					tagName: 'button',
-					innerHTML : 'Play',
+					innerHTML : '<i class="fas fa-play"></i>',
 					className: 'btn',
 					onclick: function(e){
 						toggleVideoPlay('video-member-'+requestId, e.target); 
@@ -154,10 +157,10 @@
 		
 		if(vid.paused){
 			vid.play();
-			button.innerHTML = "Pause";
+			button.innerHTML = "<i class=\"fas fa-pause\"></i>";
 		}else{
 			vid.pause();
-			button.innerHTML = "Play";
+			button.innerHTML = "<i class=\"fas fa-play\"></i>";
 		}
 	}
 	
@@ -167,10 +170,10 @@
 		
 		if(vid.muted){
 			vid.muted = false;
-			button.innerHTML = "Mute";
+			button.innerHTML = "<i class=\"fas fa-volume-mute\"></i>";
 		}else{
 			vid.muted = true;
-			button.innerHTML = "UnMute";
+			button.innerHTML = "<i class=\"fas fa-volume-down\"></i>";
 		}
 	}
 
