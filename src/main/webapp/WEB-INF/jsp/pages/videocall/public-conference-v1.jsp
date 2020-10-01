@@ -434,7 +434,7 @@
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
 			    ]
 			};
-		const peerConnection = new RTCPeerConnection( null, {//configuration2, {
+		const peerConnection = new RTCPeerConnection( configuration2, {//configuration2, {
 		    optional : [ {
 		        RtpDataChannels : true
 		    } ]
