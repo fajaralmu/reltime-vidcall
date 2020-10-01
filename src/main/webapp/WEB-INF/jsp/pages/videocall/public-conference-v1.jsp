@@ -21,6 +21,10 @@
 						<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
 						<p>${member.created }</p>
 						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
+						<div id="video-control-${member.requestId }">
+							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);">Play</button>
+							<button class="btn" onclick="toggleVideoMute'video-member-${member.requestId }', this);">UnMute</button>
+						</div>
 						<c:if test="${member.requestId != registeredRequest.requestId }" >
 							<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
 						</c:if>
@@ -103,12 +107,32 @@
 				height: 150,
 				width: 150,
 				style: {visibility: 'hidden'}
+			},
+			ch4: {
+				tagName: 'div',
+				id: 'video-controls-'+requestId,
+				ch1: {
+					tagName: 'button',
+					innerHTML : 'Play',
+					className: 'btn',
+					onclick: function(e){
+						toggleVideoPlay('video-member-'+requestId, e.target); 
+					}
+				},
+				ch2: {
+					tagName: 'button',
+					innerHTML : 'UnMute',
+					className: 'btn',
+					onclick: function(e){
+						toggleVideoMute('video-member-'+requestId, e.target);
+					}
+				}
+			
 			}
-
 		};
 		
 		if(requestId != "${registeredRequest.requestId}"){
-			memberElementObject['ch4'] = {
+			memberElementObject['ch5'] = {
 				tagName: 'button',
 				className: 'btn btn-info btn-sm',
 				onclick: function(e){
@@ -122,6 +146,32 @@
 		memberList.appendChild(memberElement);
 
 		updateEventLog(username  + ' Joined');
+	}
+	
+	function toggleVideoPlay(videoId, button){
+		const vid = byId(videoId);
+		if(!vid) return;
+		
+		if(vid.paused){
+			vid.play();
+			button.innerHTML = "Pause";
+		}else{
+			vid.pause();
+			button.innerHTML = "Play";
+		}
+	}
+	
+	function toggleVideoMute(videoId, button){
+		const vid = byId(videoId);
+		if(!vid) return;
+		
+		if(vid.muted){
+			vid.muted = false;
+			button.innerHTML = "Mute";
+		}else{
+			vid.muted = true;
+			button.innerHTML = "UnMute";
+		}
 	}
 
 	function removeMemberItem(username, requestId, date) {
