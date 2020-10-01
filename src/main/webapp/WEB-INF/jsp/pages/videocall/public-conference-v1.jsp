@@ -9,8 +9,8 @@
 	<div class="border" class="row">
 		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
 		<h3>${registeredRequest.requestId }</h3>
-		<button class="btn btn-secondary" onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
-		<button class="btn btn-danger" onclick="leave()"><i class="fas fa-sign-oute"></i>&nbsp;Leave</button>
+		<button class="btn btn-info btn-lg" onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
+		<button class="btn btn-danger btn-lg" onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
 	</div>
 	<div class="row">
 		<div class="col-6">
@@ -375,8 +375,9 @@
 			updateVideoEvent(); 
 		}
 		//updateVideoEvent(); 
-		if(handleNewMemberJoin)
-			createOffer(requestId);
+		if(handleNewMemberJoin){
+			createOffer(requestId); 
+		}
 	}
 	
 	function initDataChannel(ev){
@@ -517,7 +518,7 @@
 	if("${member.requestId}" == "${registeredRequest.requestId}"){
 		
 	}else{
-		initWebRtc("${member.requestId}", false);
+		initWebRtc("${member.requestId}", true);
 	}
 		
 	</script>
