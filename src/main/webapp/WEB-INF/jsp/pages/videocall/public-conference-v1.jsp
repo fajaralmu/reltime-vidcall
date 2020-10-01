@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div>
-	<h2>Public Conference ${roomId }</h2>
+	<h2>Public Conference | ${roomId }</h2>
 	<div class="border" class="row">
 		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
 		<h3>${registeredRequest.requestId }</h3>
@@ -64,7 +64,7 @@
 		const callbackMemberJoin = {
 			subscribeUrl : "/wsResp/joinroom/${roomId }",
 			callback : function(resp) {
-				_class.initWebRtc(resp.requestId, true);
+				//_class.initWebRtc(resp.requestId, true);
 				if(byId("member-item-"+resp.requestId)){ 
 					_class.removeMemberItem(resp.username, resp.requestId, resp.date);
 				}

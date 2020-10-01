@@ -31,6 +31,18 @@
 <script src="<c:url value="/res/js/time.js?v=1"></c:url >"></script>
 
 <script src="<c:url value="/res/fa/js/all.js?v=1"></c:url >"></script>
+
+<c:forEach var="stylePath" items="${additionalStylePaths }">
+	<link rel="stylesheet"
+		href="<c:url value="/res/css/pages/${ stylePath.value}.css?version=1"></c:url >" />
+</c:forEach>
+<c:forEach var="scriptPath" items="${additionalScriptPaths }">
+	<script
+		src="<c:url value="/res/js/pages/${scriptPath.value }.js?v=1"></c:url >"></script>
+</c:forEach>
+
+
+
 <script type="text/javascript">
 
 	var ipAndPort = "${ipAndPort}";

@@ -27,7 +27,7 @@ public class MvcAppController extends BaseController{
 	}
 
 	@RequestMapping(value = { "/" })
-	@CustomRequestInfo(pageUrl = "pages/main-menu", title = "Nuswantoro Conference")
+	@CustomRequestInfo(pageUrl = "pages/main-menu", title = "Nuswantoro.conf")
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
 		 
