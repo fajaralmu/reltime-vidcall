@@ -10,19 +10,9 @@
 		<div class="col-6">
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 		</div>
-		<div class="col-6">
-			<div class="input-group mb-3">
-			  <div class="input-group-prepend">
-			    <span class="input-group-text" id="basic-addon1">Room ID</span>
-			  </div>
-			  <input value="${roomId }" type="text" disabled="disabled" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-			</div>
-			<div class="input-group mb-3">
-			  <div class="input-group-prepend">
-			    <span class="input-group-text" id="basic-addon1">Your ID</span>
-			  </div>
-			  <input value="${registeredRequest.requestId }" type="text" disabled="disabled" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-			</div>
+		<div class="col-6"> 
+		    <h3>Room : ${roomId }</h3>
+		    <h3>User :${registeredRequest.requestId }</h3> 
 			
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
@@ -107,7 +97,7 @@
 	function handleMemberJoin(resp){
 		if(isUserRequestId(resp.requestId)) {
 			//TODO: update...
-			window.location.reload();
+			//window.location.reload();
 			return;
 		}
 		
@@ -115,6 +105,7 @@
 			removeMemberItem(resp.username, resp.requestId, resp.date);
 		}
 		addMemberList(resp.username, resp.requestId, resp.date);
+		initWebRtc(resp.requestId, true);
 	}
 
 	function addMemberList(username, requestId, date) {
