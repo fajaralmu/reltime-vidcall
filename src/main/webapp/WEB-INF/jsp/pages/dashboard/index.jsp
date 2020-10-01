@@ -12,11 +12,24 @@
 				<div class="card-header">Generate Room Id</div>
 				<div class="card-body">
 					<p><i class="fas fa-key"></i>&nbsp;Room Id <span id="room-id">${roomId == null ? "Not Generated" : roomId}</span></p>
-					<p><i class="fas fa-link"></i>&nbsp;Link <a class="badge badge-info" id="room-link"></a></p>
-					<button class="btn btn-primary" onclick="generateRoomId()">Generate</button>
+					<p><i class="fas fa-link"></i>&nbsp;Link <a class="badge badge-info" id="room-link"></a></p> 
 				</div>
 				<div class="card-footer">
-					<span id="footer-info">${roomId != null? 'Update Room Id' : 'Generate Room Id'}</span>
+					<button class="btn btn-primary" onclick="generateRoomId()" id="footer-info">
+						${roomId != null? 'Update Room Id' : 'Generate Room Id'}</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="card">
+				<div class="card-header">Go To Existing Room</div>
+				<div class="card-body">
+					<p>Enter Existing Room</p>
+					<input type="text" class="form-control" placeholder="Existing Room Id" id="input-existing-room" />
+					
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary" onclick="goToExistingRoom()">Submit</button>
 				</div>
 			</div>
 		</div>
@@ -27,6 +40,15 @@
 	const footerInfo = byId("footer-info");
 	const roomId = byId("room-id");
 	const roomLink = byId("room-link");
+	const roomIdExisting = byId("input-existing-room");
+	
+	function goToExistingRoom(){
+		if(null == roomIdExisting.value){
+			infoDialog("Please specify room ID!").then(function(e){});
+			return;
+		}
+		window.location.href = "<spring:url value="/stream/publicconference/" />"+roomIdExisting.value;
+	}
 		
 	function generateRoomId(){
 		postReq("<spring:url value="/api/webrtcroom/generateroomid" />", {},

@@ -18,9 +18,12 @@
 				<h3 style="text-align: center;">Member List</h3>
 				<c:forEach var="member" items="${members}">
 					<div id="member-item-${member.requestId}">
-					<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
-					<p>${member.created }</p>
-					<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
+						<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
+						<p>${member.created }</p>
+						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
+						<c:if test="${member.requestId != registeredRequest.requestId }" >
+							<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
+						</c:if>
 					</div>
 				</c:forEach>
 			</div>
@@ -100,6 +103,14 @@
 				height: 150,
 				width: 150,
 				style: {visibility: 'hidden'}
+			},
+			ch4: {
+				tagName: 'button',
+				className: 'btn btn-info btn-sm',
+				onclick: function(e){
+					initWebRtc(requestId, true);
+				},
+				innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
 			}
 
 		};
