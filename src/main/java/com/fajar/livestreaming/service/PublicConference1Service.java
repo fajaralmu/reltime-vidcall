@@ -118,9 +118,10 @@ public class PublicConference1Service {
 		String roomId = request.getRoomId();
 		String originId = request.getOriginId();
 		String eventId = request.getEventId();
+		String destination = request.getDestination();
 		
 		WebResponse response = WebResponse.builder().requestId(originId).eventId(eventId).webRtcObject(request.getWebRtcObject()).build();
-		realtimeService.convertAndSend("/wsResp/webrtcpublicconference/"+roomId , response); 
+		realtimeService.convertAndSend("/wsResp/webrtcpublicconference/"+roomId+"/"+destination , response); 
 		return response;
 	}
 

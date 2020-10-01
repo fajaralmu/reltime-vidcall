@@ -6,12 +6,16 @@
 
 <div>
 	<h2>Public Conference | ${roomId }</h2>
-	<div class="border" class="row">
-		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
-		<h3>${registeredRequest.requestId }</h3>
-		<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
-		<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
-		<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
+	<div class="border row">
+		<div class="col-6">
+			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
+		</div>
+		<div class="col-6">
+			<h3>Your ID: ${registeredRequest.requestId }</h3>
+			<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
+			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
+			<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-6">
@@ -83,7 +87,7 @@
 			}
 		};
 		const callbackWebRtcHandshake = {
-				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
+				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }/${registeredRequest.requestId}",
 				callback : function(resp){
 					_class.handleWebRtcHandshake(resp.eventId, resp.requestId, resp.webRtcObject);
 				}
@@ -416,7 +420,7 @@
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
 			    ]
 			};
-		const peerConnection = new RTCPeerConnection(configuration2, {
+		const peerConnection = new RTCPeerConnection( null, {//configuration2, {
 		    optional : [ {
 		        RtpDataChannels : true
 		    } ]
@@ -486,12 +490,7 @@
 	}
 	
 	function initDataChannel(ev){
-		dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true }); 
-	
-		/* dataChannel.onopen = function(event){ console.debug("DATA CHANNEL ON OPEN ", event); } 
-		dataChannel.onmessage = function(event) { console.debug("#####dataChannel Message:", event ); };
-		dataChannel.onerror = function(error) { console.debug("#####dataChannel Error:", error); };
-		dataChannel.onclose = function(closed) { onsole.debug("#####Data channel is closed ", closed); }; */
+		dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });  
 	}
 	
 	function handlePartnerLeave(data){
@@ -595,6 +594,7 @@
 			originId : "${registeredRequest.requestId}",
 			roomId: '${roomId}',
 			eventId: eventId,
+			destination:requestId,
 		 	webRtcObject: (msg) 
 		});
 	}
