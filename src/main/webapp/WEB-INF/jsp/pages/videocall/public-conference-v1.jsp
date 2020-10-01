@@ -20,12 +20,12 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-4">
-			<div class="border border-primary rounded" id="member-list">
-				<h3 style="text-align: center;">Member List</h3>
+		<div class="col-6">
+			<div class="border border-primary rounded row" id="member-list">
+				<h3 class="col-6" style="text-align: center;">Member List</h3><div class="col-6"></div>
 				<c:forEach var="member" items="${members}">
-					<div id="member-item-${member.requestId}">
-						<h3><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h3>
+					<div class="col-6" id="member-item-${member.requestId}">
+						<h5><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h5>
 						<p>${member.created }</p>
 						<c:if test="${member.requestId != registeredRequest.requestId }" >
 							<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
@@ -45,7 +45,7 @@
 			</div>
 
 		</div>
-		<div class="col-8">
+		<div class="col-6">
 			<div class="border border-primary rounded bg-dark"  >
 				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
 				<div id="event-log" >
@@ -112,8 +112,9 @@
 		const memberElementObject = {
 			tagName : 'div',
 			id : "member-item-" + requestId,
+			className: 'col-6',
 			ch1 : {
-				tagName : 'h3',
+				tagName : 'h5',
 				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username, 
 			},
 			ch2 : {

@@ -44,12 +44,27 @@
 				<div class="card-body">
 					<ol>
 						<li>Register Username</li>
-						<li>Check Available Sessions</li>
-						<li>Call The User</li>
-						<li>Invalidate Session If You're Done</li>
+						<li>
+							<p>One to One Video Call</p>
+							<ol>
+								<li>Check Available Sessions</li>
+								<li>Call The User</li>
+								<li>Invalidate Session If You're Done</li>
+							</ol>
+						</li>
+						<li>
+							<p>Public Video Call</p>
+							<ol>
+								<li>Go To Dashboard</li>
+								<li>Generate Room Id</li>
+								<li>Enter Using Generated Room Id To Join</li> 
+							</ol>
+						</li>
+
 					</ol>
 					<p>Source Code</p>
-					<a href="https://github.com/fajaralmu/reltime-vidcall"><i class="fab fa-github"></i>&nbsp;Github</a>
+					<a href="https://github.com/fajaralmu/reltime-vidcall"><i
+						class="fab fa-github"></i>&nbsp;Github</a>
 				</div>
 			</div>
 		</div>
@@ -62,13 +77,13 @@
 	const buttonRegister = byId("btn-register");
 
 	function invalidate() {
-		confirmDialog("Do you want to invalidate session?").then(function(ok){
-			if(ok){
+		confirmDialog("Do you want to invalidate session?").then(function(ok) {
+			if (ok) {
 				doInvalidate();
 			}
 		})
 	}
-	
+
 	function doInvalidate() {
 		const requestObject = {};
 		postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
@@ -82,13 +97,14 @@
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
 		function registerSession() {
-			confirmDialog("Do you want to Register Session?").then(function(ok){
-				if(ok){
-					doRegisterSession();
-				}
-			})
+			confirmDialog("Do you want to Register Session?").then(
+					function(ok) {
+						if (ok) {
+							doRegisterSession();
+						}
+					})
 		}
-	
+
 		function doRegisterSession() {
 			if (inputUserName.value == null || inputUserName.value.trim() == "") {
 				infoDialog("Please specify username!").then(function(E) {
