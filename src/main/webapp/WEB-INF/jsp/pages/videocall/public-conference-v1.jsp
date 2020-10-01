@@ -23,7 +23,7 @@
 						<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
 						<div id="video-control-${member.requestId }">
 							<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);">Play</button>
-							<button class="btn" onclick="toggleVideoMute'video-member-${member.requestId }', this);">UnMute</button>
+							<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);">UnMute</button>
 						</div>
 						<c:if test="${member.requestId != registeredRequest.requestId }" >
 							<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
@@ -132,7 +132,7 @@
 		};
 		
 		if(requestId != "${registeredRequest.requestId}"){
-			memberElementObject['ch5'] = {
+			memberElementObject['ch4']['ch3'] = {
 				tagName: 'button',
 				className: 'btn btn-info btn-sm',
 				onclick: function(e){
