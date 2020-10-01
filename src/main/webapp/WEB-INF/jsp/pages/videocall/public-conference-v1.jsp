@@ -9,8 +9,9 @@
 	<div class="border" class="row">
 		<video height="200" width="200" muted="muted" controls id="my-video"></video> 
 		<h3>${registeredRequest.requestId }</h3>
-		<button class="btn btn-info btn-lg" onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
-		<button class="btn btn-danger btn-lg" onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
+		<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button>
+		<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
+		<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
 	</div>
 	<div class="row">
 		<div class="col-6">
@@ -31,7 +32,7 @@
 							</div>
 						</c:if>
 						<c:if test="${member.requestId == registeredRequest.requestId }" >
-							<h3>You</h3>
+							<h3 class="center-aligned bg-light">You</h3>
 						</c:if>
 					</div>
 				</c:forEach>
@@ -40,8 +41,7 @@
 		</div>
 		<div class="col-6">
 			<div class="border border-primary rounded bg-dark"  >
-				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3>
-				<button onclick="clearLog()" class="btn btn-secondary btn-sm"><i class="fas fa-trash-alt"></i></button>
+				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
 				<div id="event-log" >
 				</div>
 			</div>
@@ -148,7 +148,7 @@
 		
 		if(requestId == "${registeredRequest.requestId}"){
 			memberElementObject['ch3'] = {
-					tagName:'h3', innerHTML: 'YOU'
+					tagName:'h3', innerHTML: 'YOU', className: 'center-aligned bg-light'
 			}
 			memberElementObject['ch4'] = null;
 		}
@@ -246,8 +246,9 @@
 	function updateVideoEvent() {
 		const app = this;   
 		if(app.videoStream){
-			updateEventLog("videoStream IS EXIST");
-			peerCount = 0;
+			updateEventLog("VideoStream IS EXIST");
+			var peerCount = 0;
+			var totalPeer = 0;
 			for (var key in peerConnections ) {
 	       		
 	       		if(matchCurrentReqId(key)){
@@ -258,12 +259,15 @@
 		       		const peerConnection = entry['connection'];
 		       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
 		       			peerConnections[key]['connection'].addStream(this.videoStream); 
+		       			peerCount++;
 		       		} 
-		       		peerCount++;
+		       		totalPeer++;
+		       		
 	       		} 
 	       		
 			}  
-			updateEventLog("Peer Count: "+peerCount);
+			updateEventLog("Updated Peer Count: "+peerCount);
+			updateEventLog("Total Peer Count: "+totalPeer);
 			return;
 		}
 		
