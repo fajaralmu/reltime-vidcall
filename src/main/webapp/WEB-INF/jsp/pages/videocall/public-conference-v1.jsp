@@ -390,22 +390,9 @@
    		}
 		updateEventLog("## HANDSHAKE "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
 		
-	    var data =  (webRtcObject.data); 
-	    switch (webRtcObject.event) {
-	    // when somebody wants to call us
-	    case "offer":
-	        handleOffer(requestId, data);  break;
-	    case "answer":
-	        handleAnswer(requestId, data);  break;
-	    // when a remote peer sends an ice candidate to us
-	    case "candidate":
-	        handleCandidate(requestId, data);  break;
-	    case "leave":
-	        handlePartnerLeave(data);  break;
-	    case "dial":
-	        handlePartnerDial(requestId, data);  break;
-	    default:  break;
-	    }
+	    const data =  (webRtcObject.data); 
+	    handleHandshake(webRtcObject.event, requestId, data);
+	    
 	}
 	  
 	function initWebRtc(requestId, handleNewMemberJoin){ 

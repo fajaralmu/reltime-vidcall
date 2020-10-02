@@ -23,6 +23,13 @@ const HandshakeHandler = {
 	}
 };
 
+function handleHandshake(event, requestId, data){
+	const handler = HandshakeHandler[event];
+	if(handler){
+		handler(requestId, data);
+	}
+}
+
 
 function getPeerConnection(requestId){
 	if(!peerConnections[requestId]){
