@@ -116,11 +116,15 @@
 		if(byId("member-item-"+resp.requestId)){ 
 			removeMemberItem(resp.username, resp.requestId, resp.date);
 		}
-		addMemberList(resp.username, resp.requestId, resp.date, resp.roomCreator);
+		addMemberList(resp);
 		initWebRtc(resp.requestId, true);
 	}
 
-	function addMemberList(username, requestId, date, isRoomCreator) {
+	function addMemberList(response) {
+		const username = response.username;
+		const requestId = response.requestId;
+		const date = response.date;
+		const isRoomCreator = response.roomCreator;
 		const memberElementObject = {
 			tagName : 'div',
 			id : "member-item-" + requestId,
