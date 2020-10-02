@@ -332,10 +332,8 @@
 	}
 	
 	function removePeerConnection(requestId){
-		if(!peerConnections[requestId]){
-			return;
-		}
-		peerConnections[requestId] = null;
+		 const peerConnection = generatePeerConnection(requestId);
+		 updatePeerConnection(requestId, peerConnection); 
 	}
 	
 	function updatePeerConnection(requestId, obj){
@@ -441,6 +439,26 @@
 			return;
 		}
 		
+		const peerConnection = generatePeerConnection(requestId);
+		
+		var mustUpdate = false;
+		if(this.videoStream){
+			peerConnection.addStream(this.videoStream);
+			mustUpdate = true;
+		}
+		
+		updatePeerConnection(requestId, peerConnection); 
+		if(mustUpdate){
+			updateEventLog("# Will Update Video Event ");
+			updateVideoEvent(); 
+		}
+		//updateVideoEvent(); 
+		if(handleNewMemberJoin){
+			createOffer(requestId); 
+		}
+	}
+	
+	function generatePeerConnection(requestId) {
 		var configuration2 = {
 			    "iceServers" : [ 
 			    	{ "url":"stun:stun2.1.google.com:19302"  } 
@@ -498,21 +516,7 @@
 			initDataChannel(ev);
 		}
 		
-		var mustUpdate = false;
-		if(this.videoStream){
-			peerConnection.addStream(this.videoStream);
-			mustUpdate = true;
-		}
-		
-		updatePeerConnection(requestId, peerConnection); 
-		if(mustUpdate){
-			updateEventLog("# Will Update Video Event ");
-			updateVideoEvent(); 
-		}
-		//updateVideoEvent(); 
-		if(handleNewMemberJoin){
-			createOffer(requestId); 
-		}
+		return peerConnection;
 	}
 	
 	function initDataChannel(ev){
@@ -625,7 +629,7 @@
 	}
 		  
 	function handlePartnerDial(requestId) {
-		//removePeerConnection(requestId);
+		removePeerConnection(requestId);
 		initWebRtc(requestId, true);
 		updateVideoEvent(); 
 	}
@@ -653,7 +657,7 @@
 	}
 	
 	function dialPartner(requestId){
-		//removePeerConnection(requestId);
+		removePeerConnection(requestId);
 		send(requestId, {
 			event: 'dial',
 			data: {}
