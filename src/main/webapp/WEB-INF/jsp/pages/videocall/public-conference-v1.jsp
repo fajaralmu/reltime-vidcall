@@ -33,7 +33,7 @@
 							<div class="btn-group" role="group" id="video-control-${member.requestId }">
 								<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-pause"></i></button>
 								<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
-							 	<button class="btn btn-info btn-sm" onclick="initWebRtc('${member.requestId}', true)"><i class="fas fa-phone"></i>&nbsp;Dial</button>
+							 	<button class="btn btn-info btn-sm" onclick="dialPartner('${member.requestId}')"><i class="fas fa-phone"></i>&nbsp;Dial</button>
 							
 							</div>
 						</c:if>
@@ -156,7 +156,7 @@
 					tagName: 'button',
 					className: 'btn btn-info btn-sm',
 					onclick: function(e){
-						initWebRtc(requestId, true);
+						dialPartner(requestId);
 					},
 					innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
 				}
@@ -329,6 +329,13 @@
 		return peerConnections[requestId]['connection'];
 	}
 	
+	function removePeerConnection(requestId){
+		if(!peerConnections[requestId]){
+			return;
+		}
+		peerConnections[requestId] = null;
+	}
+	
 	function updatePeerConnection(requestId, obj){
 		if(!getPeerConnection(requestId)) {
 			peerConnections[requestId] = {
@@ -416,6 +423,9 @@
 	        break;
 	    case "leave":
 	        handlePartnerLeave(data);
+	        break;
+	    case "dial":
+	        handlePartnerDial(requestId);
 	        break;
 	    default:
 	        break;
@@ -597,6 +607,11 @@
 		peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 		updatePeerConnection(requestId,peerConnection );
 	}
+		  
+	function handlePartnerDial(requestId) {
+		removePeerConnection(requestId);
+		initWebRtc(requestId, true);
+	}
 	
 	function send(requestId, msg) {
 		const eventId = randomNumber();
@@ -618,6 +633,15 @@
 			 return;
 		 }
 		 conn.send(JSON.stringify(message));
+	}
+	
+	function dialPartner(requestId){
+		removePeerConnection(requestId);
+		send(requestId, {
+			event: 'dial',
+			data: {}
+		})
+		
 	}
 	
 	function redial(){
