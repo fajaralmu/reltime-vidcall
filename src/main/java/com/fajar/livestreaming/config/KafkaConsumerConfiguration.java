@@ -1,4 +1,4 @@
-package com.fajar.livestreaming.config.kafka;
+package com.fajar.livestreaming.config;
 
 import java.util.HashMap;
 import java.util.Map;

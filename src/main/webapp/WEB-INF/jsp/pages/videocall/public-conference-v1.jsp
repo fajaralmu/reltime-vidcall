@@ -12,7 +12,7 @@
 		</div>
 		<div class="col-6"> 
 		    <h3>Room : ${roomId }</h3>
-		    <h3>User :${registeredRequest.requestId } <c:if test="${isRoomOwner == true }"><small>Room Admin</small></c:if></h3> 
+		    <h3>User :${registeredRequest.requestId } <c:if test="${isRoomOwner == true }"><small>You Are Room Admin</small></c:if></h3> 
 			
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
@@ -25,10 +25,14 @@
 	<div class="row">
 		<div class="col-6">
 			<div class="border border-primary rounded row" id="member-list">
-				<h3 class="col-6" style="text-align: center;">Member List</h3><div class="col-6"></div>
+				<h3 class="col-6" style="text-align: center">Member List</h3><div class="col-6"></div>
 				<c:forEach var="member" items="${members}">
 					<div class="col-6" id="member-item-${member.requestId}">
-						<h5><i class="fas fa-user-circle"></i>&nbsp;${member.username } </h5>
+						<h5><i class="fas fa-user-circle"></i>&nbsp;${member.username } 
+						<c:if test="${true ==  member.roomCreator}">
+							<small><i class="fas fa-headset"></i></small>
+						</c:if>
+						</h5>
 						<p>${member.created }</p>
 						<c:if test="${member.requestId != registeredRequest.requestId }" >
 							<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
@@ -59,12 +63,9 @@
 </div>
 
 <script type="text/javascript">
-	const memberList = byId("member-list");
-	const eventLog = byId("event-log");
-
-	function clearLog(){
-		eventLog.innerHTML = "";
-	}
+	memberList = byId("member-list");
+	eventLog = byId("event-log");
+ 
 	
 	function prepare() {
 		const _class = this;
@@ -115,18 +116,18 @@
 		if(byId("member-item-"+resp.requestId)){ 
 			removeMemberItem(resp.username, resp.requestId, resp.date);
 		}
-		addMemberList(resp.username, resp.requestId, resp.date);
+		addMemberList(resp.username, resp.requestId, resp.date, resp.roomCreator);
 		initWebRtc(resp.requestId, true);
 	}
 
-	function addMemberList(username, requestId, date) {
+	function addMemberList(username, requestId, date, isRoomCreator) {
 		const memberElementObject = {
 			tagName : 'div',
 			id : "member-item-" + requestId,
 			className: 'col-6',
 			ch1 : {
 				tagName : 'h5',
-				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username, 
+				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username + (isRoomCreator? '<small><i class="fas fa-headset"></i></small>':''), 
 			},
 			ch2 : {
 				tagName : 'p',
@@ -219,19 +220,6 @@
 		memberElement.remove();
 
 		updateEventLog(username  + ' Leave');
-	}
-
-	function updateEventLog(log) {
-	//	log = new Date() + ' ' + log;
-		const line = createHtmlTag({
-			tagName: 'p',
-			ch1:{
-				tagName : 'code',
-				innerHTML : log
-			}
-			
-		});
-		eventLog.appendChild(line);
 	}
  
 

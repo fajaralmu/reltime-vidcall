@@ -5,6 +5,10 @@ const peerConnections = {};
 var conn = null; 
 var dataChannel = null;
 
+//html elements
+var memberList;
+var eventLog;
+
 const HandshakeHandler = {
 	"offer" : function(requestId, data) {
 		handleOffer(requestId, data);
@@ -111,4 +115,23 @@ function generatePeerConnection(requestId) {
 
 function initDataChannel(ev){
 	//dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });  
+}
+
+/////////////////////////// DOM MANIPULATIONS ///////////////////////////////////////
+
+function clearLog(){
+	eventLog.innerHTML = "";
+}
+
+function updateEventLog(log) {
+	//	log = new Date() + ' ' + log;
+	const line = createHtmlTag({
+		tagName: 'p',
+		ch1:{
+			tagName : 'code',
+			innerHTML : log
+		}
+		
+	});
+	eventLog.appendChild(line);
 }

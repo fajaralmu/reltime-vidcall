@@ -33,6 +33,7 @@ public class WebResponse implements Serializable {
 	
 	private boolean onlineStatus;
 	private boolean accept;
+	private boolean roomCreator;
 	
 	private RegisteredRequest registeredRequest;
 	

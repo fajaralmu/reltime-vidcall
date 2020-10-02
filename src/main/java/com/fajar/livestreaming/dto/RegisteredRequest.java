@@ -40,5 +40,6 @@ public class RegisteredRequest implements Serializable{/**
 	
 	@Builder.Default
 	private boolean exist = true;
+	private boolean roomCreator;
 	
 }

@@ -1,4 +1,4 @@
-package com.fajar.livestreaming.config.kafka;
+package com.fajar.livestreaming.config;
 
 public interface DynamicBean {
 
