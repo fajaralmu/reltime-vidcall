@@ -275,7 +275,6 @@
 	       			 
 	       		}else{
 	       			 
-	       			const entry = peerConnections[key];
 		       		const peerConnection = entry['connection'];
 		       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
 		       			peerConnections[key]['connection'].addStream(this.videoStream); 
@@ -628,6 +627,7 @@
 	function handlePartnerDial(requestId) {
 		removePeerConnection(requestId);
 		initWebRtc(requestId, true);
+		updateVideoEvent(); 
 	}
 	
 	function send(requestId, msg) {
@@ -657,7 +657,8 @@
 		send(requestId, {
 			event: 'dial',
 			data: {}
-		})
+		});
+		
 		
 	}
 	
