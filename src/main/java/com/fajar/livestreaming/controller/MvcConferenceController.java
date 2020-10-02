@@ -74,16 +74,22 @@ public class MvcConferenceController extends BaseController {
 		model.addAttribute("partnerInfo", partnerSession);
 		return basePage;
 	}
-	
+
 	@RequestMapping(value = { "/publicconference/{roomId}" })
-	@CustomRequestInfo(title = "Public Conference v1", pageUrl = "pages/videocall/public-conference-v1", stylePaths = "conference")
-	public String publicconference(Model model, @PathVariable(name="roomId") String roomId, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@CustomRequestInfo(
+		title = "Public Conference v1",
+		pageUrl = "pages/videocall/public-conference-v1", 
+		scriptPaths = "conference", 
+		stylePaths = "conference")
+	public String publicconference(Model model, @PathVariable(name = "roomId") String roomId,
+			HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
 		boolean codeIsValid = publicConference1Service.validateCode(roomId);
-		if(!codeIsValid) {
-			sendRedirect(response, request.getContextPath()+"/app/");
+		if (!codeIsValid) {
+			sendRedirect(response, httpRequest.getContextPath() + "/app/");
 		}
+		boolean isRoomOwner = publicConference1Service.isRoomOwner(httpRequest, roomId);
+		model.addAttribute("isRoomOwner", isRoomOwner);
 		model.addAttribute("roomId", roomId);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
 		return basePage;

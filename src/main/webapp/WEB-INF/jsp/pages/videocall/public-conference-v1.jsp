@@ -17,6 +17,9 @@
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
 			<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
+			<c:if test="${isRoomOwner == true }">
+				<button class="btn btn-danger  " onclick="invalidateRoom()"><i class="fas fa-times-circle"></i>&nbsp;Invalidate Room</button>
+			</c:if>
 		</div>
 	</div>
 	<div class="row">
@@ -91,7 +94,15 @@
 					_class.handleWebRtcHandshake(resp.eventId, resp.requestId, resp.webRtcObject);
 				}
 			};
-		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake);
+		const callbackRoomInvalidated = {
+				subscribeUrl : "/wsResp/roominvalidated/${roomId }",
+				callback : function(resp){
+					infoDialog("Room has been invalidated").then(function(e){
+						window.location.reload();
+					})
+				}
+			};
+		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake, callbackRoomInvalidated);
 	}
 	
 	function handleMemberJoin(resp){
@@ -253,9 +264,6 @@
 	var paused = false;
 	var video;
 	var myVideo = byId("my-video"); 
-	var videoStream = null;
-	     
-	const peerConnections = {};
 	
 	function isUserRequestId(requestId){
 		return requestId == "${registeredRequest.requestId}";
@@ -319,33 +327,9 @@
 					}  
 		            console.debug("END getUserMedia"); 
 		            updateEventLog("End HandleMedia peerCount: "+peerCount);
-		        }).catch(function (err) {  });
-	   
-	    	
-	}  
-	
-	function getPeerConnection(requestId){
-		if(!peerConnections[requestId]){
-			return null;
-		}
-		return peerConnections[requestId]['connection'];
-	}
-	
-	function removePeerConnection(requestId){
-		 const peerConnection = generatePeerConnection(requestId);
-		 updatePeerConnection(requestId, peerConnection); 
-	}
-	
-	function updatePeerConnection(requestId, obj){
-		if(!getPeerConnection(requestId)) {
-			peerConnections[requestId] = {
-					'date' : new Date()
-			};
-		}
-		peerConnections[requestId]['connection'] = obj;
-		peerConnections[requestId]['updated'] = new Date();
-	}
-	
+		        }).catch(function (err) { console.error(error); });	    	
+	}   
+	 
 	function closePeerConnection(requestId){
 		const peerConnection = getPeerConnection(requestId);
 		if(!peerConnection){
@@ -379,10 +363,8 @@
 	}
 	 
 	
-	//////////////////////////// websocket stuff //////////////////////////
+	//////////////////////////// WebRTC stuff //////////////////////////
 	
-	var conn = null; 
-	var dataChannel = null;
 	
 	function initWebSocketConference(){
 		updateVideoEvent();
@@ -412,26 +394,20 @@
 	    switch (webRtcObject.event) {
 	    // when somebody wants to call us
 	    case "offer":
-	        handleOffer(requestId, data);
-	        break;
+	        handleOffer(requestId, data);  break;
 	    case "answer":
-	        handleAnswer(requestId, data);
-	        break;
+	        handleAnswer(requestId, data);  break;
 	    // when a remote peer sends an ice candidate to us
 	    case "candidate":
-	        handleCandidate(requestId, data);
-	        break;
+	        handleCandidate(requestId, data);  break;
 	    case "leave":
-	        handlePartnerLeave(data);
-	        break;
+	        handlePartnerLeave(data);  break;
 	    case "dial":
-	        handlePartnerDial(requestId);
-	        break;
-	    default:
-	        break;
+	        handlePartnerDial(requestId, data);  break;
+	    default:  break;
 	    }
 	}
-	
+	  
 	function initWebRtc(requestId, handleNewMemberJoin){ 
 		
 		if(isUserRequestId(requestId)){
@@ -662,8 +638,6 @@
 			event: 'dial',
 			data: {}
 		});
-		
-		
 	}
 	
 	function redial(){
@@ -688,3 +662,22 @@
 		
 	</script>
 </c:forEach>
+<c:if test="${isRoomOwner == true }">
+	<script>
+		function invalidateRoom(){
+	 		confirmDialog("Invalidate Room ?").then(function(ok){
+	 			if(ok){
+	 				doInvalidateRoom();
+	 			}
+	 		});
+		}
+		
+		function doInvalidateRoom(){
+			postReq("<spring:url value="/api/webrtcroom/invalidate" />", {roomId: "${roomId}"},
+					function(xhr) {
+						infoDone();
+						 
+					});
+		}
+	</script>
+</c:if>

@@ -52,7 +52,37 @@ public class PublicConference1Service {
 		if(null != oldRoomId && roomMembers.containsKey(oldRoomId)) {
 			roomMembers.remove(oldRoomId);
 		}
-		roomMembers.put(newRoomId, new HashMap<String, Date>());
+		if(newRoomId != null) {
+			roomMembers.put(newRoomId, new HashMap<String, Date>());
+		}else if(roomMembers.containsKey(newRoomId)) {
+			roomMembers.remove(newRoomId);
+		}
+		
+	}
+	
+	public WebResponse invalidateRoom(HttpServletRequest httpRequest, WebRequest request) {
+		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
+		if (session == null) {
+			return null;
+		}
+		final String roomId = request.getRoomId();
+		if(validateCode(roomId)) {
+			updateRoomMembers(roomId, null);
+		}
+		
+		activeRoomId.remove(session.getRequestId());
+		realtimeService.convertAndSend("/wsResp/roominvalidated/"+roomId, WebResponse.success());
+		return new WebResponse();
+	}
+	
+	public boolean isRoomOwner(HttpServletRequest httpRequest, String roomId) {
+		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
+		if (session == null) {
+			return false;
+		}
+		
+		String activeRoom = activeRoomId.get(session.getRequestId()) ;
+		return activeRoom != null && activeRoom.equals(roomId);
 	}
 
 	public boolean validateCode(String roomId) {
