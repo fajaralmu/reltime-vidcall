@@ -268,7 +268,9 @@
 			var peerCount = 0;
 			var totalPeer = 0;
 			for (var key in peerConnections ) {
-	       		
+
+       			const entry = peerConnections[key];
+       			if(null == entry) continue;
 	       		if(isUserRequestId(key)){
 	       			 
 	       		}else{
@@ -299,12 +301,13 @@
 			       	app.myVideo.srcObject = stream;
 			       	var peerCount = 0;
 			       	for (var key in peerConnections ) {
-			       		
+
+		       			const entry = peerConnections[key];
+		       			if(null == entry) continue;
 			       		if(isUserRequestId(key)){
 			       			 
 			       		}else{
 			       			 
-			       			const entry = peerConnections[key];
 				       		const peerConnection = entry['connection'];
 				       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
 				       			peerConnections[key]['connection'].addStream(stream); 
@@ -557,6 +560,10 @@
 		const _class = this;
 		
 		updateEventLog(requestId+" handleOffer");
+		if(!peerConnection){
+			updateEventLog("Aborted bacause peer is null");
+			return;
+		}
 		console.debug(requestId, "handleOffer: ", offer);
 		
 		peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
@@ -584,8 +591,14 @@
 	function handleCandidate(requestId, candidate){
 		const peerConnection = getPeerConnection(requestId);
 		
-		console.debug(requestId, "handleCandidate: ", candidate);
+		
 		updateEventLog(requestId+" handleCandidate");
+		if(!peerConnection){
+			updateEventLog("Aborted bacause peer is null");
+			return;
+		}
+		
+		console.debug(requestId, "handleCandidate: ", candidate);
 		
 		peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 		updatePeerConnection(requestId,peerConnection );
@@ -595,9 +608,13 @@
 	function handleAnswer(requestId, answer) {
 		const peerConnection = getPeerConnection(requestId);
 		
-		console.debug(requestId, "handleAnswer: ", answer);
 		updateEventLog(requestId+" handleAnswer");
-		
+		if(!peerConnection){
+			updateEventLog("Aborted bacause peer is null");
+			return;
+		}
+
+		console.debug(requestId, "handleAnswer: ", answer);
 		  if(peerConnection.signalingState == "stable"){ // && this.videoStream) {
 			updateEventLog("WILL ERROR? handle answer beacuse state is stable");
 			//peerConnections[requestId]['connection'].addStream(this.videoStream); 
