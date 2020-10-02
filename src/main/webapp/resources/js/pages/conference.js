@@ -24,9 +24,13 @@ const HandshakeHandler = {
 };
 
 function handleHandshake(event, requestId, data){
-	const handler = HandshakeHandler[event];
-	if(handler){
-		handler(requestId, data);
+	try{
+		const handler = HandshakeHandler[event];
+		if(handler){
+			handler(requestId, data);
+		}
+	}catch(e){
+		updateEventLog("Error when handling handshake "+e);
 	}
 }
 
@@ -51,4 +55,60 @@ function updatePeerConnection(requestId, obj){
 	}
 	peerConnections[requestId]['connection'] = obj;
 	peerConnections[requestId]['updated'] = new Date();
+}
+
+function generatePeerConnection(requestId) {
+	var configuration2 = {
+		    "iceServers" : [ 
+		    	{ "url":"stun:stun2.1.google.com:19302"  } 
+		    ]
+		};
+	const peerConnection = new RTCPeerConnection( configuration2, {//configuration2, {
+	    optional : [ {
+	        RtpDataChannels : true
+	    } ]
+	} );
+	//TODO: onaddstream is deprecated, change to ontrack
+	peerConnection.onaddstream  = function(event) {
+		updateEventLog("PeerConnection Start Add Stream => "+ requestId);
+		const vid = byId("video-member-"+requestId);
+		if(vid){
+			vid.srcObject = event.stream;
+			vid.style.visibiity = "visible";
+			vid.addEventListener('canplay', function (ev) { 
+				vid.play();
+	    	}, false);
+		}
+		updateEventLog("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
+		
+	}; 
+	peerConnection.onicecandidate = function(event) {
+		console.debug("peerConnection on ICE Candidate: ", event.candidate);
+		updateEventLog("Peer IceCandidate ("+ requestId +")");
+	    if (event.candidate) {
+	        send(requestId, {
+	            event : "candidate",
+	            data : event.candidate
+	        }); 
+	    }else{
+	    	console.warn("Candiate is NULL: ", event);
+	    	updateEventLog("Peer IceCandidate IS NULL ("+ requestId +")");
+	    }
+	};
+	peerConnection.onsignalingstatechange = function(e){
+		const state = peerConnection.signalingState;
+		console.debug("PEER CONNECTION Signaling state: ", state);
+		updateEventLog("Peer SignalingState ("+ requestId +") | "+state);
+	}
+	
+	peerConnection.ondatachannel = function(ev){
+		console.debug("ondatachannel: ", ev);
+		initDataChannel(ev);
+	}
+	
+	return peerConnection;
+}
+
+function initDataChannel(ev){
+	//dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });  
 }

@@ -12,7 +12,7 @@
 		</div>
 		<div class="col-6"> 
 		    <h3>Room : ${roomId }</h3>
-		    <h3>User :${registeredRequest.requestId }</h3> 
+		    <h3>User :${registeredRequest.requestId } <c:if test="${isRoomOwner == true }"><small>Room Admin</small></c:if></h3> 
 			
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
@@ -421,70 +421,7 @@
 		}
 	}
 	
-	function generatePeerConnection(requestId) {
-		var configuration2 = {
-			    "iceServers" : [ 
-			    	{ "url":"stun:stun2.1.google.com:19302"  } 
-			    ]
-			};
-		const peerConnection = new RTCPeerConnection( configuration2, {//configuration2, {
-		    optional : [ {
-		        RtpDataChannels : true
-		    } ]
-		} );
-		peerConnection.onaddstream  = function(event) {
-			updateEventLog("PeerConnection Start Add Stream => "+ requestId);
-			const vid = byId("video-member-"+requestId);
-			if(vid){
-				vid.srcObject = event.stream;
-				vid.style.visibiity = "visible";
-				vid.addEventListener('canplay', function (ev) { 
-					vid.play();
-		    	}, false);
-			}
-			updateEventLog("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
-			
-		};
-		/* peerConnection.ontrack  = function(event) {
-			updateEventLog("PeerConnection Start Add Track => "+ requestId);
-			const vid = byId("video-member-"+requestId);
-			if(vid){
-				vid.srcObject = event.stream;
-				vid.style.visibiity = "visible";
-			}
-			updateEventLog("PeerConnection End Add Track => "+ requestId);
-			 
-		};*/
-		peerConnection.onicecandidate = function(event) {
-			console.debug("peerConnection on ICE Candidate: ", event.candidate);
-			updateEventLog("Peer IceCandidate ("+ requestId +")");
-		    if (event.candidate) {
-		        send(requestId, {
-		            event : "candidate",
-		            data : event.candidate
-		        }); 
-		    }else{
-		    	console.warn("Candiate is NULL: ", event);
-		    	updateEventLog("Peer IceCandidate IS NULL ("+ requestId +")");
-		    }
-		};
-		peerConnection.onsignalingstatechange = function(e){
-			const state = peerConnection.signalingState;
-			console.debug("PEER CONNECTION Signaling state: ", state);
-			updateEventLog("Peer SignalingState ("+ requestId +") | "+state);
-		}
-		
-		peerConnection.ondatachannel = function(ev){
-			console.debug("ondatachannel: ", ev);
-			initDataChannel(ev);
-		}
-		
-		return peerConnection;
-	}
 	
-	function initDataChannel(ev){
-		dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });  
-	}
 	
 	function handlePartnerLeave(data){
 	//	infoDialog("partner left the call").then(function(e){});
