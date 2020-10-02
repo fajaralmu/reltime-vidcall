@@ -679,7 +679,7 @@
 	if("${member.requestId}" == "${registeredRequest.requestId}"){
 		
 	}else{
-		initWebRtc("${member.requestId}", true);
+		dialPartner("${member.requestId}");//, true);
 	}
 		
 	</script>
