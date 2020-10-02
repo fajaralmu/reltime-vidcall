@@ -625,7 +625,7 @@
 	}
 		  
 	function handlePartnerDial(requestId) {
-		removePeerConnection(requestId);
+		//removePeerConnection(requestId);
 		initWebRtc(requestId, true);
 		updateVideoEvent(); 
 	}
@@ -653,7 +653,7 @@
 	}
 	
 	function dialPartner(requestId){
-		removePeerConnection(requestId);
+		//removePeerConnection(requestId);
 		send(requestId, {
 			event: 'dial',
 			data: {}
