@@ -12,7 +12,13 @@
 		</div>
 		<div class="col-6"> 
 		    <h3>Room : ${roomId }</h3>
-		    <h3>User :${registeredRequest.requestId } <c:if test="${isRoomOwner == true }"><small>You Are Room Admin</small></c:if></h3> 
+		    <h3>User : ${registeredRequest.requestId } </h3>
+		    <c:if test="${isRoomOwner == true }">
+		    	<h3>You Are Room Admin</h3>
+		    </c:if>
+		    <c:if test="${isRoomOwner == false }">
+		    	<h3>Admin : ${roomAdmin.username }</h3>
+		    </c:if>
 			
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
 			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
@@ -142,7 +148,7 @@
 			},
 			ch2 : {
 				tagName : 'p',
-				innerHTML : 'Date: ' + date
+				innerHTML : 'Date: ' + new Date(date)
 			},
 			ch3: {
 				tagName: 'video',

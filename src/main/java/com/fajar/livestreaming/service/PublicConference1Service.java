@@ -84,12 +84,24 @@ public class PublicConference1Service {
 	
 	public boolean isRoomOwner(HttpServletRequest httpRequest, String roomId) {
 		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
-		if (session == null) {
+		if (session == null || validateCode(roomId) == false) {
 			return false;
 		}
+		RegisteredRequest roomOwner = getRoomOwner(roomId);
 		
-		String activeRoom = activeRoomId.get(session.getRequestId()) ;
-		return activeRoom != null && activeRoom.equals(roomId);
+		return roomOwner!= null && roomOwner.getRequestId().equals(session.getRequestId());
+	}
+	
+	public RegisteredRequest getRoomOwner(String roomId) {
+		if(!validateCode(roomId)) {
+			return null;
+		}
+		ConferenceData conferenceData = roomMembers.get(roomId);
+		String creatorId = conferenceData.getCreatorRequestId();
+		
+		RegisteredRequest session = userSessionService.getRequestFromSessionMap(creatorId);
+		return session;
+		
 	}
 
 	public boolean validateCode(String roomId) {

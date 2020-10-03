@@ -90,11 +90,15 @@ public class MvcConferenceController extends BaseController {
 			sendRedirect(response, httpRequest.getContextPath() + "/app/");
 		}
 		boolean isRoomOwner = publicConference1Service.isRoomOwner(httpRequest, roomId);
+		RegisteredRequest roomAdmin = publicConference1Service.getRoomOwner(roomId);
 		List<Message> chatMessages = publicConference1Service.getChatMessages(roomId);
+		
 		model.addAttribute("chatMessages", chatMessages);
 		model.addAttribute("isRoomOwner", isRoomOwner);
+		model.addAttribute("roomAdmin", roomAdmin);
 		model.addAttribute("roomId", roomId);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
+		
 		return basePage;
 	}
 

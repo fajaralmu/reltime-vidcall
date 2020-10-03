@@ -70,7 +70,7 @@
 	
 	function updateLink(link){
 		roomLink.setAttribute("href", link);
-		roomLink.innerHTML = link;
+		roomLink.innerHTML = "Go To Room";
 	}
 	
 </script>
