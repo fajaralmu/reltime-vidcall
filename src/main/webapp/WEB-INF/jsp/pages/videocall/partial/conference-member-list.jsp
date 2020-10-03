@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div class="border border-primary rounded " id="member-list">
-	<h3 class="col-6" style="text-align: center">Member List</h3>
+	<h3  style="text-align: center">Member List</h3>
 	<div class="row">
 		<c:forEach var="member" items="${members}">
 			<div class="col-6" id="member-item-${member.requestId}">

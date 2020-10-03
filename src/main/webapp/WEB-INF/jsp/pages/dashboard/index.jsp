@@ -49,8 +49,17 @@
 		}
 		window.location.href = "<spring:url value="/stream/publicconference/" />"+roomIdExisting.value;
 	}
-		
+	
 	function generateRoomId(){
+		confirmDialog("Do You want to generate/update Room? The existing room will be invalidated... ")
+		.then(function(ok){  
+			if(ok){
+				doGenerateRoomId();
+			}
+		})
+	}
+		
+	function doGenerateRoomId(){
 		postReq("<spring:url value="/api/webrtcroom/generateroomid" />", {},
 				function(xhr) {
 					infoDone();

@@ -3,14 +3,14 @@
 }
 
 .chat-message-user {
-	margin-top: 3px;
+	margin-top: 5px;
 	padding: 3px;
 	background-color: #fdfd;
 	border-radius: 4px;
 }
  
 .chat-message-common {
-	margin-top: 3px;
+	margin-top: 5px;
 	padding: 3px; 
 	border-radius: 4px;
 	background-color: #cccccc;

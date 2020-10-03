@@ -53,11 +53,15 @@ public class PublicConference1Service {
 	public synchronized void updateRoomMembers(String creatorId, String oldRoomId, String newRoomId) {
 		if(null != oldRoomId && roomMembers.containsKey(oldRoomId)) {
 			roomMembers.remove(oldRoomId);
+			nofityRoomInvalidated(oldRoomId);
 		}
+		
 		if(newRoomId != null) {
 			putNewRoomMembers(creatorId, newRoomId);
-		}else if(roomMembers.containsKey(newRoomId)) {
+			
+		}else if(roomMembers.containsKey(oldRoomId)) {
 			roomMembers.remove(oldRoomId);
+			//nofityRoomInvalidated(oldRoomId);
 		}
 		
 	}
@@ -78,8 +82,12 @@ public class PublicConference1Service {
 		}
 		
 		activeRoomId.remove(session.getRequestId());
-		realtimeService.convertAndSend("/wsResp/roominvalidated/"+roomId, WebResponse.success());
+		
 		return new WebResponse();
+	}
+	
+	private void nofityRoomInvalidated(String roomId) {
+		realtimeService.convertAndSend("/wsResp/roominvalidated/"+roomId, WebResponse.success());
 	}
 	
 	public boolean isRoomOwner(HttpServletRequest httpRequest, String roomId) {

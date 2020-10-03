@@ -7,7 +7,7 @@
 <div>
 	<h2>Public Conference</h2>
 	<div class="border row">
-		<div class="col-6">
+		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 		</div>
 		<div class="col-6"> 
