@@ -28,7 +28,7 @@
 				</div>
 				<div id="chat-list">
 					<c:forEach var="message" items="${chatMessages }">
-						<div class="chat-message ${message.requestId == registeredRequest.requestId ? 'user' : 'common' }">
+						<div class="chat-message-${message.requestId == registeredRequest.requestId ? 'user' : 'common' }">
 
 							<span>${message.requestId == registeredRequest.requestId ? 'You' : message.username }</span>
 							<h4>${message.body }</h4>

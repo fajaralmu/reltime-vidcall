@@ -93,7 +93,7 @@
 	//</div>
 		const chatItemProp = {
 				tagName: 'div',
-				className: 'chat-message '+(isUserRequestId(chatMessage.requestId)? 'user':'common'),
+				className: 'chat-message-'+(isUserRequestId(chatMessage.requestId)? 'user':'common'),
 				
 				ch1: {
 					tagName: 'span',
@@ -106,7 +106,7 @@
 				},
 				ch3: {
 					tagName: 'span',
-					innerHTML: chatMessage.date 
+					innerHTML: new Date(chatMessage.date)
 				}
 		}
 		const chatItemElement = createHtmlTag(chatItemProp);

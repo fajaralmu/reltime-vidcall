@@ -2,17 +2,16 @@
 	width: 100%;
 }
 
-.chat-message {
+.chat-message-user {
 	margin-top: 3px;
 	padding: 3px;
-	
+	background-color: #fdfd;
 	border-radius: 4px;
 }
-
-.user {
-	background-color: #fdfd;
-}
-
-.common {
+ 
+.chat-message-common {
+	margin-top: 3px;
+	padding: 3px; 
+	border-radius: 4px;
 	background-color: #cccccc;
 }
