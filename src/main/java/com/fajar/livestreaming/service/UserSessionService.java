@@ -31,6 +31,8 @@ public class UserSessionService {
 	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
 	private static final String SESSION_TRIAL_ONE = "1";
 	private static final String SESSION_ATTR_SESS_DATA = "session-data";
+	private static final String HEADER_REQUEST_ID = "request-id";
+	
 	private final HashMap<String, Object> activeCalls = new HashMap<>();
 
 	@Autowired
@@ -123,6 +125,15 @@ public class UserSessionService {
 
 		} catch (Exception e) {
 		}
+		
+		//check by header
+		try {
+			RegisteredRequest session = getRequestFromSessionMap(request.getHeader(HEADER_REQUEST_ID));
+			return session;
+		} catch (Exception e) {
+			
+		}
+		
 		return null;
 	}
 
