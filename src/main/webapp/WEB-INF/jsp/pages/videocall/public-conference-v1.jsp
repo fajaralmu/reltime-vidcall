@@ -52,19 +52,51 @@
 			</div>
 
 		</div>
-		<div class="col-6">
-			<div class="border border-primary rounded bg-dark"  >
-				<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
-				<div id="event-log" >
+		<div class="col-6"> 
+			<ul class="nav nav-tabs" id="tab-event-log-chat" role="tablist">
+			  <li class="nav-item">
+			    <a class="nav-link active" id="chat-tab" data-toggle="tab" href="#chat-panel" role="tab" aria-controls="chat-panel" aria-selected="true">Chat</a>
+			  </li>
+			  <li class="nav-item">
+			    <a class="nav-link" id="log-tab" data-toggle="tab" href="#log-panel" role="tab" aria-controls="log-panel" aria-selected="false">Log</a>
+			  </li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="chat-panel" role="tabpanel" aria-labelledby="chat-panel">
+					<h3>Chat</h3>
+					<div>
+						<input type="text" class="form-control" id="input-chat-message" />
+						<button class="btn btn-info" onclick = "sendChat()" >Send</button>
+					</div>
+					<div class="border border-primary rounded" id="chat-list">
+						<c:forEach var="message" items="${chatMessages }">
+							<div class="chat-message">
+								<p>${message.body }</p>
+								<p><i>${message.username }</i></p>
+								<p><i>${message.date }</i></p>
+							</div>
+						</c:forEach>
+					</div>
 				</div>
+				<div class="tab-pane fade" id="log-panel" role="tabpanel" aria-labelledby="log-panel">
+				  	<div class="border border-primary rounded bg-dark"  >
+						<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
+						<div id="event-log" >
+						</div>
+					</div>
+				</div> 
 			</div>
-		</div>
+			
+		 </div>
 	</div>
 </div>
+
 
 <script type="text/javascript">
 	memberList = byId("member-list");
 	eventLog = byId("event-log");
+	const chatList = byId("chat-list");
+	const inputChatMessage = byId("input-chat-message");
  
 	
 	function prepare() {
@@ -103,7 +135,45 @@
 					})
 				}
 			};
-		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake, callbackRoomInvalidated);
+		const callbackNewChat = {
+				subscribeUrl : "/wsResp/newchat/${roomId }",
+				callback : function(resp){
+					 _class.handleNewChat(resp);
+				}
+			};
+		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake, callbackRoomInvalidated, callbackNewChat);
+	}
+	
+	function handleNewChat(resp){
+		//<div class="chat-message border-secondary rounded">
+		//<p>${message.body }</p>
+		//<p><i>${message.username }</i></p>
+	//</div>
+		const chatItemProp = {
+				tagName: 'div',
+				className: 'chat-message',
+				ch1: {
+					tagName: 'p',
+					innerHTML: resp.chatMessage.body
+				},
+				ch2: {
+					tagName: 'p',
+					ch1: {
+						tagName: 'i',
+						innerHTML: resp.chatMessage.username
+					}
+				},
+				ch3: {
+					tagName: 'p',
+					ch1: {
+						tagName: 'i',
+						innerHTML: resp.chatMessage.date
+					}
+				}
+		}
+		const chatItemElement = createHtmlTag(chatItemProp);
+		chatList.appendChild(chatItemElement);
+	
 	}
 	
 	function handleMemberJoin(resp){
@@ -538,6 +608,20 @@
 			eventId: eventId,
 			destination:requestId,
 		 	webRtcObject: (msg) 
+		});
+	}
+	
+	function sendChat(){
+		const body = inputChatMessage.value;
+		if(!body || body == ""){
+			infoDialog("Please specify messge body!").then(function(e){ });
+			return;
+		}
+		sendToWebsocket("/app/publicconf1/newchat", {
+//			originId : requestId,
+			originId : "${registeredRequest.requestId}",
+			roomId: '${roomId}',
+			message: body
 		});
 	}
 	

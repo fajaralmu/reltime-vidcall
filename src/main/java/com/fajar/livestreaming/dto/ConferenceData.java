@@ -1,8 +1,10 @@
 package com.fajar.livestreaming.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +25,7 @@ public class ConferenceData implements Serializable{/**
 	private HashMap<String, Date> members = new HashMap();
 	@Builder.Default
 	private Date createdDate = new Date();
+	@Builder.Default
+	private List<Message> chatMessages = new ArrayList<Message>();
 
 }

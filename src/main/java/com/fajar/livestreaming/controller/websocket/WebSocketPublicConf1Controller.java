@@ -50,5 +50,9 @@ public class WebSocketPublicConf1Controller extends BaseController {
 	public WebResponse leave(WebRequest request) throws IOException {
 		return publicConference1Service.leaveRoom(request);
 	}
+	@MessageMapping("/publicconf1/newchat")
+	public WebResponse newchat(WebRequest request) throws IOException {
+		return publicConference1Service.sendMessage(request);
+	}
 
 }

@@ -38,6 +38,7 @@ public class WebResponse implements Serializable {
 	private RegisteredRequest registeredRequest;
 	
 	private WebRtcObject webRtcObject;
+	private Message chatMessage;
  
 	 
 	public static WebResponse failedResponse() {

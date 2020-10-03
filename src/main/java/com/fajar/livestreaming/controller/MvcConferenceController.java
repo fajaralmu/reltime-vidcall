@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fajar.livestreaming.annotation.Authenticated;
 import com.fajar.livestreaming.annotation.CustomRequestInfo;
+import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.PublicConference1Service;
 import com.fajar.livestreaming.service.StreamingService;
@@ -89,6 +90,8 @@ public class MvcConferenceController extends BaseController {
 			sendRedirect(response, httpRequest.getContextPath() + "/app/");
 		}
 		boolean isRoomOwner = publicConference1Service.isRoomOwner(httpRequest, roomId);
+		List<Message> chatMessages = publicConference1Service.getChatMessages(roomId);
+		model.addAttribute("chatMessages", chatMessages);
 		model.addAttribute("isRoomOwner", isRoomOwner);
 		model.addAttribute("roomId", roomId);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.ConferenceData;
+import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
@@ -174,6 +175,52 @@ public class PublicConference1Service {
 		WebResponse response = WebResponse.builder().requestId(originId).eventId(eventId).webRtcObject(request.getWebRtcObject()).build();
 		realtimeService.convertAndSend("/wsResp/webrtcpublicconference/"+roomId+"/"+destination , response); 
 		return response;
+	}
+
+	//////////////////////////// CHAT MESSAGE ///////////////////////////////////////////////////
+	
+	public List<Message> getChatMessages(String roomId) {
+		List<Message> chatMessages = new ArrayList<>();
+		
+		if(validateCode(roomId) == false) {
+			return chatMessages;
+		}
+		
+		ConferenceData conferenceData = roomMembers.get(roomId);
+		chatMessages = conferenceData.getChatMessages();
+		return chatMessages ;
+	}
+	
+	public WebResponse sendMessage(WebRequest request) {
+	//String requestId, String roomId, String body) {
+		String roomId = request.getRoomId();
+		String body = request.getMessage();
+		String requestId = request.getOriginId();
+		if(validateCode(roomId) == false) {
+			return null;
+		}
+		Message newMessage = constructMessage(requestId, body);
+		if(null == newMessage) {
+			return null;
+		}
+		
+		roomMembers.get(roomId).getChatMessages().add(newMessage);
+		WebResponse response = WebResponse.builder().chatMessage(newMessage).build();
+		realtimeService.convertAndSend("/wsResp/newchat/"+roomId, response);
+		return new WebResponse();
+	}
+	
+	public Message constructMessage(String requestId, String body) {
+		RegisteredRequest session = userSessionService.getRequestFromSessionMap(requestId);
+		if(null == session) {
+			return null;
+		}
+		 
+		Message message = new Message();
+		message.setBody(body);
+		message.setRequestId(requestId);
+		message.setUsername(session.getUsername());
+		return message;
 	}
 
 }
