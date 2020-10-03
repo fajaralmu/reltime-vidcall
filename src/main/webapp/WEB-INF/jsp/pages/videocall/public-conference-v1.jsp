@@ -63,19 +63,21 @@
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="chat-panel" role="tabpanel" aria-labelledby="chat-panel">
-					<h3>Chat</h3>
-					<div>
-						<input type="text" class="form-control" id="input-chat-message" />
-						<button class="btn btn-info" onclick = "sendChat()" >Send</button>
-					</div>
-					<div class="border border-primary rounded" id="chat-list">
-						<c:forEach var="message" items="${chatMessages }">
-							<div class="chat-message">
-								<p>${message.body }</p>
-								<p><i>${message.username }</i></p>
-								<p><i>${message.date }</i></p>
-							</div>
-						</c:forEach>
+					<div class="border border-primary rounded">
+						<h3>Chat</h3>
+						<div>
+							<input type="text" class="form-control" id="input-chat-message" />
+							<button class="btn btn-info" onclick = "sendChat()" >Send</button>
+						</div>
+						<div id="chat-list">
+							<c:forEach var="message" items="${chatMessages }">
+								<div class="chat-message">
+									<p>${message.body }</p>
+									<p><i>${message.username }</i></p>
+									<p><i>${message.date }</i></p>
+								</div>
+							</c:forEach>
+						</div>
 					</div>
 				</div>
 				<div class="tab-pane fade" id="log-panel" role="tabpanel" aria-labelledby="log-panel">
@@ -623,7 +625,7 @@
 			roomId: '${roomId}',
 			message: body
 		});
-		body.value = "";
+		inputChatMessage.value = "";
 	}
 	
 	function sendToWebsocketV2(message){
