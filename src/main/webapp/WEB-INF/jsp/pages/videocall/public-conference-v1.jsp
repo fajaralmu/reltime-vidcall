@@ -607,21 +607,21 @@
 	</script>
 </c:forEach>
 <c:if test="${isRoomOwner == true }">
-	<script>
-		function invalidateRoom(){
-	 		confirmDialog("Invalidate Room ?").then(function(ok){
-	 			if(ok){
-	 				doInvalidateRoom();
-	 			}
-	 		});
-		}
-		
-		function doInvalidateRoom(){
-			postReq("<spring:url value="/api/webrtcroom/invalidate" />", {roomId: "${roomId}"},
-					function(xhr) {
-						infoDone();
-						 
-					});
-		}
-	</script>
+	<script type="text/javascript">
+	function invalidateRoom() {
+		confirmDialog("Invalidate Room ?").then(function(ok) {
+			if (ok) {
+				doInvalidateRoom();
+			}
+		});
+	}
+
+	function doInvalidateRoom() {
+		postReq("<spring:url value="/api/webrtcroom/invalidate" />", {
+			roomId : "${roomId}"
+		}, function(xhr) {
+			infoDone();
+		});
+	}
+</script>
 </c:if>

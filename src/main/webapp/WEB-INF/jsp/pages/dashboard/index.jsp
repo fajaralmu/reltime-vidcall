@@ -17,6 +17,7 @@
 				<div class="card-footer">
 					<button class="btn btn-primary" onclick="generateRoomId()" id="footer-info">
 						${roomId != null? 'Update Room Id' : 'Generate Room Id'}</button>
+					<button class="btn btn-danger" onclick="invalidateRoom()" >Invalidate Room</button>
 				</div>
 			</div>
 		</div>
@@ -41,6 +42,7 @@
 	const roomId = byId("room-id");
 	const roomLink = byId("room-link");
 	const roomIdExisting = byId("input-existing-room");
+	var currentRoomId = "${roomId}";
 	
 	function goToExistingRoom(){
 		if(null == roomIdExisting.value){
@@ -65,8 +67,9 @@
 					infoDone();
 					var response = (xhr.data);
 					if(response && response.code == "00"){
-						footerInfo.innerHTML = 'Update Room Id';
-						roomId.innerHTML = response.message;
+						
+						updateRoomInfo(response.message);
+						
 						const link = "<spring:url value="/stream/publicconference/"/>"+(response.message);
 						updateLink(link);
 					}else if(response){
@@ -77,14 +80,46 @@
 				});
 	}
 	
+	function updateRoomInfo(id){
+		footerInfo.innerHTML = id == null ? 'Generate Room Id' : 'Update Room Id';
+		roomId.innerHTML = id;
+		currentRoomId = id;
+	}
+	
 	function updateLink(link){
-		roomLink.setAttribute("href", link);
-		roomLink.innerHTML = "Go To Room";
+		if(null == link){
+			roomLink.setAttribute("href", "");
+			roomLink.innerHTML = "";
+		}else{
+			roomLink.setAttribute("href", link);
+			roomLink.innerHTML = "Go To Room";
+		}
+		
 	}
 	
 </script>
+<script type="text/javascript">
+	function invalidateRoom() {
+		if(null == currentRoomId || "" == currentRoomId){ return; }
+		confirmDialog("Invalidate Room ?").then(function(ok) {
+			if (ok) {
+				doInvalidateRoom();
+			}
+		});
+	}
+
+	function doInvalidateRoom() {
+		postReq("<spring:url value="/api/webrtcroom/invalidate" />", {
+			roomId : currentRoomId
+		}, function(xhr) {
+			infoDone();
+			updateLink(null);
+			updateRoomInfo(null);
+		});
+	}
+</script>
 <c:if test="${roomId != null }" >
 <script>
-	updateLink("https://"+  ipAndPort+ctxPath +"/stream/publicconference/${roomId}");
+	updateLink("<spring:url value="/stream/publicconference/"/>${roomId}");
 </script>
 </c:if>
