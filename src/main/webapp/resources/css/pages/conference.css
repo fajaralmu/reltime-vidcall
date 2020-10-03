@@ -5,6 +5,14 @@
 .chat-message {
 	margin-top: 3px;
 	padding: 3px;
-	background-color: #cccccc;
+	
 	border-radius: 4px;
+}
+
+.user {
+	background-color: #fdfd;
+}
+
+.common {
+	background-color: #cccccc;
 }

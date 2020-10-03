@@ -24,72 +24,11 @@
 	</div>
 	<div class="row">
 		<div class="col-6">
-			<div class="border border-primary rounded row" id="member-list">
-				<h3 class="col-6" style="text-align: center">Member List</h3><div class="col-6"></div>
-				<c:forEach var="member" items="${members}">
-					<div class="col-6" id="member-item-${member.requestId}">
-						<h5><i class="fas fa-user-circle"></i>&nbsp;${member.username } 
-						<c:if test="${true ==  member.roomCreator}">
-							<small><i class="fas fa-headset"></i></small>
-						</c:if>
-						</h5>
-						<p>${member.created }</p>
-						<c:if test="${member.requestId != registeredRequest.requestId }" >
-							<video class="border" style="visibility: hidden" height="150" width="150" muted="muted" id="video-member-${member.requestId }" ></video>
-						
-							<div class="btn-group" role="group" id="video-control-${member.requestId }">
-								<button class="btn" onclick="toggleVideoPlay('video-member-${member.requestId }', this);"><i class="fas fa-pause"></i></button>
-								<button class="btn" onclick="toggleVideoMute('video-member-${member.requestId }', this);"><i class="fas fa-volume-down"></i></button>
-							 	<button class="btn btn-info btn-sm" onclick="dialPartner('${member.requestId}')"><i class="fas fa-phone"></i>&nbsp;Dial</button>
-							
-							</div>
-						</c:if>
-						<c:if test="${member.requestId == registeredRequest.requestId }" >
-							<h3 class="center-aligned bg-light">You</h3>
-						</c:if>
-					</div>
-				</c:forEach>
-			</div>
-
+			<jsp:include page="partial/conference-member-list.jsp"></jsp:include>
 		</div>
 		<div class="col-6"> 
-			<ul class="nav nav-tabs" id="tab-event-log-chat" role="tablist">
-			  <li class="nav-item">
-			    <a class="nav-link active" id="chat-tab" data-toggle="tab" href="#chat-panel" role="tab" aria-controls="chat-panel" aria-selected="true">Chat</a>
-			  </li>
-			  <li class="nav-item">
-			    <a class="nav-link" id="log-tab" data-toggle="tab" href="#log-panel" role="tab" aria-controls="log-panel" aria-selected="false">Log</a>
-			  </li>
-			</ul>
-			<div class="tab-content" id="myTabContent">
-				<div class="tab-pane fade show active" id="chat-panel" role="tabpanel" aria-labelledby="chat-panel">
-					<div class="border border-primary rounded">
-						<h3>Chat</h3>
-						<div>
-							<input type="text" class="form-control" id="input-chat-message" />
-							<button class="btn btn-info" onclick = "sendChat()" >Send</button>
-						</div>
-						<div id="chat-list">
-							<c:forEach var="message" items="${chatMessages }">
-								<div class="chat-message">
-									<p>${message.body }</p>
-									<p><i>${message.username }</i></p>
-									<p><i>${message.date }</i></p>
-								</div>
-							</c:forEach>
-						</div>
-					</div>
-				</div>
-				<div class="tab-pane fade" id="log-panel" role="tabpanel" aria-labelledby="log-panel">
-				  	<div class="border border-primary rounded bg-dark"  >
-						<h3 style="text-align: center; color:#cccccc" class="bg-dark">Event Log</h3> 
-						<div id="event-log" >
-						</div>
-					</div>
-				</div> 
-			</div>
-			
-		 </div>
+			<jsp:include page="partial/conference-chat-log.jsp"></jsp:include>
+		</div>
 	</div>
 </div>
 
@@ -147,30 +86,27 @@
 	}
 	
 	function handleNewChat(resp){
+		const chatMessage = resp.chatMessage;
 		//<div class="chat-message border-secondary rounded">
 		//<p>${message.body }</p>
 		//<p><i>${message.username }</i></p>
 	//</div>
 		const chatItemProp = {
 				tagName: 'div',
-				className: 'chat-message',
+				className: 'chat-message '+(isUserRequestId(chatMessage.requestId)? 'user':'common'),
+				
 				ch1: {
-					tagName: 'p',
-					innerHTML: resp.chatMessage.body
+					tagName: 'span',
+					innerHTML: isUserRequestId(chatMessage.requestId) ? 'You' : chatMessage.username
+					
 				},
 				ch2: {
-					tagName: 'p',
-					ch1: {
-						tagName: 'i',
-						innerHTML: resp.chatMessage.username
-					}
+					tagName: 'h4',
+					innerHTML: chatMessage.body
 				},
 				ch3: {
-					tagName: 'p',
-					ch1: {
-						tagName: 'i',
-						innerHTML: resp.chatMessage.date
-					}
+					tagName: 'span',
+					innerHTML: chatMessage.date 
 				}
 		}
 		const chatItemElement = createHtmlTag(chatItemProp);
