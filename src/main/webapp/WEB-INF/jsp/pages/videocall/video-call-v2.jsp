@@ -89,7 +89,7 @@ function initLiveStream(){
 
 function reCallPartner(){
 	const requestObject = {destination: "${partnerId }"};
-	postReq("<spring:url value="/api/stream/callpartner" />", requestObject, function(xhr) { });
+	postReq("<spring:url value="/api/webrtc2/callpartner" />", requestObject, function(xhr) { });
 }
 
 

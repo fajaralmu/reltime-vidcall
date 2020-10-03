@@ -1,6 +1,7 @@
 var stompClient = null;
 var wsConnected = false;
 const onConnectCallbacks = new Array();
+const subscriptionCallbacks = new Array();
 
 function sendToWebsocket(url, requestObject){
 	if(!wsConnected){
@@ -11,27 +12,18 @@ function sendToWebsocket(url, requestObject){
 	return true;
 }
 
-/**
- * 
- * @param callBackObject
- *            video call
- * @returns
- */
-function connectToWebsocket( ... callBackObjects) {
-
-	const requestIdElement = document.getElementById("request-id");
-	 
+function performWebsocketConnection(){
 	var socket = new SockJS(websocketUrl);
 	const stompClients = Stomp.over(socket);
 	stompClients.connect({}, function(frame) {
 		wsConnected = true;
 		// setConnected(true);
-		console.log('Connected -> ' + frame, stompClients.ws._transport.ws.url);
-
+		console.log('Websocket CONNECTED: ' ,websocketUrl ,'frame :', frame, stompClients.ws._transport.ws.url);
+		console.debug("subscriptionCallbacks :" ,subscriptionCallbacks.length);
 		// document.getElementById("ws-info").innerHTML =
 		// stompClients.ws._transport.ws.url;
-		for(let i =0; i < callBackObjects.length; i++){
-			const callBackObject = callBackObjects[i];
+		for(let i =0; i < subscriptionCallbacks.length; i++){
+			const callBackObject = subscriptionCallbacks[i];
 			
 			if(callBackObject){ 
 				
@@ -51,11 +43,26 @@ function connectToWebsocket( ... callBackObjects) {
 			const callback = onConnectCallbacks[i];
 			callback(frame);
 		}
-		
-
+		 
 	});
 
 	this.stompClient = stompClients;
+}
+
+/**
+ * 
+ * @param callBackObject
+ *            video call
+ * @returns
+ */
+function connectToWebsocket( ... callBackObjects) { 
+	 
+	if(null == callBackObjects) {
+		return;
+	}
+	for (var i = 0; i < callBackObjects.length; i++) {
+		subscriptionCallbacks.push(callBackObjects[i]);
+	} 
 }
 
 function disconnect() {

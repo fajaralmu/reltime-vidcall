@@ -89,6 +89,7 @@
 		document.body.onload = function() {
 			//console.log("init progress websocket");
 			//initProgressWebsocket();
+			performWebsocketConnection();
 
 		}
 		
@@ -129,5 +130,9 @@
 			initCallbackCalling("${registeredRequest.requestId }");
 		</script>
 	</c:if>
+	<script type="text/javascript">
+	
+	
+	</script>
 </body>
 </html>
