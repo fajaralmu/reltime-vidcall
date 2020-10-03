@@ -58,7 +58,7 @@
 					if(response && response.code == "00"){
 						footerInfo.innerHTML = 'Update Room Id';
 						roomId.innerHTML = response.message;
-						const link = "https://"+ ipAndPort+ctxPath +"/stream/publicconference/"+(response.message);
+						const link = "<spring:url value="/stream/publicconference/"/>"+(response.message);
 						updateLink(link);
 					}else if(response){
 						infoDialog(response.message).then(function(e){});

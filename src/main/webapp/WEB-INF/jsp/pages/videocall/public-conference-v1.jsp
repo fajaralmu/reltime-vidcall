@@ -98,7 +98,6 @@
 				ch1: {
 					tagName: 'span',
 					innerHTML: isUserRequestId(chatMessage.requestId) ? 'You' : chatMessage.username
-					
 				},
 				ch2: {
 					tagName: 'h4',
