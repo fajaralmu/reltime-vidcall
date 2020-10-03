@@ -623,6 +623,7 @@
 			roomId: '${roomId}',
 			message: body
 		});
+		body.value = "";
 	}
 	
 	function sendToWebsocketV2(message){
