@@ -16,8 +16,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Configuration
-@EnableKafka
+//@Configuration
+//@EnableKafka
 @Slf4j
 public class KafkaConsumerConfiguration implements DynamicBean {
 
