@@ -5,7 +5,6 @@ import static com.fajar.livestreaming.runtimerepo.SessionRepository.SESSION_ATTR
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,15 +35,15 @@ public class UserSessionService {
 	private static final String HEADER_REQUEST_ID = "request-id"; 
 	
 	@Autowired
-	private SessionRepository SESSION_MAP;
+	private SessionRepository sessionRepository;
 	
-//	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
+//	private static final Map<String, SessionData> sessionRepository = new LinkedHashMap<>();
 	
 	
 	@Autowired
-	private ActiveCallsRepository activeCalls;
+	private ActiveCallsRepository activeCallsRepository;
 	
-//	private final HashMap<String, Object> activeCalls = new HashMap<>();
+//	private final HashMap<String, Object> activeCallsRepository = new HashMap<>();
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -55,28 +54,28 @@ public class UserSessionService {
 	}
 
 	private SessionData getSessionData() {
-		SessionData sessionData = SESSION_MAP.getData();
+		SessionData sessionData = sessionRepository.getData();
 		if (null == sessionData) {
-			SESSION_MAP.init();
+			sessionRepository.init();
 		} 
 
-		return SESSION_MAP.getData();
+		return sessionRepository.getData();
 	}
 
 	public void addRequestId(RegisteredRequest request) {
 		getSessionData();
 
-		SESSION_MAP.addNewApp(request);
+		sessionRepository.addNewApp(request);
 	}
 
 	public RegisteredRequest getRequestFromSessionMap(String requestId) {
 //		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
-		return SESSION_MAP.getRequest(requestId);
+		return sessionRepository.getRequest(requestId);
 	}
 
 	private void removeSessionById(String requestId) {
 //		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
-		SESSION_MAP.removeRequest(requestId);
+		sessionRepository.removeRequest(requestId);
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
@@ -121,9 +120,9 @@ public class UserSessionService {
 			return;
 		}
 //		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
-		SESSION_MAP.setActive(requestId, active);
+		sessionRepository.setActive(requestId, active);
 		if (active) {
-			activeCalls.put(requestId, new Date());
+			activeCallsRepository.put(requestId, new Date());
 		}
 
 		realtimeService.sendUpdateSessionStatus(existingReqId);
@@ -206,21 +205,21 @@ public class UserSessionService {
 	public WebResponse leavecall(HttpServletRequest httpRequest) {
 		RegisteredRequest userSession = getRegisteredRequest(httpRequest);
 		if (null != userSession) {
-			activeCalls.remove(userSession.getRequestId());
+			activeCallsRepository.remove(userSession.getRequestId());
 		}
 		return new WebResponse();
 	}
 
 	public HashMap<String, Object> getActiveCalls() {
-		return activeCalls.getMap();
+		return activeCallsRepository.getMap();
 	}
 
 	public boolean isInActiveCall(String requestId) {
-		return requestId != null && activeCalls.containsKey(requestId);
+		return requestId != null && activeCallsRepository.containsKey(requestId);
 	}
 
 	public void clearActiveCalls() {
-		activeCalls.clear();
+		activeCallsRepository.clear();
 	}
 	
 	

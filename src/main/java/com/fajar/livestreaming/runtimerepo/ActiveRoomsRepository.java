@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fajar.livestreaming.service.runtime.TempSessionService;
+import com.fajar.livestreaming.runtime.TempSessionService;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

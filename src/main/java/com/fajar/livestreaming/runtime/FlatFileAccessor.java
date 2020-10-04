@@ -1,4 +1,4 @@
-package com.fajar.livestreaming.service.runtime;
+package com.fajar.livestreaming.runtime;
 
 import java.io.BufferedReader;
 import java.io.File;

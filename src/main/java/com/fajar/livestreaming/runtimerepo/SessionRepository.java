@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
-import com.fajar.livestreaming.service.runtime.TempSessionService;
+import com.fajar.livestreaming.runtime.TempSessionService;
 
 import lombok.extern.slf4j.Slf4j;
 

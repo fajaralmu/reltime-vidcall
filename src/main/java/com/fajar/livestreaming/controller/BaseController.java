@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,13 +29,29 @@ import lombok.extern.slf4j.Slf4j;
 public class BaseController {
 
 	private static final String MODEL_ATTR_TITLE = "title";
-
 	private static final String MODEL_ATTR_PAGE_URL = "pageUrl";
-
+	
 	protected String basePage = "BASE_PAGE";
+	
 	@Autowired
 	protected UserSessionService userSessionService;
-
+	
+	@Value("${app.header.label}")
+	private String applicationHeaderLabel;
+	@Value("${app.footer.label}")
+	private String applicationFooterLabel;
+	
+	@ModelAttribute("applicationHeaderLabel")
+	public String applicationHeaderLabel(HttpServletRequest request) {
+		
+		return applicationHeaderLabel;
+	}
+	@ModelAttribute("applicationFooterLabel")
+	public String applicationFooterLabel(HttpServletRequest request) {
+		
+		return applicationFooterLabel;
+	}
+	
 	@ModelAttribute("registeredRequest")
 	public RegisteredRequest getPublicRequestId(HttpServletRequest request) {
 		try {
@@ -170,6 +187,5 @@ public class BaseController {
 			return;
 		}
 		setModelAttribute(modelAndView, "pageUrl", pageUrl);
-
 	}
 }
