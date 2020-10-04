@@ -9,6 +9,9 @@
 	<div class="border row">
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
+			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">true</span></h5>
+			<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
+			<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
 		</div>
 		<div class="col-6"> 
 		    <h3>Room : ${roomId }</h3>
@@ -46,9 +49,12 @@
 	
 	infoChatCount = byId("info-chat-count");
 	infoLogCount = byId("info-logs-count");
+	infoVideoEnabled = byId("info-video-enabled");
 	
 	const chatList = byId("chat-list");
 	const inputChatMessage = byId("input-chat-message"); 
+	
+	var videoEnabled = true;
 	
 	function prepare() {
 		const _class = this;
@@ -92,15 +98,37 @@
 					 _class.handleNewChat(resp);
 				}
 			};
-		connectToWebsocket(callbackMemberJoin, callbackMemberLeave, callbackWebRtcHandshake, callbackRoomInvalidated, callbackNewChat);
+		const callbackTogglePeerStream = {
+				subscribeUrl : "/wsResp/togglepeerstream/${roomId }",
+				callback : function(resp){
+					 _class.handleTogglePeerStream(resp);
+				}
+			};
+		connectToWebsocket(callbackMemberJoin, 
+				callbackMemberLeave, callbackWebRtcHandshake, 
+				callbackRoomInvalidated, callbackNewChat, 
+				callbackTogglePeerStream);
+	}
+	
+	function handleTogglePeerStream(resp){
+		const requestId = resp.requestId;
+		const enabled = resp.streamEnabled;
+		
+		if(isUserRequestId(requestId)) {
+			return;
+		}
+		
+		if(enabled){
+			dialPartner(requestId);
+		} else if(this.videoStream != null){ 
+			
+		}
+		
 	}
 	
 	function handleNewChat(resp){
 		const chatMessage = resp.chatMessage;
-		//<div class="chat-message border-secondary rounded">
-		//<p>${message.body }</p>
-		//<p><i>${message.username }</i></p>
-	//</div>
+		 
 		const chatItemProp = {
 				tagName: 'div',
 				className: 'chat-message-'+(isUserRequestId(chatMessage.requestId)? 'user':'common'),
@@ -264,8 +292,31 @@
 				window.location.href = "<spring:url value="/dashboard/" /> ";
 			}
 		})
+	}
+	
+	function togglePeerStream(enabled){
 		
+		if(this.videoEnabled == enabled){
+			infoDialog("Currently is "+enabled).then(function(e){});
+			return;
+		}
 		
+		sendToWebsocket("/app/publicconf1/togglepeerstream", {
+//			originId : requestId,
+			originId : "${registeredRequest.requestId}",
+			roomId: '${roomId}',
+			streamEnabled: enabled
+		});
+		if(enabled == false){
+			for ( var key in peerConnections) {
+				if(isUserRequestId(key)){
+					continue;
+				}
+				removePeerStream(key, this.videoStream);
+			}
+		}
+		this.videoEnabled = enabled;
+		infoVideoEnabled.innerHTML = enabled;
 	}
 
 	prepare();
@@ -286,23 +337,20 @@
 			updateEventLog("VideoStream IS EXIST");
 			var peerCount = 0;
 			var totalPeer = 0;
+			
 			for (var key in peerConnections ) {
-
        			const entry = peerConnections[key];
        			if(null == entry) continue;
+       			
 	       		if(isUserRequestId(key)){
-	       			 
-	       		}else{
-	       			 
+	       		}else{ 
 		       		const peerConnection = entry['connection'];
 		       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
 		       			peerConnections[key]['connection'].addStream(this.videoStream); 
 		       			peerCount++;
 		       		} 
-		       		totalPeer++;
-		       		
-	       		} 
-	       		
+		       		totalPeer++; 
+	       		}
 			}  
 			updateEventLog("Updated Peer Count: "+peerCount);
 			updateEventLog("Total Peer Count: "+totalPeer);
@@ -330,7 +378,6 @@
 				       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
 				       			peerConnections[key]['connection'].addStream(stream); 
 				       		}
-				       		
 				       		//updatePeerConnection(key, peerConnection);
 				       		peerCount++;
 			       		} 
@@ -357,44 +404,7 @@
 			}
 		});	
 	}
-	
-	function removeStream(requestId, stream){
-		const peerConnection = getPeerConnection(requestId); 
-		
-		if(!peerConnection)
-		{
-			return;
-		}
-		if(peerConnection.getSenders() && stream.getTracks()){
-			
-			peerConnection.getSenders().forEach(function(sender){
-				stream.getTracks().forEach(function(track) {
-			      if(track == sender.track) {
-			    	  peerConnection.removeTrack(sender);
-			    	  console.debug("track removed : ", track.kind);
-			      }
-			    })
-			  });
-		}
-		
-		
-		updatePeerConnection(requestId,peerConnection );
-	}
-	
-	function setStream(requestId, stream){
-		const peerConnection = getPeerConnection(requestId); 
-		
-		if(!peerConnection)
-		{
-			return;
-		}
-		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
-			peerConnection.addStream(stream);
-			updatePeerConnection(requestId, peerConnection);
-   		} 
-		
-	}
-	
+	 
 	function updateVideoDom(){ } 
 	
 	function showVideoElement(requestId){
@@ -542,7 +552,6 @@
 	function handleCandidate(requestId, candidate){
 		const peerConnection = getPeerConnection(requestId);
 		
-		
 		updateEventLog(requestId+" handleCandidate");
 		if(!peerConnection){
 			updateEventLog("Aborted bacause peer is null");
@@ -644,7 +653,7 @@
 	if("${member.requestId}" == "${registeredRequest.requestId}"){
 		
 	}else{
-		initWebRtc("${member.requestId}", true);
+		dialPartner("${member.requestId}");
 	}
 		
 	</script>

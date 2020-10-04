@@ -34,5 +34,6 @@ public class WebRequest implements Serializable {
 	private WebRtcObject webRtcObject;
 	
 	private boolean accept;
+	private boolean streamEnabled;
 
 }

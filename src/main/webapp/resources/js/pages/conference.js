@@ -119,6 +119,28 @@ function initDataChannel(ev){
 	//dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });  
 }
 
+function removePeerStream(requestId, stream){
+	const peerConnection = getPeerConnection(requestId); 
+	
+	if(!peerConnection)
+	{
+		return;
+	}
+	if(peerConnection.getSenders() && stream.getTracks()){
+		
+		peerConnection.getSenders().forEach(function(sender){
+			stream.getTracks().forEach(function(track) {
+		      if(sender.track != null && track.kind == sender.track.kind) {
+		    	  peerConnection.removeTrack(sender);
+		    	  console.debug("track removed : ", track.kind);
+		      }
+		    })
+		  });
+	}
+	
+	updatePeerConnection(requestId,peerConnection );
+} 
+
 /////////////////////////// DOM MANIPULATIONS ///////////////////////////////////////
 
 function clearLog(){

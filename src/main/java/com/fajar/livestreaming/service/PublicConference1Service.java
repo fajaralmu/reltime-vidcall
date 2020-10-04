@@ -253,4 +253,13 @@ public class PublicConference1Service {
 		return message;
 	}
 
+	public WebResponse togglePeerStream(WebRequest request) {
+		String originId = request.getOriginId();
+		String roomId = request.getRoomId();
+		boolean streamEnabled = request.isStreamEnabled();
+		WebResponse response = WebResponse.builder().streamEnabled(streamEnabled).requestId(originId).build();
+		realtimeService.convertAndSend("/wsResp/togglepeerstream/" + roomId, response);
+		return response ;
+	}
+
 }
