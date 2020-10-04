@@ -122,21 +122,23 @@ function initDataChannel(ev){
 function removePeerStream(requestId, stream){
 	const peerConnection = getPeerConnection(requestId); 
 	
-	if(!peerConnection)
-	{
+	if(!peerConnection){
 		return;
 	}
-	if(peerConnection.getSenders() && stream.getTracks()){
-		
-		peerConnection.getSenders().forEach(function(sender){
-			stream.getTracks().forEach(function(track) {
-		      if(sender.track != null && track.kind == sender.track.kind) {
-		    	  peerConnection.removeTrack(sender);
-		    	  console.debug("track removed : ", track.kind);
-		      }
-		    })
-		  });
+	if(peerConnection.getSenders() == null || stream.getTracks() == null){
+		return;
 	}
+	
+	peerConnection.getSenders().forEach(function(sender){
+		stream.getTracks().forEach(function(track) {
+	      if(sender.track != null && track.kind == sender.track.kind) {
+	    	  peerConnection.removeTrack(sender);
+	    	  const identical = track == sender.track;
+	    	  console.debug("track removed : ", track.kind ," identical: ", identical);
+	      }
+	    })
+	});
+	
 	
 	updatePeerConnection(requestId,peerConnection );
 } 

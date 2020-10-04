@@ -21,3 +21,11 @@
 	overflow-y : scroll;
 	overfloe-x: none;
 }
+
+.video-cover {
+	width: 150px;
+	height: 150px;
+	background-color: #cccccc;
+	text-align: center;
+	padding-top: 55px;
+}

@@ -40,6 +40,9 @@ function htmlToElement(html) {
     return template.content.firstChild;
 }
 
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
 
 function createAnchor(id, html, url){ 
 	return createHtmlTag({tagName:"a", innerHTML: html, id: id, href: url}); 

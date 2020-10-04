@@ -120,9 +120,38 @@
 		
 		if(enabled){
 			dialPartner(requestId);
+			
 		} else if(this.videoStream != null){ 
 			
 		}
+		
+		setVideoCover(requestId, enabled);
+	}
+	
+	function setVideoCover(requestId, hideCover){
+		const videoElement = byId("video-member-"+requestId);
+		const videoControl = byId("video-control-"+requestId);
+		if(videoElement == null){
+			return;
+		}
+		
+		if(hideCover){
+			const coverElement = byId('video-cover-'+requestId);
+			if(coverElement) coverElement.remove();
+			videoElement.style.display = 'block';
+			videoControl.style.display = 'block';
+			
+		} else {
+			const cover = {
+					tagName: 'div', className: 'video-cover rounded align-middle', 
+					id:'video-cover-'+requestId, innerHTML: '<h1><i class="fas fa-video-slash"></i></h1>'
+			}
+			
+			insertAfter(createHtmlTag(cover), videoElement);
+			videoElement.style.display = 'none';
+			videoControl.style.display = 'none';
+		}
+		
 		
 	}
 	
@@ -173,9 +202,8 @@
 		const date = response.date;
 		const isRoomCreator = response.roomCreator;
 		const memberElementObject = {
-			tagName : 'div',
+			tagName : 'div',className: 'col-6',
 			id : "member-item-" + requestId,
-			className: 'col-6',
 			ch1 : {
 				tagName : 'h5',
 				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username + (isRoomCreator? '<small><i class="fas fa-headset"></i></small>':''), 
@@ -185,39 +213,33 @@
 				innerHTML : 'Date: ' + new Date(date)
 			},
 			ch3: {
-				tagName: 'video',
+				tagName: 'video',className: 'border',
 				id: 'video-member-'+requestId,
-				muted: 'muted',
-				className: 'border',
+				muted: 'muted', 
 				controls: '',
-				height: 150,
-				width: 150,
+				height: 150, width: 150,
 				style: {visibility: 'hidden'}
 			},
 			ch4: {
-				tagName: 'div',
-				id: 'video-controls-'+requestId,
-				className: 'btn-group',
+				tagName: 'div', className: 'btn-group',
+				id: 'video-control-'+requestId,
 				role: 'group',
 				ch1: {
-					tagName: 'button',
+					tagName: 'button', className: 'btn',
 					innerHTML : '<i class="fas fa-pause"></i>',
-					className: 'btn',
 					onclick: function(e){
 						toggleVideoPlay('video-member-'+requestId, e.target); 
 					}
 				},
 				ch2: {
-					tagName: 'button',
+					tagName: 'button', className: 'btn',
 					innerHTML : "<i class=\"fas fa-volume-mute\"></i>",
-					className: 'btn',
 					onclick: function(e){
 						toggleVideoMute('video-member-'+requestId, e.target);
 					}
 				},
 				ch3: {
-					tagName: 'button',
-					className: 'btn btn-info btn-sm',
+					tagName: 'button', className: 'btn btn-info btn-sm',
 					onclick: function(e){
 						dialPartner(requestId);
 					},
