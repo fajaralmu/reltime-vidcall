@@ -40,11 +40,15 @@
 
 
 <script type="text/javascript">
+	//declared in conference.js
 	memberList = byId("member-list");
 	eventLog = byId("event-log");
+	
+	infoChatCount = byId("info-chat-count");
+	infoLogCount = byId("info-logs-count");
+	
 	const chatList = byId("chat-list");
-	const inputChatMessage = byId("input-chat-message");
- 
+	const inputChatMessage = byId("input-chat-message"); 
 	
 	function prepare() {
 		const _class = this;
@@ -116,6 +120,8 @@
 		}
 		const chatItemElement = createHtmlTag(chatItemProp);
 		chatList.appendChild(chatItemElement);
+		
+		infoChatCount.innerHTML = parseInt(infoChatCount.innerHTML) + 1; 
 	
 	}
 	

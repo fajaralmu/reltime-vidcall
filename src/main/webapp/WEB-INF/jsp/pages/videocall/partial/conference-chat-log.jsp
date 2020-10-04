@@ -7,17 +7,17 @@
 	<ul class="nav nav-tabs" id="tab-event-log-chat" role="tablist">
 		<li class="nav-item"><a class="nav-link active" id="chat-tab"
 			data-toggle="tab" href="#chat-panel" role="tab"
-			aria-controls="chat-panel" aria-selected="true">Chat</a></li>
+			aria-controls="chat-panel" aria-selected="true">Chat <span class="badge badge-secondary" id="info-chat-count">${chatMessages.size() }</span></a></li>
 		<li class="nav-item"><a class="nav-link" id="log-tab"
 			data-toggle="tab" href="#log-panel" role="tab"
-			aria-controls="log-panel" aria-selected="false">Log</a></li>
+			aria-controls="log-panel" aria-selected="false">Log <span class="badge badge-secondary" id="info-logs-count">0</span></a></li>
 	</ul>
 	<div class="tab-content" id="myTabContent">
 		<div class="tab-pane fade show active" id="chat-panel" role="tabpanel"
 			aria-labelledby="chat-panel">
 			<div class="border border-primary rounded">
 				<h3 style="text-align: center; color: #cccccc" class="bg-dark">Chat
-					Messages</h3>
+					</h3>
 				<div style="padding: 3px">
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" id="input-chat-message" />
@@ -42,7 +42,7 @@
 			aria-labelledby="log-panel">
 			<div class="border border-primary rounded bg-dark">
 				<h3 style="text-align: center; color: #cccccc" class="bg-dark">Event
-					Log</h3>
+					Log </h3>
 				<div id="event-log"></div>
 			</div>
 		</div>

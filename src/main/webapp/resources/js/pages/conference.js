@@ -8,6 +8,8 @@ var dataChannel = null;
 //html elements
 var memberList;
 var eventLog;
+var infoChatCount;
+var infoLogCount;
 
 const HandshakeHandler = {
 	"offer" : function(requestId, data) {
@@ -121,6 +123,7 @@ function initDataChannel(ev){
 
 function clearLog(){
 	eventLog.innerHTML = "";
+	infoLogCount.innerHTML = 0;
 }
 
 function updateEventLog(log) {
@@ -134,4 +137,6 @@ function updateEventLog(log) {
 		
 	});
 	eventLog.appendChild(line);
+	if(infoLogCount)
+		infoLogCount.innerHTML = parseInt(infoLogCount.innerHTML) + 1;
 }
