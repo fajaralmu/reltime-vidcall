@@ -1,5 +1,7 @@
 package com.fajar.livestreaming.service;
 
+import static com.fajar.livestreaming.runtimerepo.SessionRepository.SESSION_ATTR_SESS_DATA;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +21,8 @@ import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.SessionData;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
+import com.fajar.livestreaming.runtimerepo.SessionRepository;
 import com.fajar.livestreaming.util.MapUtil;
 import com.fajar.livestreaming.util.StringUtil;
 
@@ -28,12 +32,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserSessionService {
 
-	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
-	private static final String SESSION_TRIAL_ONE = "1";
-	private static final String SESSION_ATTR_SESS_DATA = "session-data";
-	private static final String HEADER_REQUEST_ID = "request-id";
 	
-	private final HashMap<String, Object> activeCalls = new HashMap<>();
+	private static final String HEADER_REQUEST_ID = "request-id"; 
+	
+	@Autowired
+	private SessionRepository SESSION_MAP;
+	
+//	private static final Map<String, SessionData> SESSION_MAP = new LinkedHashMap<>();
+	
+	
+	@Autowired
+	private ActiveCallsRepository activeCalls;
+	
+//	private final HashMap<String, Object> activeCalls = new HashMap<>();
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -43,26 +54,29 @@ public class UserSessionService {
 		LogProxyFactory.setLoggers(this);
 	}
 
-	private SessionData getSessionData(String key) {
-		if (null == SESSION_MAP.get(key)) {
-			SESSION_MAP.put(key, new SessionData());
-		}
+	private SessionData getSessionData() {
+		SessionData sessionData = SESSION_MAP.getData();
+		if (null == sessionData) {
+			SESSION_MAP.init();
+		} 
 
-		return SESSION_MAP.get(key);
+		return SESSION_MAP.getData();
 	}
 
 	public void addRequestId(RegisteredRequest request) {
-		getSessionData(SESSION_TRIAL_ONE);
+		getSessionData();
 
-		SESSION_MAP.get(SESSION_TRIAL_ONE).addNewApp(request);
+		SESSION_MAP.addNewApp(request);
 	}
 
 	public RegisteredRequest getRequestFromSessionMap(String requestId) {
-		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
+//		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
+		return SESSION_MAP.getRequest(requestId);
 	}
 
 	private void removeSessionById(String requestId) {
-		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
+//		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
+		SESSION_MAP.removeRequest(requestId);
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
@@ -93,7 +107,7 @@ public class UserSessionService {
 	}
 
 	public List<RegisteredRequest> getAvaliableRequests() {
-		Map<String, RegisteredRequest> registeredApps = getSessionData(SESSION_TRIAL_ONE).getRegisteredApps();
+		Map<String, RegisteredRequest> registeredApps = getSessionData().getRegisteredApps();
 		return MapUtil.mapToList(registeredApps);
 	}
 
@@ -106,7 +120,8 @@ public class UserSessionService {
 		if (null == existingReqId) {
 			return;
 		}
-		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
+//		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
+		SESSION_MAP.setActive(requestId, active);
 		if (active) {
 			activeCalls.put(requestId, new Date());
 		}
@@ -197,7 +212,7 @@ public class UserSessionService {
 	}
 
 	public HashMap<String, Object> getActiveCalls() {
-		return activeCalls;
+		return activeCalls.getMap();
 	}
 
 	public boolean isInActiveCall(String requestId) {

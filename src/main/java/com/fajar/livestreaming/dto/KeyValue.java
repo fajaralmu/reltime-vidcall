@@ -1,17 +1,19 @@
 package com.fajar.livestreaming.dto;
 
 import java.io.Serializable;
+import java.util.Map.Entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class KeyValue<K, V> implements Serializable{/**
+@Data
+public class KeyValue<K, V> implements Entry<K, V>, Serializable{/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1668484384625090190L;
@@ -20,6 +22,14 @@ public class KeyValue<K, V> implements Serializable{/**
 	private V value;
 	@Builder.Default
 	private boolean valid = true;
+	 
+	@Override
+	public V setValue(V value) {
+		this.value = value;
+		return value;
+	}
+	
+	
 	
 }
 
