@@ -358,6 +358,43 @@
 		});	
 	}
 	
+	function removeStream(requestId, stream){
+		const peerConnection = getPeerConnection(requestId); 
+		
+		if(!peerConnection)
+		{
+			return;
+		}
+		if(peerConnection.getSenders() && stream.getTracks()){
+			
+			peerConnection.getSenders().forEach(function(sender){
+				stream.getTracks().forEach(function(track) {
+			      if(track == sender.track) {
+			    	  peerConnection.removeTrack(sender);
+			    	  console.debug("track removed : ", track.kind);
+			      }
+			    })
+			  });
+		}
+		
+		
+		updatePeerConnection(requestId,peerConnection );
+	}
+	
+	function setStream(requestId, stream){
+		const peerConnection = getPeerConnection(requestId); 
+		
+		if(!peerConnection)
+		{
+			return;
+		}
+		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
+			peerConnection.addStream(stream);
+			updatePeerConnection(requestId, peerConnection);
+   		} 
+		
+	}
+	
 	function updateVideoDom(){ } 
 	
 	function showVideoElement(requestId){
