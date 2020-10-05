@@ -18,13 +18,13 @@ import com.fajar.livestreaming.service.PublicConference1Service;
 
 @CrossOrigin
 @RestController
-public class WebSocketPublicConf1Controller extends BaseController {
-	Logger log = LoggerFactory.getLogger(WebSocketPublicConf1Controller.class);
+public class WebSocketWebRTCConference1Controller extends BaseController {
+	Logger log = LoggerFactory.getLogger(WebSocketWebRTCConference1Controller.class);
 
 	@Autowired
 	private PublicConference1Service publicConference1Service; 
 
-	public WebSocketPublicConf1Controller() {
+	public WebSocketWebRTCConference1Controller() {
 		log.info("------------------WebSocketPublicConf1Controller #1-----------------");
 	}
 

@@ -42,4 +42,6 @@ public class RegisteredRequest implements Serializable{/**
 	private boolean exist = true;
 	private boolean roomCreator;
 	
+	private ConferenceMember conferenceMemberData;
+	
 }

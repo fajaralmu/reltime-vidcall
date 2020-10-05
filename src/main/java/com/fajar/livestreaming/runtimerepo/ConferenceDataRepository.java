@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.ConferenceData;
+import com.fajar.livestreaming.dto.ConferenceMember;
 import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.runtime.TempSessionService;
 
@@ -73,7 +74,7 @@ public class ConferenceDataRepository implements RuntimeRepository {
 	public synchronized void addNewMember(String roomId, String requestId) {
 		try {
 			ConferenceData conferenceData = get(roomId);
-			conferenceData.getMembers().put(requestId, new Date());
+			conferenceData.getMembers().put(requestId, ConferenceMember.builder().requestId(requestId).build());
 			put(roomId, conferenceData);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -95,6 +96,17 @@ public class ConferenceDataRepository implements RuntimeRepository {
 		try {
 			ConferenceData conferenceData = get(roomId);
 			conferenceData.getChatMessages().add(newMessage);
+			put(roomId, conferenceData);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	public synchronized void updateEnableStream(String roomId, String originId, boolean streamEnabled) {
+		 
+		try {
+			ConferenceData conferenceData = get(roomId);
+			conferenceData.getMembers().get(originId).setStreamEnabled(streamEnabled);
 			put(roomId, conferenceData);
 		} catch (Exception e) {
 			// TODO: handle exception

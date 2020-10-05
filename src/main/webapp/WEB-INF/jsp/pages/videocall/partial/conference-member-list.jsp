@@ -17,11 +17,14 @@
 				</h5>
 				<p>${member.created }</p>
 				<c:if test="${member.requestId != registeredRequest.requestId }">
-					<video class="border" style="visibility: hidden" height="150"
+					<video class="border" style="visibility: hidden; display: ${member.conferenceMemberData.streamEnabled? 'block' : 'none'}" height="150"
 						width="150" muted="muted" id="video-member-${member.requestId }"></video>
-
-					<div class="btn-group" role="group"
-						id="video-control-${member.requestId }">
+					<c:if test="${member.conferenceMemberData.streamEnabled == false}">
+						<div id="video-cover-${member.requestId }" class="video-cover rounded align-middle">
+							<h1><i class="fas fa-video-slash"></i></h1>
+						</div>
+					</c:if>
+					<div class="btn-group" style="display: ${member.conferenceMemberData.streamEnabled? 'block' : 'none'}" role="group" id="video-control-${member.requestId }">
 						<button class="btn"
 							onclick="toggleVideoPlay('video-member-${member.requestId }', this);">
 							<i class="fas fa-pause"></i>

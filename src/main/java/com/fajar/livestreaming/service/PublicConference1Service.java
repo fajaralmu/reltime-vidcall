@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.ConferenceData;
+import com.fajar.livestreaming.dto.ConferenceMember;
 import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
@@ -177,13 +178,19 @@ public class PublicConference1Service {
 			return members;
 		}
 		ConferenceData conferenceData = conferenceDataRepository.get(roomId);
-		HashMap<String, Date> memberIds = conferenceData.getMembers();
-		for (Entry<String, Date> entry : memberIds.entrySet()) {
+		HashMap<String, ConferenceMember> memberIds = conferenceData.getMembers();
+		
+		for (Entry<String, ConferenceMember> entry : memberIds.entrySet()) {
+			
 			RegisteredRequest memberSession = userSessionService.getRequestFromSessionMap(entry.getKey());
+			
 			if (memberSession.getRequestId().equals(conferenceData.getCreatorRequestId())) {
 				memberSession.setRoomCreator(true);
 			}
-			memberSession.setCreated(entry.getValue());
+			
+			ConferenceMember memberData = entry.getValue();
+			memberSession.setConferenceMemberData(memberData);
+			
 			members.add(memberSession);
 		}
 
@@ -258,6 +265,9 @@ public class PublicConference1Service {
 		String roomId = request.getRoomId();
 		boolean streamEnabled = request.isStreamEnabled();
 		WebResponse response = WebResponse.builder().streamEnabled(streamEnabled).requestId(originId).build();
+		
+		conferenceDataRepository.updateEnableStream(roomId, originId, streamEnabled);
+		
 		realtimeService.convertAndSend("/wsResp/togglepeerstream/" + roomId, response);
 		return response ;
 	}

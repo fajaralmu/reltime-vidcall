@@ -22,7 +22,7 @@ public class ConferenceData implements Serializable{/**
 	
 	private String creatorRequestId;
 	@Builder.Default
-	private HashMap<String, Date> members = new HashMap();
+	private HashMap<String, ConferenceMember> members = new HashMap();
 	@Builder.Default
 	private Date createdDate = new Date();
 	@Builder.Default
