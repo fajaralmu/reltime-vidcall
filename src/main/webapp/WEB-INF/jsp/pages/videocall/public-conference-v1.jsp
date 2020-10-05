@@ -54,7 +54,10 @@
 	const chatList = byId("chat-list");
 	const inputChatMessage = byId("input-chat-message"); 
 	
+	const onloadCallbacks = [];
+	
 	var videoEnabled = true;
+	var isJoined = ${isJoined};
 	
 	function prepare() {
 		const _class = this;
@@ -62,6 +65,9 @@
 		onConnectCallbacks.push(function(frame) {
 			console.log("Connected to signaling server-", frame);
 			_class.join();
+			if(isJoined){
+				_class.handleOnloadCallbacks();
+			}
 		});
 
 		const callbackMemberJoin = {
@@ -297,6 +303,8 @@
  
 
 	function join() {
+		updateEventLog("Joining...");
+		
 		sendToWebsocket("/app/publicconf1/join", {
 			originId : "${registeredRequest.requestId}",
 			roomId : "${roomId}"
@@ -341,7 +349,7 @@
 		infoVideoEnabled.innerHTML = enabled;
 	}
 
-	prepare();
+	
 </script>
 <script type="text/javascript">
 	inCalling = true;
@@ -407,6 +415,11 @@
 					}  
 		            console.debug("END getUserMedia"); 
 		            updateEventLog("End HandleMedia peerCount: "+peerCount);
+		            
+		            if(isJoined) {
+		            	handleOnloadCallbacks();
+		            }
+		            
 		        }).catch(function (err) { console.error(error); });	    	
 	}   
 	 
@@ -667,15 +680,30 @@
 		}
 	}
 	
-	 
-	initLiveStream(); 
+	function handleOnloadCallbacks(){
+		console.debug("handleOnloadCallbacks: ", onloadCallbacks.length);
+	
+		for (var i = 0; i < onloadCallbacks.length; i++) {
+			const callback = onloadCallbacks[i];
+			const param = callback.param;
+			const handler = callback.handler;
+			handler(param);
+		}
+	}
+	
+	
 </script>
 <c:forEach var="member" items="${members}">
 	<script>
 	if("${member.requestId}" == "${registeredRequest.requestId}"){
 		
 	}else{
-		dialPartner("${member.requestId}");
+		onloadCallbacks.push({
+		 	param: "${member.requestId}",
+		 	handler: function(param){
+		 		dialPartner(param);
+		 	}
+		}); 
 	}
 		
 	</script>
@@ -699,3 +727,12 @@
 	}
 </script>
 </c:if>
+<script>
+prepare();
+initLiveStream();
+
+if(isJoined == false){
+	handleOnloadCallbacks();
+}
+
+</script>

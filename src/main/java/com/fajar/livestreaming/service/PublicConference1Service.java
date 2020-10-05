@@ -262,4 +262,16 @@ public class PublicConference1Service {
 		return response ;
 	}
 
+	public boolean isJoined(HttpServletRequest httpRequest, String roomId) {
+		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
+		if (null == session) {
+			return false;
+		}
+		
+		ConferenceData conferenceData = conferenceDataRepository.get(roomId);
+		return conferenceData != null &&
+				conferenceData.getMembers().get(session.getRequestId()) != null;
+		 
+	}
+
 }
