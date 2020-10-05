@@ -164,3 +164,30 @@ function updateEventLog(log) {
 	if(infoLogCount)
 		infoLogCount.innerHTML = parseInt(infoLogCount.innerHTML) + 1;
 }
+
+function setVideoCover(requestId, hideCover){
+	const videoElement = byId("video-member-"+requestId);
+	const videoControl = byId("video-control-"+requestId);
+	if(videoElement == null){
+		return;
+	}
+	
+	if(hideCover){
+		const coverElement = byId('video-cover-'+requestId);
+		if(coverElement) coverElement.remove();
+		videoElement.style.display = 'block';
+		videoControl.style.display = 'block';
+		
+	} else {
+		const cover = {
+				tagName: 'div', className: 'video-cover rounded align-middle', 
+				id:'video-cover-'+requestId, innerHTML: '<h1><i class="fas fa-video-slash"></i></h1>'
+		}
+		
+		insertAfter(createHtmlTag(cover), videoElement);
+		videoElement.style.display = 'none';
+		videoControl.style.display = 'none';
+	}
+	
+	
+}

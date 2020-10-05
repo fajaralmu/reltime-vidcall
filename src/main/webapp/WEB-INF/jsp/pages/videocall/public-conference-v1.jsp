@@ -9,7 +9,7 @@
 	<div class="border row">
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
-			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">true</span></h5>
+			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
 			<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
 			<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
 		</div>
@@ -56,8 +56,9 @@
 	
 	const onloadCallbacks = [];
 	
-	var videoEnabled = true;
+	var videoEnabled = ${!videoEnabled};
 	var isJoined = ${isJoined};
+	var initialPeerCount = ${members.size()};
 	
 	function prepare() {
 		const _class = this;
@@ -65,6 +66,7 @@
 		onConnectCallbacks.push(function(frame) {
 			console.log("Connected to signaling server-", frame);
 			_class.join();
+			_class.togglePeerStream(${videoEnabled});
 			if(isJoined){
 				_class.handleOnloadCallbacks();
 			}
@@ -85,36 +87,39 @@
 			}
 		};
 		const callbackWebRtcHandshake = {
-				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }/${registeredRequest.requestId}",
-				callback : function(resp){
-					_class.handleWebRtcHandshake(resp.eventId, resp.requestId, resp.webRtcObject);
-				}
-			};
+			subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }/${registeredRequest.requestId}",
+			callback : function(resp){
+				_class.handleWebRtcHandshake(resp.eventId, resp.requestId, resp.webRtcObject);
+			}
+		};
 		const callbackRoomInvalidated = {
-				subscribeUrl : "/wsResp/roominvalidated/${roomId }",
-				callback : function(resp){
-					infoDialog("Room has been invalidated").then(function(e){
-						window.location.reload();
-					})
-				}
-			};
+			subscribeUrl : "/wsResp/roominvalidated/${roomId }",
+			callback : function(resp){
+				infoDialog("Room has been invalidated").then(function(e){
+					window.location.reload();
+				})
+			}
+		};
 		const callbackNewChat = {
-				subscribeUrl : "/wsResp/newchat/${roomId }",
-				callback : function(resp){
-					 _class.handleNewChat(resp);
-				}
-			};
+			subscribeUrl : "/wsResp/newchat/${roomId }",
+			callback : function(resp){
+				 _class.handleNewChat(resp);
+			}
+		};
 		const callbackTogglePeerStream = {
-				subscribeUrl : "/wsResp/togglepeerstream/${roomId }",
-				callback : function(resp){
-					 _class.handleTogglePeerStream(resp);
-				}
-			};
+			subscribeUrl : "/wsResp/togglepeerstream/${roomId }",
+			callback : function(resp){
+				 _class.handleTogglePeerStream(resp);
+			}
+		};
+		
 		connectToWebsocket(callbackMemberJoin, 
 				callbackMemberLeave, callbackWebRtcHandshake, 
 				callbackRoomInvalidated, callbackNewChat, 
 				callbackTogglePeerStream);
 	}
+	
+	//function handlePeerConfirmJoin
 	
 	function handleTogglePeerStream(resp){
 		const requestId = resp.requestId;
@@ -134,32 +139,7 @@
 		setVideoCover(requestId, enabled);
 	}
 	
-	function setVideoCover(requestId, hideCover){
-		const videoElement = byId("video-member-"+requestId);
-		const videoControl = byId("video-control-"+requestId);
-		if(videoElement == null){
-			return;
-		}
-		
-		if(hideCover){
-			const coverElement = byId('video-cover-'+requestId);
-			if(coverElement) coverElement.remove();
-			videoElement.style.display = 'block';
-			videoControl.style.display = 'block';
-			
-		} else {
-			const cover = {
-					tagName: 'div', className: 'video-cover rounded align-middle', 
-					id:'video-cover-'+requestId, innerHTML: '<h1><i class="fas fa-video-slash"></i></h1>'
-			}
-			
-			insertAfter(createHtmlTag(cover), videoElement);
-			videoElement.style.display = 'none';
-			videoControl.style.display = 'none';
-		}
-		
-		
-	}
+	
 	
 	function handleNewChat(resp){
 		const chatMessage = resp.chatMessage;
@@ -199,6 +179,7 @@
 			removeMemberItem(resp.username, resp.requestId, resp.date);
 		}
 		addMemberList(resp);
+		//dialPartner(resp.requestId);
 		initWebRtc(resp.requestId, true);
 	}
 
@@ -415,10 +396,10 @@
 					}  
 		            console.debug("END getUserMedia"); 
 		            updateEventLog("End HandleMedia peerCount: "+peerCount);
-		            
+		            /* 
 		            if(isJoined) {
 		            	handleOnloadCallbacks();
-		            }
+		            } */
 		            
 		        }).catch(function (err) { console.error(error); });	    	
 	}   
@@ -622,6 +603,7 @@
 		  
 	function handlePartnerDial(requestId) {
 		removePeerConnection(requestId);
+		
 		initWebRtc(requestId, true);
 		updateVideoEvent(); 
 	}
@@ -682,6 +664,7 @@
 	
 	function handleOnloadCallbacks(){
 		console.debug("handleOnloadCallbacks: ", onloadCallbacks.length);
+		updateEventLog("handleOnloadCallbacks "+onloadCallbacks.length);
 	
 		for (var i = 0; i < onloadCallbacks.length; i++) {
 			const callback = onloadCallbacks[i];

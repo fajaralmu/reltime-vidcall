@@ -98,6 +98,7 @@ public class MvcConferenceController extends BaseController {
 		model.addAttribute("isRoomOwner", isRoomOwner);
 		model.addAttribute("roomAdmin", roomAdmin);
 		model.addAttribute("isJoined", isJoined);
+		model.addAttribute("videoEnabled", false);
 		model.addAttribute("roomId", roomId);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
 		
