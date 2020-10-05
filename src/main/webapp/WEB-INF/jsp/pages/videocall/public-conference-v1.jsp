@@ -127,7 +127,8 @@
 	
 	function handlePeerConfirmJoin(resp){
 		updateEventLog("Peer confirmed: "+resp.requestId);
-		this.togglePeerStream(${videoEnabled});
+		//DEFULT: peer cannot see video
+		this.togglePeerStream(false);
 	}
 	
 	function handleTogglePeerStream(resp){
@@ -140,10 +141,7 @@
 		
 		if(enabled){
 			dialPartner(requestId);
-			
-		} else if(this.videoStream != null){ 
-			
-		}
+		} else if(this.videoStream != null){  }
 		
 		setVideoCover(requestId, enabled);
 	}
@@ -317,10 +315,10 @@
 	
 	function togglePeerStream(enabled){
 		
-		if(this.videoEnabled == enabled){
+		/* if(this.videoEnabled == enabled){
 			infoDialog("Currently is "+enabled).then(function(e){});
 			return;
-		}
+		} */
 		
 		sendToWebsocket("/app/publicconf1/togglepeerstream", {
 //			originId : requestId,
@@ -726,6 +724,9 @@ initLiveStream();
 
 if(isJoined == false){
 	handleOnloadCallbacks();
+	
+}else {
+	this.videoEnabled = !this.videoEnabled;
 }
 
 </script>

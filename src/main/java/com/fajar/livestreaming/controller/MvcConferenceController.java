@@ -84,7 +84,7 @@ public class MvcConferenceController extends BaseController {
 		stylePaths = "conference")
 	public String publicconference(Model model, @PathVariable(name = "roomId") String roomId,
 			HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
-
+		
 		boolean codeIsValid = publicConference1Service.validateCode(roomId);
 		if (!codeIsValid) {
 			sendRedirect(response, httpRequest.getContextPath() + "/app/");
