@@ -179,6 +179,9 @@ function setVideoCover(requestId, hideCover){
 		videoControl.style.display = 'block';
 		
 	} else {
+		if(byId('video-cover-'+requestId)){
+			byId('video-cover-'+requestId).remove();
+		}
 		const cover = {
 				tagName: 'div', className: 'video-cover rounded align-middle', 
 				id:'video-cover-'+requestId, innerHTML: '<h1><i class="fas fa-video-slash"></i></h1>'

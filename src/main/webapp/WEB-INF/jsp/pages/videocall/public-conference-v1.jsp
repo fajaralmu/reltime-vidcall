@@ -66,7 +66,7 @@
 		onConnectCallbacks.push(function(frame) {
 			console.log("Connected to signaling server-", frame);
 			_class.join();
-			_class.togglePeerStream(${videoEnabled});
+			
 			if(isJoined){
 				_class.handleOnloadCallbacks();
 			}
@@ -112,14 +112,23 @@
 				 _class.handleTogglePeerStream(resp);
 			}
 		};
+		const callbackPeerConfirm = {
+			subscribeUrl : "/wsResp/peerconfirm/${roomId }/${registeredRequest.requestId}",
+			callback : function(resp){
+				 _class.handlePeerConfirmJoin(resp);
+			}
+		};
 		
 		connectToWebsocket(callbackMemberJoin, 
 				callbackMemberLeave, callbackWebRtcHandshake, 
 				callbackRoomInvalidated, callbackNewChat, 
-				callbackTogglePeerStream);
+				callbackTogglePeerStream, callbackPeerConfirm);
 	}
 	
-	//function handlePeerConfirmJoin
+	function handlePeerConfirmJoin(resp){
+		updateEventLog("Peer confirmed: "+resp.requestId);
+		this.togglePeerStream(${videoEnabled});
+	}
 	
 	function handleTogglePeerStream(resp){
 		const requestId = resp.requestId;
@@ -179,6 +188,7 @@
 			removeMemberItem(resp.username, resp.requestId, resp.date);
 		}
 		addMemberList(resp);
+		sendPeerConfirm(resp.requestId);
 		//dialPartner(resp.requestId);
 		initWebRtc(resp.requestId, true);
 	}
@@ -444,14 +454,6 @@
 		updateVideoEvent();
 		const _class = this; 
 		
-	/* 	const callbackWebRtcHandshake = {
-				subscribeUrl : "/wsResp/webrtcpublicconference/${roomId }",
-				callback : function(resp){
-					_class.handleWebRtcHandshake(resp.requestId, resp.webRtcObject);
-				}
-			};
-		 
-		connectToWebsocket( callbackWebRtcHandshake );   */
 	}
 	
 	
@@ -629,13 +631,21 @@
 			infoDialog("Please specify messge body!").then(function(e){ });
 			return;
 		}
-		sendToWebsocket("/app/publicconf1/newchat", {
-//			originId : requestId,
+		sendToWebsocket("/app/publicconf1/newchat", { 
 			originId : "${registeredRequest.requestId}",
 			roomId: '${roomId}',
 			message: body
 		});
 		inputChatMessage.value = "";
+	}
+	
+	function sendPeerConfirm(requestId){
+		 
+		sendToWebsocket("/app/peerconfirm", { 
+			originId : "${registeredRequest.requestId}",
+			roomId: '${roomId}',
+			destination: requestId
+		}); 
 	}
 	
 	function sendToWebsocketV2(message){

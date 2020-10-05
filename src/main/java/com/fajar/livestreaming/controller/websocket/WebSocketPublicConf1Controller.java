@@ -60,5 +60,10 @@ public class WebSocketPublicConf1Controller extends BaseController {
 	public WebResponse togglepeerstream(WebRequest request) throws IOException {
 		return publicConference1Service.togglePeerStream(request);
 	}
+	
+	@MessageMapping("/peerconfirm")
+	public WebResponse peerconfirm(WebRequest request) throws IOException {
+		return publicConference1Service.peerconfirm(request);
+	}
 
 }

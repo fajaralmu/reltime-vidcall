@@ -274,4 +274,12 @@ public class PublicConference1Service {
 		 
 	}
 
+	public WebResponse peerconfirm(WebRequest request) {
+		String roomId = request.getRoomId();
+		String peerId = request.getDestination();
+		WebResponse response = WebResponse.builder().requestId(request.getOriginId()).build();
+		realtimeService.convertAndSend("/wsResp/peerconfirm/" + roomId+"/"+peerId, response);
+		return response;
+	}
+
 }
