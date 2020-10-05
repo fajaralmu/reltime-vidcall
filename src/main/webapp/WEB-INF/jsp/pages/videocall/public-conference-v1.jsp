@@ -10,7 +10,7 @@
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
-			<div class="btn-group">
+			<div style="text-align: center;">
 				<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
 				<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
 			</div>
