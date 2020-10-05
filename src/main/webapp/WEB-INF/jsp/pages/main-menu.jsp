@@ -28,7 +28,9 @@
 						<button id="btn-register" class="btn btn-info"
 							onclick="registerSession()">Register</button>
 					</c:if>
-					<button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
+					<c:if test="${registeredRequest != null }">
+						<button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
+					</c:if>
 				</div>
 			</div>
 		</div>
@@ -70,24 +72,30 @@
 	const inputUserName = byId("input-username");
 	const buttonRegister = byId("btn-register");
 
-	function invalidate() {
-		confirmDialog("Do you want to invalidate session?").then(function(ok) {
-			if (ok) {
-				doInvalidate();
-			}
-		})
-	}
-
-	function doInvalidate() {
-		const requestObject = {};
-		postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
-				function(xhr) {
-					infoDone();
-					var response = (xhr.data);
-					window.location.reload();
-				});
-	}
+	
 </script>
+<c:if test="${registeredRequest != null }">
+	<script type="text/javascript">
+		function invalidate() {
+			confirmDialog("Do you want to invalidate session?").then(function(ok) {
+				if (ok) {
+					doInvalidate();
+				}
+			})
+		}
+		
+		function doInvalidate() {
+			const requestObject = {};
+			postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
+					function(xhr) {
+						infoDone();
+						var response = (xhr.data);
+						window.location.reload();
+					});
+		}
+	</script>
+	
+</c:if>
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
 		function registerSession() {

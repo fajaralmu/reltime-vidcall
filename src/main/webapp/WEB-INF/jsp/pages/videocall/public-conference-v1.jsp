@@ -10,8 +10,21 @@
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
-			<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
-			<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
+			<div class="btn-group">
+				<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
+				<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
+			</div>
+			<div>
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+				    <label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
+				</div>
+				<select id="select-stream-type" class="custom-select">
+					<option value="camera">Camera</option>
+					<option value="screen">Screen</option>
+				</select>
+				</div>
+			</div>
 		</div>
 		<div class="col-6"> 
 		    <h3>Room : ${roomId }</h3>
@@ -53,6 +66,7 @@
 	
 	const chatList = byId("chat-list");
 	const inputChatMessage = byId("input-chat-message"); 
+	const selectStreamType = byId("select-stream-type");
 	
 	const onloadCallbacks = [];
 	
@@ -304,13 +318,17 @@
 		
 		confirmDialog("Want to leave ?").then(function(ok){
 			if(ok){
-				sendToWebsocket("/app/publicconf1/leave", {
-					originId : "${registeredRequest.requestId}",
-					roomId : "${roomId}"
-				});
-				window.location.href = "<spring:url value="/dashboard/" /> ";
+				doLeave();
 			}
 		})
+	}
+	
+	function doLeave(){
+		sendToWebsocket("/app/publicconf1/leave", {
+			originId : "${registeredRequest.requestId}",
+			roomId : "${roomId}"
+		});
+		window.location.href = "<spring:url value="/dashboard/" /> ";
 	}
 	
 	function togglePeerStream(enabled){
@@ -338,6 +356,9 @@
 		infoVideoEnabled.innerHTML = enabled;
 	}
 
+	selectStreamType.onchange = function(e){
+		updateStreamType(e.target.value);
+	}	
 	
 </script>
 <script type="text/javascript">
@@ -345,6 +366,7 @@
 	var paused = false;
 	var video;
 	var myVideo = byId("my-video"); 
+	var streamType = "camera"; //"screen"
 	
 	function isUserRequestId(requestId){
 		return requestId == "${registeredRequest.requestId}";
@@ -375,42 +397,47 @@
 			updateEventLog("Total Peer Count: "+totalPeer);
 			return;
 		}
+		const config = { video: true, audio: true };
 		
-		
-	    window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-	        .then(function (stream) {
-	        		app.videoStream = stream;
-			       	console.debug("START getUserMedia"); 
-			       	updateEventLog("Start handle user media");
-			       	
-			       	app.myVideo.srcObject = stream;
-			       	var peerCount = 0;
-			       	for (var key in peerConnections ) {
-
-		       			const entry = peerConnections[key];
-		       			if(null == entry) continue;
-			       		if(isUserRequestId(key)){
-			       			 
-			       		}else{
-			       			 
-				       		const peerConnection = entry['connection'];
-				       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
-				       			peerConnections[key]['connection'].addStream(stream); 
-				       		}
-				       		//updatePeerConnection(key, peerConnection);
-				       		peerCount++;
-			       		} 
-			       		
-					}  
-		            console.debug("END getUserMedia"); 
-		            updateEventLog("End HandleMedia peerCount: "+peerCount);
-		            /* 
-		            if(isJoined) {
-		            	handleOnloadCallbacks();
-		            } */
-		            
-		        }).catch(function (err) { console.error(error); });	    	
+		var mediaStream; 
+	   	
+	   	if (streamType == "camera") {
+	   		mediaStream = window.navigator.mediaDevices.getUserMedia(config)
+	   	} else {
+	   		mediaStream = window.navigator.mediaDevices.getDisplayMedia(config)
+	   	}
+	   	mediaStream
+	   		.then(function (stream) { app.handleStream (stream) })
+	   		.catch(function (err) { console.error(error) });	    	
 	}   
+	
+	function handleStream(stream){ 
+    		this.videoStream = stream;
+	       	console.debug("START getUserMedia"); 
+	       	updateEventLog("Start handle user media");
+	       	
+	       	this.myVideo.srcObject = stream;
+	       	var peerCount = 0;
+	       	for (var key in peerConnections ) {
+
+       			const entry = peerConnections[key];
+       			if(null == entry) continue;
+	       		if(isUserRequestId(key)){
+	       			 
+	       		}else{
+	       			 
+		       		const peerConnection = entry['connection'];
+		       		if(!peerConnection.getLocalStreams() || peerConnection.getLocalStreams().length == 0){
+		       			peerConnections[key]['connection'].addStream(stream); 
+		       		}
+		       		//updatePeerConnection(key, peerConnection);
+		       		peerCount++;
+	       		} 
+	       		
+			}  
+            console.debug("END getUserMedia"); 
+            updateEventLog("End HandleMedia peerCount: "+peerCount);
+	}
 	 
 	function closePeerConnection(requestId){
 		const peerConnection = getPeerConnection(requestId);
@@ -428,6 +455,16 @@
 			}
 		});	
 	}
+	
+	function updateStreamType(type){
+		if(type != "screen" && type != "camera") {
+			return;
+		}
+		
+		this.streamType = type;
+		this.togglePeerStream(false);
+		this.videoStream = null;
+	}
 	 
 	function updateVideoDom(){ } 
 	
@@ -441,19 +478,11 @@
 	function initLiveStream(){ 
 		this.myVideo = byId("my-video");
 		this.video = byId('video'); 
-	    this.initWebSocketConference();
+		updateVideoEvent();
 	}
 	 
 	
-	//////////////////////////// WebRTC stuff //////////////////////////
-	
-	
-	function initWebSocketConference(){
-		updateVideoEvent();
-		const _class = this; 
-		
-	}
-	
+	//////////////////////////// WebRTC stuff ////////////////////////// 
 	
 	function handleWebRtcHandshake(eventId, requestId, webRtcObject){
 		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
@@ -494,8 +523,6 @@
 			createOffer(requestId); 
 		}
 	}
-	
-	
 	
 	function handlePartnerLeave(data){
 	//	infoDialog("partner left the call").then(function(e){});
@@ -638,7 +665,6 @@
 	}
 	
 	function sendPeerConfirm(requestId){
-		 
 		sendToWebsocket("/app/peerconfirm", { 
 			originId : "${registeredRequest.requestId}",
 			roomId: '${roomId}',
@@ -728,5 +754,12 @@ if(isJoined == false){
 }else {
 	this.videoEnabled = !this.videoEnabled;
 }
+
+window.addEventListener('beforeunload', function(event) {
+	doLeave();
+});
+window.addEventListener('unload', function(event) {
+  
+});
 
 </script>

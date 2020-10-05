@@ -37,7 +37,6 @@
 							onclick="dialPartner('${member.requestId}')">
 							<i class="fas fa-phone"></i>&nbsp;Dial
 						</button>
-
 					</div>
 				</c:if>
 				<c:if test="${member.requestId == registeredRequest.requestId }">
