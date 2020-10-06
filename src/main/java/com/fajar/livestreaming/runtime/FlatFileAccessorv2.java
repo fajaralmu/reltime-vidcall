@@ -72,6 +72,7 @@ public class FlatFileAccessorv2 {
 			} else {
 				System.out.println("File already exists.");
 			}
+			
 		} catch (IOException e) {
 			System.out.println("makeFile error occurred.");
 			e.printStackTrace();
@@ -110,6 +111,7 @@ public class FlatFileAccessorv2 {
 			}
 			List contents = FileUtils.readLines(myObj);
 			String result = contents.size() > 0 ? contents.get(0).toString() : "";
+			
 			return result.isEmpty() ? null : result;
 		} catch (Exception e) {
 			System.out.println("getFileContent error occurred.");

@@ -60,6 +60,15 @@ public class BaseController {
 			return null;
 		}
 	}
+	
+	@ModelAttribute("isPhone")
+	public boolean isPhone(HttpServletRequest request) {
+		try {
+			return request.getHeader("user-agent").toLowerCase().contains("android");
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	@ModelAttribute("contextPath")
 	public String getContextPath(HttpServletRequest request) {

@@ -21,7 +21,7 @@
 				</div>
 				<select id="select-stream-type" class="custom-select">
 					<option value="camera">Camera</option>
-					<option value="screen">Screen</option>
+					<c:if test="${isPhone==false }"><option value="screen">Screen</option></c:if>
 				</select>
 				</div>
 			</div>

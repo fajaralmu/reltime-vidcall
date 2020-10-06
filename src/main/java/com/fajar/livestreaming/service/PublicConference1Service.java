@@ -253,10 +253,7 @@ public class PublicConference1Service {
 			return null;
 		}
 
-		Message message = new Message();
-		message.setBody(body);
-		message.setRequestId(requestId);
-		message.setUsername(session.getUsername());
+		Message message = Message.create(session, body);
 		return message;
 	}
 

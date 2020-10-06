@@ -24,5 +24,15 @@ public class Message implements Serializable {
 	private String requestId;
 	private String username;
 	private String body;
+	
+	public static Message create(RegisteredRequest session, String body) {
+		Message message =new Message();
+		message.setBody(body);
+		message.setRequestId(session.getRequestId());
+		message.setUsername(session.getUsername());
+		
+		return message;
+		
+	}
 
 }
