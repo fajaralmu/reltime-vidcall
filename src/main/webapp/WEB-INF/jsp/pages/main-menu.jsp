@@ -18,8 +18,7 @@
 						</span>
 					</p>
 					<p>Alias:</p>
-					<input class="form-control" id="input-username"
-						placeholder="type username"
+					<input class="form-control onenter" on-enter="registerSession()" id="input-username" placeholder="type username"
 						${registeredRequest == null? "" : "disabled" }
 						value="${registeredRequest == null? null : registeredRequest.username }" />
 				</div>

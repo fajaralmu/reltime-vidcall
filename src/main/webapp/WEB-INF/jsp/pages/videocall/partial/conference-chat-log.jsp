@@ -20,7 +20,7 @@
 					</h3>
 				<div style="padding: 3px">
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" id="input-chat-message" />
+						<input type="text" class="form-control onenter" on-enter="sendChat()" id="input-chat-message" />
 						<div class="input-group-append">
 							<button class="btn btn-info" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
 						</div>

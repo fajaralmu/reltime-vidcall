@@ -26,7 +26,7 @@
 				<div class="card-header">Go To Existing Room</div>
 				<div class="card-body">
 					<p>Enter Existing Room</p>
-					<input type="text" class="form-control" placeholder="Existing Room Id" id="input-existing-room" />
+					<input type="text" class="form-control onenter"  on-enter="goToExistingRoom()" placeholder="Existing Room Id" id="input-existing-room" />
 					
 				</div>
 				<div class="card-footer">

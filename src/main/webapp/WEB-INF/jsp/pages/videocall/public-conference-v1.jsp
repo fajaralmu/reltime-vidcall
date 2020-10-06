@@ -140,17 +140,7 @@
 		
 		initEventListeners();
 	}
-	
-	function initEventListeners(){
-		
-		inputChatMessage.onkeyup = function(event){
-			if (event.keyCode === 13) { //when key is 'Enter'
-			    event.preventDefault(); 
-			    sendChat();
-			}
-		}
-		
-	}
+	 
 	
 	function handlePeerConfirmJoin(resp){
 		updateEventLog("Peer confirmed: "+resp.requestId);
