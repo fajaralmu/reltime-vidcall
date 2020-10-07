@@ -27,7 +27,7 @@ public class StreamingService {
 		LogProxyFactory.setLoggers(this); 
 	}
 	public RegisteredRequest getPartnerSession(String partnerId) throws Exception {
-		RegisteredRequest partnerSession = userSessionService.getAvailableSession(partnerId);
+		RegisteredRequest partnerSession = userSessionService.getRegisteredRequestById(partnerId);
 		
 		if(null == partnerSession) {
 			throw new Exception("Invalid request ID");

@@ -31,18 +31,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserSessionService {
 
-	
-	private static final String HEADER_REQUEST_ID = "request-id"; 
-	
+	private static final String HEADER_REQUEST_ID = "request-id";
+
 	@Autowired
 	private SessionRepository sessionRepository;
-	
+
 //	private static final Map<String, SessionData> sessionRepository = new LinkedHashMap<>();
-	
-	
+
 	@Autowired
 	private ActiveCallsRepository activeCallsRepository;
-	
+
 //	private final HashMap<String, Object> activeCallsRepository = new HashMap<>();
 
 	@Autowired
@@ -57,7 +55,7 @@ public class UserSessionService {
 		SessionData sessionData = sessionRepository.getData();
 		if (null == sessionData) {
 			sessionRepository.init();
-		} 
+		}
 
 		return sessionRepository.getData();
 	}
@@ -65,16 +63,14 @@ public class UserSessionService {
 	public void addRequestId(RegisteredRequest request) {
 		getSessionData();
 
-		sessionRepository.addNewApp(request);
+		sessionRepository.registerNewSession(request);
 	}
 
-	public RegisteredRequest getRequestFromSessionMap(String requestId) {
-//		return SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId);
+	public RegisteredRequest getRegisteredRequestById(String requestId) {
 		return sessionRepository.getRequest(requestId);
 	}
 
 	private void removeSessionById(String requestId) {
-//		SESSION_MAP.get(SESSION_TRIAL_ONE).remove(requestId);
 		sessionRepository.removeRequest(requestId);
 	}
 
@@ -82,7 +78,6 @@ public class UserSessionService {
 
 		try {
 			RegisteredRequest registeredRequest = getRegisteredRequest(request);
-
 			removeSessionById(registeredRequest.getRequestId());
 
 		} catch (Exception e) {
@@ -93,17 +88,7 @@ public class UserSessionService {
 			request.getSession().invalidate();
 		}
 
-	}
-
-	public RegisteredRequest getAvailableSession(String requestId) {
-		List<RegisteredRequest> requestList = getAvaliableRequests();
-		for (RegisteredRequest registeredRequest : requestList) {
-			if (registeredRequest.getRequestId().equals(requestId)) {
-				return registeredRequest;
-			}
-		}
-		return null;
-	}
+	} 
 
 	public List<RegisteredRequest> getAvaliableRequests() {
 		Map<String, RegisteredRequest> registeredApps = getSessionData().getRegisteredApps();
@@ -115,8 +100,8 @@ public class UserSessionService {
 	}
 
 	public void setActiveSession(String requestId, boolean active) {
-		RegisteredRequest existingReqId = getAvailableSession(requestId);
-		if (null == existingReqId) {
+		RegisteredRequest existingSession = getRegisteredRequestById(requestId);
+		if (null == existingSession) {
 			return;
 		}
 //		SESSION_MAP.get(SESSION_TRIAL_ONE).getRequest(requestId).setActive(active);
@@ -125,7 +110,7 @@ public class UserSessionService {
 			activeCallsRepository.put(requestId, new Date());
 		}
 
-		realtimeService.sendUpdateSessionStatus(existingReqId);
+		realtimeService.sendUpdateSessionStatus(existingSession);
 	}
 
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {
@@ -133,21 +118,21 @@ public class UserSessionService {
 			RegisteredRequest storedInHttpSession = (RegisteredRequest) request.getSession(false)
 					.getAttribute(SESSION_ATTR_SESS_DATA);
 			if (null != storedInHttpSession) {
-				RegisteredRequest storedInSessionMap = getRequestFromSessionMap(storedInHttpSession.getRequestId());
+				RegisteredRequest storedInSessionMap = getRegisteredRequestById(storedInHttpSession.getRequestId());
 				return storedInSessionMap;
 			}
 
 		} catch (Exception e) {
 		}
-		
-		//check by header
+
+		// check by header
 		try {
-			RegisteredRequest session = getRequestFromSessionMap(request.getHeader(HEADER_REQUEST_ID));
+			RegisteredRequest session = getRegisteredRequestById(request.getHeader(HEADER_REQUEST_ID));
 			return session;
 		} catch (Exception e) {
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -216,7 +201,5 @@ public class UserSessionService {
 	public void clearActiveCalls() {
 		activeCallsRepository.clear();
 	}
-	
-	
 
 }

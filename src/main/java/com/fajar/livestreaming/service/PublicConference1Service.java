@@ -114,7 +114,7 @@ public class PublicConference1Service {
 		ConferenceData conferenceData = conferenceDataRepository.get(roomId);
 		String creatorId = conferenceData.getCreatorRequestId();
 
-		RegisteredRequest session = userSessionService.getRequestFromSessionMap(creatorId);
+		RegisteredRequest session = userSessionService.getRegisteredRequestById(creatorId);
 		return session;
 
 	}
@@ -126,7 +126,7 @@ public class PublicConference1Service {
 	public synchronized WebResponse leaveRoom(WebRequest request) {
 		String roomId = request.getRoomId();
 		String requestId = request.getOriginId();
-		RegisteredRequest registeredRequest = userSessionService.getRequestFromSessionMap(requestId);
+		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequestById(requestId);
 
 		if (!validateCode(roomId) || registeredRequest == null) {
 			return WebResponse.failed();
@@ -145,7 +145,7 @@ public class PublicConference1Service {
 		String roomId = request.getRoomId();
 		String requestId = request.getOriginId();
 		boolean roomCreator = false;
-		RegisteredRequest registeredRequest = userSessionService.getRequestFromSessionMap(requestId);
+		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequestById(requestId);
 
 		if (!validateCode(roomId) || registeredRequest == null) {
 			return WebResponse.failed();
@@ -177,7 +177,7 @@ public class PublicConference1Service {
 		
 		for (Entry<String, ConferenceMember> entry : memberIds.entrySet()) {
 			
-			RegisteredRequest memberSession = userSessionService.getRequestFromSessionMap(entry.getKey());
+			RegisteredRequest memberSession = userSessionService.getRegisteredRequestById(entry.getKey());
 			
 			if (memberSession.getRequestId().equals(conferenceData.getCreatorRequestId())) {
 				memberSession.setRoomCreator(true);
@@ -243,7 +243,7 @@ public class PublicConference1Service {
 	}
 
 	public Message constructMessage(String requestId, String body) {
-		RegisteredRequest session = userSessionService.getRequestFromSessionMap(requestId);
+		RegisteredRequest session = userSessionService.getRegisteredRequestById(requestId);
 		if (null == session) {
 			return null;
 		}

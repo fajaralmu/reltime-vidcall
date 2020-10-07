@@ -61,7 +61,7 @@ public class SessionRepository {
 		return null;
 	}
 
-	public synchronized boolean addNewApp(RegisteredRequest request) {
+	public synchronized boolean registerNewSession(RegisteredRequest request) {
 
 		SessionData sessionData = getData();
 		if (null == sessionData) {
