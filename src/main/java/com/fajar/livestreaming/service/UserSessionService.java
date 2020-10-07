@@ -34,14 +34,10 @@ public class UserSessionService {
 	private static final String HEADER_REQUEST_ID = "request-id";
 
 	@Autowired
-	private SessionRepository sessionRepository;
-
-//	private static final Map<String, SessionData> sessionRepository = new LinkedHashMap<>();
+	private SessionRepository sessionRepository; 
 
 	@Autowired
-	private ActiveCallsRepository activeCallsRepository;
-
-//	private final HashMap<String, Object> activeCallsRepository = new HashMap<>();
+	private ActiveCallsRepository activeCallsRepository; 
 
 	@Autowired
 	private RealtimeService realtimeService;
@@ -50,19 +46,8 @@ public class UserSessionService {
 	public void init() {
 		LogProxyFactory.setLoggers(this);
 	}
-
-	private SessionData getSessionData() {
-		SessionData sessionData = sessionRepository.getData();
-		if (null == sessionData) {
-			sessionRepository.init();
-		}
-
-		return sessionRepository.getData();
-	}
-
-	public void addRequestId(RegisteredRequest request) {
-		getSessionData();
-
+ 
+	public void registerNewSession(RegisteredRequest request) {  
 		sessionRepository.registerNewSession(request);
 	}
 
@@ -91,7 +76,7 @@ public class UserSessionService {
 	} 
 
 	public List<RegisteredRequest> getAvaliableRequests() {
-		Map<String, RegisteredRequest> registeredApps = getSessionData().getRegisteredApps();
+		Map<String, RegisteredRequest> registeredApps = sessionRepository.getData().getRegisteredApps();
 		return MapUtil.mapToList(registeredApps);
 	}
 
@@ -114,23 +99,22 @@ public class UserSessionService {
 	}
 
 	public RegisteredRequest getRegisteredRequest(HttpServletRequest request) {
+		
+		String requestId = null;
+		RegisteredRequest storedInHttpSession = null;
 		try {
-			RegisteredRequest storedInHttpSession = (RegisteredRequest) request.getSession(false)
+			storedInHttpSession = (RegisteredRequest) request.getSession(false)
 					.getAttribute(SESSION_ATTR_SESS_DATA);
-			if (null != storedInHttpSession) {
-				RegisteredRequest storedInSessionMap = getRegisteredRequestById(storedInHttpSession.getRequestId());
-				return storedInSessionMap;
-			}
-
-		} catch (Exception e) {
+		} catch (Exception e) { }
+		
+		if (null != storedInHttpSession) {
+			requestId = storedInHttpSession.getRequestId();
+		}else {
+			requestId = request.getHeader(HEADER_REQUEST_ID);
 		}
-
-		// check by header
-		try {
-			RegisteredRequest session = getRegisteredRequestById(request.getHeader(HEADER_REQUEST_ID));
-			return session;
-		} catch (Exception e) {
-
+		
+		if(null != requestId) {
+			return getRegisteredRequestById(requestId);
 		}
 
 		return null;
@@ -141,15 +125,17 @@ public class UserSessionService {
 		if (null != currentRequest) {
 			removeRegisteredRequest(request);
 			currentRequest.setExist(false);
-			realtimeService.sendUpdateSessionExistance(currentRequest);
+			realtimeService.sendUpdateSessionExistance(currentRequest, false);
 		}
 	}
 
 	public RegisteredRequest registerSession(WebRequest request, HttpServletRequest httpRequest) {
 		RegisteredRequest newRegisteredRequest = createNewRequest(request.getUsername(), httpRequest);
+		
 		setSessionAttributeSessionData(httpRequest, newRegisteredRequest);
-		addRequestId(newRegisteredRequest);
-		realtimeService.sendUpdateSessionExistance(newRegisteredRequest);
+		
+		registerNewSession(newRegisteredRequest);
+		realtimeService.sendUpdateSessionExistance(newRegisteredRequest, true);
 
 		return newRegisteredRequest;
 	}

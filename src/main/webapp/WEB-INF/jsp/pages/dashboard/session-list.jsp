@@ -36,21 +36,28 @@
 
 	function initWebSocket() {
 		const _class = this;
-		const callbackObject1 = {
-			subscribeUrl : "/wsResp/sessions",
+		const callbackNewSession = {
+			subscribeUrl : "/wsResp/sessions/new",
 			callback : function(resp) {
-				_class.updateSessionList(resp);
+				_class.updateSessionList(resp, true);
 			}
 
 		};
-		const callbackObject2 = {
+		const callbackInvalidateSession = {
+			subscribeUrl : "/wsResp/sessions/invalidate",
+			callback : function(resp) {
+				_class.updateSessionList(resp, false);
+			}
+
+		};
+		const callbackSessionStatus = {
 			subscribeUrl : "/wsResp/sessionstatus",
 			callback : function(resp) {
 				_class.updateSessionStatus(resp);
 			}
 
 		};
-		connectToWebsocket(callbackObject1, callbackObject2);
+		connectToWebsocket(callbackNewSession, callbackInvalidateSession, callbackSessionStatus);
 	}
 
 	function updateSessionStatus(response) {
@@ -60,17 +67,21 @@
 		byId("status-"+requestId).innerHTML = status;
 	}
 
-	function updateSessionList(response) {
+	function updateSessionList(response, exist) {
 		const registeredRequest = response.registeredRequest;
 		if(!registeredRequest){
 			return;
 		}
 		
-		if(registeredRequest.exist){
+		if(exist){
 			const htmlTag = generateHtmlTextForSession(registeredRequest);
 			sessionList.appendChild(htmlTag); 
 		}else{
-			removeElementById(registeredRequest.requestId);
+			const listItem = byId(registeredRequest.requestId);
+			if(listItem){
+				listItem.remove();
+			}
+			
 		}
 	}
 

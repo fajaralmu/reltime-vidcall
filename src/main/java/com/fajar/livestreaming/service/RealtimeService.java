@@ -33,9 +33,9 @@ public class RealtimeService {
 	}
 
 
-	public boolean sendUpdateSessionExistance(RegisteredRequest registeredRequest) {
- 
-		convertAndSend("/wsResp/sessions", WebResponse.builder().registeredRequest(registeredRequest).build());
+	public boolean sendUpdateSessionExistance(RegisteredRequest registeredRequest, boolean existance) {
+		String additionalParam = existance ? "new":"invalidate";
+		convertAndSend("/wsResp/sessions/"+additionalParam, WebResponse.builder().registeredRequest(registeredRequest).build());
 
 		return true;
 	}
