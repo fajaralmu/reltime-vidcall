@@ -24,12 +24,11 @@ import com.fajar.livestreaming.util.StringUtil;
 @Service
 public class PublicConference1Service {
 
-//	private final HashMap<String, String> activeRoomId = new HashMap<>();
 	@Autowired
-	private ActiveRoomsRepository activeRoomId;
-//	private final HashMap<String, ConferenceData> conferenceDataRepository = new HashMap<>();
+	private ActiveRoomsRepository activeRoomsRepository;
 	@Autowired
 	private ConferenceDataRepository conferenceDataRepository;
+	
 	@Autowired
 	private UserSessionService userSessionService;
 	@Autowired
@@ -41,7 +40,7 @@ public class PublicConference1Service {
 			return null;
 		}
 
-		return activeRoomId.get(session.getRequestId());
+		return activeRoomsRepository.get(session.getRequestId());
 	}
 
 	public synchronized WebResponse generateRoomId(HttpServletRequest httpRequest) {
@@ -50,8 +49,8 @@ public class PublicConference1Service {
 			return null;
 		}
 		String newRoomId = StringUtil.generateRandomNumber(1) + StringUtil.generateRandomChar(4).toLowerCase();
-		String oldRoomId = activeRoomId.get(session.getRequestId());
-		activeRoomId.put(session.getRequestId(), newRoomId);
+		String oldRoomId = activeRoomsRepository.get(session.getRequestId());
+		activeRoomsRepository.put(session.getRequestId(), newRoomId);
 		updateconferenceDataRepository(session.getRequestId(), oldRoomId, newRoomId);
 
 		return WebResponse.builder().message(newRoomId).build();
@@ -75,8 +74,7 @@ public class PublicConference1Service {
 
 	private void putNewconferenceDataRepository(String creatorId, String newRoomId) {
 
-		conferenceDataRepository.put(newRoomId,
-				ConferenceData.builder().creatorRequestId(creatorId).members(new HashMap<>()).build());
+		conferenceDataRepository.put(newRoomId, ConferenceData.newRegisteredRoom(creatorId, newRoomId));
 	}
 
 	public WebResponse invalidateRoom(HttpServletRequest httpRequest, WebRequest request) {
@@ -84,12 +82,13 @@ public class PublicConference1Service {
 		if (session == null) {
 			return null;
 		}
-		final String roomId = request.getRoomId();
+		
+		String roomId = request.getRoomId();
 		if (validateCode(roomId)) {
 			updateconferenceDataRepository(session.getRequestId(), roomId, null);
 		}
 
-		activeRoomId.remove(session.getRequestId());
+		activeRoomsRepository.remove(session.getRequestId());
 
 		return new WebResponse();
 	}
@@ -121,13 +120,7 @@ public class PublicConference1Service {
 	}
 
 	public boolean validateCode(String roomId) {
-		return activeRoomId.validateCode(roomId);
-//		for (String key : activeRoomId.keySet()) {
-//			if (activeRoomId.get(key).equals(roomId)) {
-//				return true;
-//			}
-//		}
-//		return false;
+		return activeRoomsRepository.validateCode(roomId);
 	}
 
 	public synchronized WebResponse leaveRoom(WebRequest request) {
@@ -141,9 +134,11 @@ public class PublicConference1Service {
 
 //		conferenceDataRepository.get(roomId).getMembers().remove(requestId);
 		conferenceDataRepository.removeMember(roomId, requestId);
-		realtimeService.convertAndSend("/wsResp/leaveroom/" + roomId, WebResponse.builder()
-				.username(registeredRequest.getUsername()).date(new Date()).requestId(requestId).build());
-		return new WebResponse();
+		WebResponse response = WebResponse.builder()
+				.username(registeredRequest.getUsername()).date(new Date()).requestId(requestId).build();
+		
+		realtimeService.convertAndSend("/wsResp/leaveroom/" + roomId, response);
+		return response;
 	}
 
 	public synchronized WebResponse joinRoom(WebRequest request) {
@@ -285,6 +280,7 @@ public class PublicConference1Service {
 		String roomId = request.getRoomId();
 		String peerId = request.getDestination();
 		WebResponse response = WebResponse.builder().requestId(request.getOriginId()).build();
+		
 		realtimeService.convertAndSend("/wsResp/peerconfirm/" + roomId+"/"+peerId, response);
 		return response;
 	}
