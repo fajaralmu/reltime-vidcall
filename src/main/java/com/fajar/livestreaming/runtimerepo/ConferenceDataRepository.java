@@ -9,22 +9,10 @@ import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.runtime.TempSessionService;
 
 @Service
-public class ConferenceDataRepository implements RuntimeRepository {
+public class ConferenceDataRepository {
 
 	@Autowired
 	private TempSessionService tempSessionService;
-
-	@Override
-	public Object getData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateData(Object data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	public boolean containsKey(String oldRoomId) {
 		ConferenceData object = null;
@@ -90,7 +78,7 @@ public class ConferenceDataRepository implements RuntimeRepository {
 	}
 
 	public synchronized void addChatMessage(String roomId, Message newMessage) {
-		 
+
 		try {
 			ConferenceData conferenceData = get(roomId);
 			conferenceData.getChatMessages().add(newMessage);
@@ -101,7 +89,7 @@ public class ConferenceDataRepository implements RuntimeRepository {
 	}
 
 	public synchronized void updateEnableStream(String roomId, String originId, boolean streamEnabled) {
-		 
+
 		try {
 			ConferenceData conferenceData = get(roomId);
 			conferenceData.getMembers().get(originId).setStreamEnabled(streamEnabled);

@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Service
-public class ActiveRoomsRepository implements RuntimeRepository {
+public class ActiveRoomsRepository {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -27,13 +27,11 @@ public class ActiveRoomsRepository implements RuntimeRepository {
 
 	}
 
-	@Override
-	public  Object getData() {
+	public Object getData() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public boolean updateData(Object data) {
 		// TODO Auto-generated method stub
 		return false;
@@ -83,7 +81,7 @@ public class ActiveRoomsRepository implements RuntimeRepository {
 	public boolean validateCode(String roomId) {
 		List<ActiveRoomData> rooms = tempSessionService.getAllFiles(ActiveRoomData.class);
 		for (ActiveRoomData activeRoomData : rooms) {
-			if(activeRoomData.getRoomId().equals(roomId)) {
+			if (activeRoomData.getRoomId().equals(roomId)) {
 				return true;
 			}
 		}

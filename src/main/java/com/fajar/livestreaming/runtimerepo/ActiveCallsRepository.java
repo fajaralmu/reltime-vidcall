@@ -12,7 +12,7 @@ import com.fajar.livestreaming.dto.ActiveCalls;
 import com.fajar.livestreaming.runtime.TempSessionService;
 
 @Service
-public class ActiveCallsRepository implements RuntimeRepository<ActiveCalls>{
+public class ActiveCallsRepository {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -37,7 +37,7 @@ public class ActiveCallsRepository implements RuntimeRepository<ActiveCalls>{
 		return updateData(activeCalls);
 	}
 	
-	@Override
+	 
 	public synchronized boolean updateData(ActiveCalls activeCalls) {
 		try {
 			tempSessionService.put(ACTIVE_CALLS, activeCalls);
@@ -48,7 +48,7 @@ public class ActiveCallsRepository implements RuntimeRepository<ActiveCalls>{
 		return false;
 	}
 
-	@Override
+	 
 	public synchronized ActiveCalls getData() {
 
 		try {

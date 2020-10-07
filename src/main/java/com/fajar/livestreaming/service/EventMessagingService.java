@@ -1,7 +1,6 @@
 package com.fajar.livestreaming.service;
 
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver; 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 public class EventMessagingService {
 	
 	public EventMessagingService() {
-		PayloadMethodArgumentResolver ccc = null;
 		log.debug("Instantiated EventMessagingService"); 
 	}
 

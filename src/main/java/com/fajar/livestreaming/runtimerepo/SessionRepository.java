@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class SessionRepository implements RuntimeRepository<SessionData> {
+public class SessionRepository {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -39,7 +39,6 @@ public class SessionRepository implements RuntimeRepository<SessionData> {
 		return updateData(sessionData);
 	}
 
-	@Override
 	public synchronized boolean updateData(SessionData sessionData) {
 		try {
 			tempSessionService.put(SESSION_ATTR_SESS_DATA, sessionData);
@@ -50,7 +49,6 @@ public class SessionRepository implements RuntimeRepository<SessionData> {
 		return false;
 	}
 
-	@Override
 	public synchronized SessionData getData() {
 
 		try {
@@ -88,7 +86,7 @@ public class SessionRepository implements RuntimeRepository<SessionData> {
 			SessionData sessionData = getData();
 			return sessionData.getRequest(requestId);
 		} catch (Exception e) {
-			 
+
 		}
 		return null;
 	}
@@ -101,6 +99,6 @@ public class SessionRepository implements RuntimeRepository<SessionData> {
 		} catch (Exception e) {
 			return false;
 		}
-		
+
 	}
 }
