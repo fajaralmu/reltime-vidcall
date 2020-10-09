@@ -137,7 +137,7 @@
 		if(resp.code == "00"){
 			recordingTimer.innerHTML = "Recording Time: "+ resp.message;
 		}else{
-			recordingTimer.innerHTML = "Stopped At "+ recordingTimer +" cause: "+resp.message;
+			recordingTimer.innerHTML = "Stopped At "+ recordingTimer.code +" cause: "+resp.message;
 			forceStopRecording(peerId, resp.message);
 		}
 	}

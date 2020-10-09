@@ -314,8 +314,8 @@ public class PublicConference1Service {
 			}
 			
 			@Override
-			public void end(String cause) {
-				WebResponse response = WebResponse.builder().code("RECORD_STOPPED").message(cause).requestId(peerId).build();
+			public void end(String cause, int counter) {
+				WebResponse response = WebResponse.builder().code(DateUtil.secondToTimeString(counter)).message(cause).requestId(peerId).build();
 				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
 				removeSchedulerCallback(this.getId());
 			}

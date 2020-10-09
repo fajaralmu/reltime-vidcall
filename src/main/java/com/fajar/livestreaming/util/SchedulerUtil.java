@@ -34,7 +34,7 @@ public class SchedulerUtil {
 				}
 				
 				log.info("END Scheduler");
-				schedulerCallback.end(getStoppedRecordingCause());
+				schedulerCallback.end(getStoppedRecordingCause(), counterTime);
 				
 				removeScheduler(schedulerCallback.getId());
 			}
@@ -58,7 +58,7 @@ public class SchedulerUtil {
 		public void stop();
 		public boolean isRunning();
 		
-		default void end(String cause) { log.info("Recording ended, cause: {}", cause); }
+		default void end(String cause, int counter) { log.info("Recording ended, cause: {}", cause); }
 	}
 
 	public static SchedulerCallback getScheduler(String schedulerId) {
