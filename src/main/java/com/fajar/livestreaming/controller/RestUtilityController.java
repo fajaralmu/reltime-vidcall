@@ -19,8 +19,6 @@ import com.fajar.livestreaming.dto.WebResponse;
 @RestController 
 public class RestUtilityController extends BaseController{
 	Logger log = LoggerFactory.getLogger(RestUtilityController.class); 
-	  
-	 
 	
 	public RestUtilityController() {
 		log.info("------------------RestAppController #1-----------------");

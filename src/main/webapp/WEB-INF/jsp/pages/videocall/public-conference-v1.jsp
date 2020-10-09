@@ -42,6 +42,9 @@
 			<c:if test="${isRoomOwner == true }">
 				<button class="btn btn-danger  " onclick="invalidateRoom()"><i class="fas fa-times-circle"></i>&nbsp;Invalidate Room</button>
 			</c:if>
+			
+			<a style="margin-top" id="btn-download-recorded" class="btn btn-warning"><i class="fas fa-file-download"></i> Recorded Capture</a>
+			
 		</div>
 	</div>
 	<div class="row">
@@ -138,12 +141,12 @@
 				callbackRoomInvalidated, callbackNewChat, 
 				callbackTogglePeerStream, callbackPeerConfirm);
 		
-		initEventListeners();
+
 	}
 	 
 	
 	function handlePeerConfirmJoin(resp){
-		updateEventLog("Peer confirmed: "+resp.requestId);
+		log("Peer confirmed: "+resp.requestId);
 		//DEFULT: peer cannot see video
 		this.togglePeerStream(false);
 	}
@@ -256,8 +259,15 @@
 						dialPartner(requestId);
 					},
 					innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
-				}
-			
+				},
+				ch4: {
+					tagName: 'button', className: 'btn btn-secondary btn-sm',
+					id:'toggle-record-'+requestId,
+					onclick: function(e){
+						startRecording(requestId);
+					},
+					innerHTML: '<i class="fas fa-record-vinyl"></i> Recording'
+				},
 			}
 		};
 		
@@ -271,7 +281,7 @@
 		const memberElement = createHtmlTag(memberElementObject);
 		memberList.appendChild(memberElement);
 
-		updateEventLog(username  + ' Joined');
+		log(username  + ' Joined');
 	}
 	
 	function toggleVideoPlay(videoId, button){
@@ -304,12 +314,12 @@
 		const memberElement = byId("member-item-" + requestId);
 		memberElement.remove();
 
-		updateEventLog(username  + ' Leave');
+		log(username  + ' Leave');
 	}
  
 
 	function join() {
-		updateEventLog("Joining...");
+		log("Joining...");
 		
 		sendToWebsocket("/app/publicconf1/join", {
 			originId : "${registeredRequest.requestId}",
@@ -378,7 +388,7 @@
 	function updateVideoEvent() {
 		const app = this;   
 		if(app.videoStream){
-			updateEventLog("VideoStream IS EXIST");
+			log("VideoStream IS EXIST");
 			var peerCount = 0;
 			var totalPeer = 0;
 			
@@ -396,8 +406,8 @@
 		       		totalPeer++; 
 	       		}
 			}  
-			updateEventLog("Updated Peer Count: "+peerCount);
-			updateEventLog("Total Peer Count: "+totalPeer);
+			log("Updated Peer Count: "+peerCount);
+			log("Total Peer Count: "+totalPeer);
 			return;
 		}
 		const config = { video: true, audio: true };
@@ -417,7 +427,7 @@
 	function handleStream(stream){ 
     		this.videoStream = stream;
 	       	console.debug("START getUserMedia"); 
-	       	updateEventLog("Start handle user media");
+	       	log("Start handle user media");
 	       	
 	       	this.myVideo.srcObject = stream;
 	       	var peerCount = 0;
@@ -439,7 +449,7 @@
 	       		
 			}  
             console.debug("END getUserMedia"); 
-            updateEventLog("End HandleMedia peerCount: "+peerCount);
+            log("End HandleMedia peerCount: "+peerCount);
 	}
 	 
 	function closePeerConnection(requestId){
@@ -491,10 +501,10 @@
 		console.debug("handleWebRtcHandshake from ",requestId,": ", webRtcObject);
 		
 		if(isUserRequestId(requestId)){
-			updateEventLog("## HANDSHAKE ABORTED "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
+			log("## HANDSHAKE ABORTED "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
    			return;
    		}
-		updateEventLog("## HANDSHAKE "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
+		log("## HANDSHAKE "+eventId+"|"+webRtcObject.event.toUpperCase()+"|"+requestId);
 		
 	    const data =  (webRtcObject.data); 
 	    handleHandshake(webRtcObject.event, requestId, data);
@@ -518,7 +528,7 @@
 		
 		updatePeerConnection(requestId, peerConnection); 
 		if(mustUpdate){
-			updateEventLog("# Will Update Video Event ");
+			log("# Will Update Video Event ");
 			updateVideoEvent(); 
 		}
 		//updateVideoEvent(); 
@@ -545,7 +555,7 @@
 		if(isUserRequestId(requestId)){
    			return;
    		}
-		updateEventLog("doCreateOffer to "+requestId);
+		log("doCreateOffer to "+requestId);
 		const peerConnection = getPeerConnection(requestId);
 		const _class = this;
 		peerConnection.createOffer(function(offer) {
@@ -566,9 +576,9 @@
 		const peerConnection = getPeerConnection(requestId);
 		const _class = this;
 		
-		updateEventLog(requestId+" handleOffer");
+		log(requestId+" handleOffer");
 		if(!peerConnection){
-			updateEventLog("Aborted bacause peer is null");
+			log("Aborted bacause peer is null");
 			return;
 		}
 		console.debug(requestId, "handleOffer: ", offer);
@@ -580,7 +590,7 @@
 			
 			const peerConnection2 = getPeerConnection(requestId);
 			console.debug("createAnswer: ", answer);
-			updateEventLog(requestId+" createAnswer");
+			log(requestId+" createAnswer");
 			
 			peerConnection2.setLocalDescription(answer);
 	        send(requestId, {
@@ -598,9 +608,9 @@
 	function handleCandidate(requestId, candidate){
 		const peerConnection = getPeerConnection(requestId);
 		
-		updateEventLog(requestId+" handleCandidate");
+		log(requestId+" handleCandidate");
 		if(!peerConnection){
-			updateEventLog("Aborted bacause peer is null");
+			log("Aborted bacause peer is null");
 			return;
 		}
 		
@@ -614,15 +624,15 @@
 	function handleAnswer(requestId, answer) {
 		const peerConnection = getPeerConnection(requestId);
 		
-		updateEventLog(requestId+" handleAnswer");
+		log(requestId+" handleAnswer");
 		if(!peerConnection){
-			updateEventLog("Aborted bacause peer is null");
+			log("Aborted bacause peer is null");
 			return;
 		}
 
 		console.debug(requestId, "handleAnswer: ", answer);
 		  if(peerConnection.signalingState == "stable"){ // && this.videoStream) {
-			updateEventLog("WILL ERROR? handle answer beacuse state is stable");
+			log("WILL ERROR? handle answer beacuse state is stable");
 			//peerConnections[requestId]['connection'].addStream(this.videoStream); 
 			//return;
 		} 
@@ -641,7 +651,7 @@
 	function send(requestId, msg) {
 		const eventId = randomNumber();
 		console.debug("SEND WEBSOCKET, event: ", msg.event);
-		updateEventLog(">> SEND WEBSOCKET to "+requestId+" | "+eventId+" :"+msg.event);
+		log(">> SEND WEBSOCKET to "+requestId+" | "+eventId+" :"+msg.event);
 		//console.info("Send Audio Data");
 		sendToWebsocket("/app/publicconf1/webrtc", {
 //			originId : requestId,
@@ -701,7 +711,7 @@
 	
 	function handleOnloadCallbacks(){
 		console.debug("handleOnloadCallbacks: ", onloadCallbacks.length);
-		updateEventLog("handleOnloadCallbacks "+onloadCallbacks.length);
+		log("handleOnloadCallbacks "+onloadCallbacks.length);
 	
 		for (var i = 0; i < onloadCallbacks.length; i++) {
 			const callback = onloadCallbacks[i];

@@ -36,7 +36,7 @@ function handleHandshake(event, requestId, data){
 			handler(requestId, data);
 		}
 	}catch(e){
-		updateEventLog("Error when handling handshake "+e);
+		log("Error when handling handshake "+e);
 	}
 }
 
@@ -76,7 +76,7 @@ function generatePeerConnection(requestId) {
 	} );
 	//TODO: onaddstream is deprecated, change to ontrack
 	peerConnection.onaddstream  = function(event) {
-		updateEventLog("PeerConnection Start Add Stream => "+ requestId);
+		log("PeerConnection Start Add Stream => "+ requestId);
 		const vid = byId("video-member-"+requestId);
 		if(vid){
 			vid.srcObject = event.stream;
@@ -85,12 +85,12 @@ function generatePeerConnection(requestId) {
 				vid.play();
 	    	}, false);
 		}
-		updateEventLog("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
+		log("PeerConnection End Add Stream => "+ requestId+" vid: "+(vid!=null));
 		
 	}; 
 	peerConnection.onicecandidate = function(event) {
 		console.debug("peerConnection on ICE Candidate: ", event.candidate);
-		updateEventLog("Peer IceCandidate ("+ requestId +")");
+		log("Peer IceCandidate ("+ requestId +")");
 	    if (event.candidate) {
 	        send(requestId, {
 	            event : "candidate",
@@ -98,13 +98,13 @@ function generatePeerConnection(requestId) {
 	        }); 
 	    }else{
 	    	console.warn("Candiate is NULL: ", event);
-	    	updateEventLog("Peer IceCandidate IS NULL ("+ requestId +")");
+	    	log("Peer IceCandidate IS NULL ("+ requestId +")");
 	    }
 	};
 	peerConnection.onsignalingstatechange = function(e){
 		const state = peerConnection.signalingState;
 		console.debug("PEER CONNECTION Signaling state: ", state);
-		updateEventLog("Peer SignalingState ("+ requestId +") | "+state);
+		log("Peer SignalingState ("+ requestId +") | "+state);
 	}
 	
 	peerConnection.ondatachannel = function(ev){
@@ -150,13 +150,13 @@ function clearLog(){
 	infoLogCount.innerHTML = 0;
 }
 
-function updateEventLog(log) {
+function log(content) {
 	//	log = new Date() + ' ' + log;
 	const line = createHtmlTag({
 		tagName: 'p',
 		ch1:{
 			tagName : 'code',
-			innerHTML : log
+			innerHTML : content
 		}
 		
 	});
@@ -191,6 +191,8 @@ function setVideoCover(requestId, hideCover){
 		videoElement.style.display = 'none';
 		videoControl.style.display = 'none';
 	}
-	
-	
+}
+
+function wait(delayInMS) {
+	return new Promise(resolve => setTimeout(resolve, delayInMS));
 }

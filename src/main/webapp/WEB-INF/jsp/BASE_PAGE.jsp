@@ -18,17 +18,16 @@
 <link rel="stylesheet" type="text/css"
 	href="<c:url value="/res/fa/css/all.css" />" />
 <link rel="stylesheet"
-	href="<c:url value="/res/css/bootstrap.min.css" />" />
+	href="<c:url value="/res/css/bootstrap/bootstrap.min.css" />" />
 <script src="<c:url value="/res/js/jquery-3.3.1.slim.min.js" />"></script>
 <script src="<c:url value="/res/js/popper.min.js" />"></script>
-<script src="<c:url value="/res/js/bootstrap.min.js"  />"></script>
+<script src="<c:url value="/res/js/bootstrap/bootstrap.min.js"  />"></script>
 <script src="<c:url value="/res/js/sockjs-0.3.2.min.js"></c:url >"></script>
 <script src="<c:url value="/res/js/stomp.js"></c:url >"></script>
 <script src="<c:url value="/res/js/websocket-util.js"></c:url >"></script>
 <script src="<c:url value="/res/js/ajax.js?v=1"></c:url >"></script>
 <script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script> 
 <script src="<c:url value="/res/js/dialog.js?v=1"></c:url >"></script>
-<script src="<c:url value="/res/js/time.js?v=1"></c:url >"></script>
 
 <script src="<c:url value="/res/fa/js/all.js?v=1"></c:url >"></script>
 
