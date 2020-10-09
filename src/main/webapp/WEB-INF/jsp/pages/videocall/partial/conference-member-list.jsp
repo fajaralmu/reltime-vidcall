@@ -45,7 +45,7 @@
 							<i class="fas fa-phone"></i>&nbsp;Dial
 						</button>
 						<button class="btn btn-secondary btn-sm"
-							onclick="startRecord('${member.requestId}')" id="toggle-record-${member.requestId}"><i class="fas fa-record-vinyl"></i> Rec</button>
+							onclick="startRecording('${member.requestId}')" id="toggle-record-${member.requestId}"><i class="fas fa-record-vinyl"></i> Rec</button>
 						</div>
 				</c:if>
 				<c:if test="${member.requestId == registeredRequest.requestId }">
