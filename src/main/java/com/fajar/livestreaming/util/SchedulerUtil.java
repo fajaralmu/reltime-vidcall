@@ -8,9 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SchedulerUtil {
-	private static final Map<String , SchedulerUtil.SchedulerCallback> schedulerCallbacks = new HashMap<>();
+	private static final Map<String , SchedulerUtil.SchedulerCallback> SCHEDULER_CALLBACKS = new HashMap<>();
 	
 	public static void registerScheduler(SchedulerCallback schedulerCallback ) {
+		
+		if(getScheduler(schedulerCallback.getId()) != null) {
+			getScheduler(schedulerCallback.getId()).stop();
+			removeScheduler(schedulerCallback.getId());
+		}
+		
 		ThreadUtil.run(new Runnable() {
 			int counterTime = 0;
 			int maxTime = schedulerCallback.getMaxTime();
@@ -47,7 +53,7 @@ public class SchedulerUtil {
 			}
 		});
 		
-		schedulerCallbacks.put(schedulerCallback.getId(), schedulerCallback);
+		SCHEDULER_CALLBACKS.put(schedulerCallback.getId(), schedulerCallback);
 		
 	}
 	
@@ -63,12 +69,12 @@ public class SchedulerUtil {
 
 	public static SchedulerCallback getScheduler(String schedulerId) {
 		 
-		return schedulerCallbacks.get(schedulerId);
+		return SCHEDULER_CALLBACKS.get(schedulerId);
 	}
 
 	public static void removeScheduler(String id) {
 		try {
-			schedulerCallbacks.remove(id);
+			SCHEDULER_CALLBACKS.remove(id);
 		}catch (Exception e) {
 			 
 		}

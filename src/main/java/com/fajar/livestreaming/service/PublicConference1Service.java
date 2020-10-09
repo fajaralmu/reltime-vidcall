@@ -351,28 +351,6 @@ public class PublicConference1Service {
 	}
 
 	public static void main(String[] args) {
-//		SchedulerCallback schedulerCallback = new SchedulerCallback() {
-//
-//			@Override
-//			public void action(int counter) {
-//				
-//				System.out.println("T: "+counter);
-//			}
-//
-//			@Override
-//			public int getMaxTime() {
-//				 
-//				return 15;
-//			}
-//			
-//			public void end() {};
-//			
-//			
-//			
-//		};
-////		scheduler(schedulerCallback  );
-//		System.out.println(DateUtil.secondToTimeString(6));
-//		System.out.println(DateUtil.secondToTimeString(116));
-//		System.out.println(DateUtil.secondToTimeString(90));
+ 
 	}
 }

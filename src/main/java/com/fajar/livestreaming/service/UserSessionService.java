@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
-import com.fajar.livestreaming.dto.SessionData;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;

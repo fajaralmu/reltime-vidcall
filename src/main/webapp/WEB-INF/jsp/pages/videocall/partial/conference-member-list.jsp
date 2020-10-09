@@ -188,6 +188,9 @@
 		updateToggleRecordButton(requestId, true);
 	}
 	
+	/**
+		notify scheduler to stop counting
+	*/
 	function notifyStopRecording(callback) {
 		if(schedulerId == null){
 			return;

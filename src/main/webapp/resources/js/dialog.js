@@ -169,7 +169,7 @@ function infoDialog(msg) {
 						tagName : 'div',
 						className : 'modal-content',
 						ch1 : modalHeader("Info"),
-						ch2 : modalBody('<i class="fa fa-info-circle"></i>&nbsp'+ msg),
+						ch2 : modalBody('<h2><i class="fa fa-info-circle"></i></h2>'+ msg),
 						ch3 : {
 							tagName : 'div',
 							className : 'modal-footer',
