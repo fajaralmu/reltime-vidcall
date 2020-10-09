@@ -40,6 +40,8 @@ public class BaseController {
 	private String applicationHeaderLabel;
 	@Value("${app.footer.label}")
 	private String applicationFooterLabel;
+	@Value("${app.streaming.maxRecordingTime}")
+	private Integer maxRecordingTime;
 	
 	@ModelAttribute("applicationHeaderLabel")
 	public String applicationHeaderLabel(HttpServletRequest request) {
@@ -50,6 +52,11 @@ public class BaseController {
 	public String applicationFooterLabel(HttpServletRequest request) {
 		
 		return applicationFooterLabel;
+	}
+	
+	@ModelAttribute("maxRecordingTime")
+	public int maxRecordingTime() {
+		return maxRecordingTime;
 	}
 	
 	@ModelAttribute("registeredRequest")

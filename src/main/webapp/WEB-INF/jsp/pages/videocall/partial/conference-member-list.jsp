@@ -162,15 +162,26 @@
 		downloadButton.download = "";
 	}
 	
+	function forceStopRecording(requestId){
+		infoDialog("Recording time exceeds max recording time: "+maxRecordingTime+" s")
+		.then(function(e){ });
+		
+		doStopRecording(requestId);
+	}
+	
 	function stopRecording(requestId) {
 
 		confirmDialog("Stop recording ?").then(function(ok){
 			if(ok){
-				isRecording = false;
-				recorder.stop();
-				updateToggleRecordButton(requestId, true);
+				doStopRecording(requestId);
 			}
 		});
+	}
+	
+	function doStopRecording(requestId) {
+		isRecording = false;
+		recorder.stop();
+		updateToggleRecordButton(requestId, true);
 	}
 
 </script>

@@ -59,6 +59,7 @@
 	var videoEnabled = ${!videoEnabled};
 	var isJoined = ${isJoined};
 	var initialPeerCount = ${members.size()};
+	var maxRecordingTime = parseInt("${maxRecordingTime}");
 	
 	function prepare() {
 		const _class = this;
@@ -134,10 +135,10 @@
 	function handleRecordingTimer(resp){
 		const peerId = resp.requestId;
 		if(resp.code == "00"){
-			byId("recording-timer").innerHTML = resp.message+ " CODE: "+resp.code;
+			byId("recording-timer").innerHTML = "Recording Time: "+ resp.message;
 		}else{
 			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML;
-			stopRecording(peerId);
+			forceStopRecording(peerId);
 		}
 	}
 	 
