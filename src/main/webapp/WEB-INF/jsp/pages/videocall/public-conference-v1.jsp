@@ -135,9 +135,9 @@
 	function handleRecordingTimer(resp){
 		const peerId = resp.requestId;
 		if(resp.code == "00"){
-			byId("recording-timer").innerHTML = "Recording Time: "+ resp.message;
+			recordingTimer.innerHTML = "Recording Time: "+ resp.message;
 		}else{
-			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML +" cause: "+resp.code;
+			recordingTimer.innerHTML = "Stopped At "+ recordingTimer +" cause: "+resp.message;
 			forceStopRecording(peerId, resp.message);
 		}
 	}

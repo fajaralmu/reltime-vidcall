@@ -1,11 +1,14 @@
 package com.fajar.livestreaming.util;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SchedulerUtil {
+	private static final Map<String , SchedulerUtil.SchedulerCallback> schedulerCallbacks = new HashMap<>();
 	
 	public static void registerScheduler(SchedulerCallback schedulerCallback ) {
 		ThreadUtil.run(new Runnable() {
@@ -32,6 +35,8 @@ public class SchedulerUtil {
 				
 				log.info("END Scheduler");
 				schedulerCallback.end(getStoppedRecordingCause());
+				
+				removeScheduler(schedulerCallback.getId());
 			}
 			
 			private String getStoppedRecordingCause() {
@@ -41,6 +46,9 @@ public class SchedulerUtil {
 				return "Recording time exceeds max time: "+maxTime+" seconds";
 			}
 		});
+		
+		schedulerCallbacks.put(schedulerCallback.getId(), schedulerCallback);
+		
 	}
 	
 	public static interface SchedulerCallback {
@@ -50,7 +58,20 @@ public class SchedulerUtil {
 		public void stop();
 		public boolean isRunning();
 		
-		default void end(String cause) { log.info("Recording ended"); }
+		default void end(String cause) { log.info("Recording ended, cause: {}", cause); }
+	}
+
+	public static SchedulerCallback getScheduler(String schedulerId) {
+		 
+		return schedulerCallbacks.get(schedulerId);
+	}
+
+	public static void removeScheduler(String id) {
+		try {
+			schedulerCallbacks.remove(id);
+		}catch (Exception e) {
+			 
+		}
 	}
 
 }

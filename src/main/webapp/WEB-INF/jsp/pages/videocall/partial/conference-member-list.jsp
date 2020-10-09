@@ -60,6 +60,7 @@
 <script type="text/javascript">
 	const lengthInMS = 10000;
 	const downloadButton = byId("btn-download-recorded");
+	const recordingTimer = byId("recording-timer");
 	
 	var isRecording = false;
 	var recorder = null;

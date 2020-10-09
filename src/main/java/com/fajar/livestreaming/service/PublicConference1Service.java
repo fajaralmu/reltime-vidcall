@@ -24,7 +24,6 @@ import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
 import com.fajar.livestreaming.util.DateUtil;
 import com.fajar.livestreaming.util.SchedulerUtil;
 import com.fajar.livestreaming.util.StringUtil;
-import com.fajar.livestreaming.util.ThreadUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,9 +39,7 @@ public class PublicConference1Service {
 	@Autowired
 	private UserSessionService userSessionService;
 	@Autowired
-	private RealtimeService realtimeService;
-	
-	private final Map<String , SchedulerUtil.SchedulerCallback> schedulerCallbacks = new HashMap<>();
+	private RealtimeService realtimeService; 
 	
 	@Value("${app.streaming.maxRecordingTime}")
 	private Integer maxRecordingTime;
@@ -315,11 +312,6 @@ public class PublicConference1Service {
 				WebResponse response = WebResponse.builder().counter(counter).message(DateUtil.secondToTimeString(counter)).requestId(peerId).build();
 				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
 			}
-
-			@Override
-			public int getMaxTime() {
-				return maxRecordingTime;
-			}
 			
 			@Override
 			public void end(String cause) {
@@ -327,32 +319,21 @@ public class PublicConference1Service {
 				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
 				removeSchedulerCallback(this.getId());
 			}
-
-			@Override
-			public String getId() {
-				return schedulerId;
-			}
-
-			@Override
-			public void stop() {
-				this.running = false;
-			}
-
-			@Override
-			public boolean isRunning() {
-				return running;
-			}
+ 
+			public String getId() { return schedulerId; } 
+			public int getMaxTime() { return maxRecordingTime; } 
+			public void stop() { running = false; } 
+			public boolean isRunning() { return running; }
 		};
 		
 		SchedulerUtil.registerScheduler(callback);
-		schedulerCallbacks.put(schedulerId, callback);
 		
 		return WebResponse.builder().message(schedulerId).build();
 	}
 	
 	public WebResponse stopRecording(HttpServletRequest httpRequest, String schedulerId) {
 		 
-		SchedulerUtil.SchedulerCallback schedulerCallback = schedulerCallbacks.get(schedulerId);
+		SchedulerUtil.SchedulerCallback schedulerCallback = SchedulerUtil.getScheduler(schedulerId);
 		
 		if(schedulerCallback == null) {
 			return WebResponse.builder().message("schedulerCallback NOT FOUND").build();
@@ -366,10 +347,8 @@ public class PublicConference1Service {
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private void removeSchedulerCallback(String id) {
-		schedulerCallbacks.remove(id);
+		SchedulerUtil.removeScheduler(id);
 	}
-	
-	
 
 	public static void main(String[] args) {
 //		SchedulerCallback schedulerCallback = new SchedulerCallback() {
