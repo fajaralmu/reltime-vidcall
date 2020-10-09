@@ -45,7 +45,7 @@
 							<i class="fas fa-phone"></i>&nbsp;Dial
 						</button>
 						<button class="btn btn-secondary btn-sm"
-							onclick="startRecord('${member.requestId}')" id="toggle-record-${member.requestId}"><i class="fas fa-record-vinyl"></i> Recording</button>
+							onclick="startRecord('${member.requestId}')" id="toggle-record-${member.requestId}"><i class="fas fa-record-vinyl"></i> Rec</button>
 						</div>
 				</c:if>
 				<c:if test="${member.requestId == registeredRequest.requestId }">
@@ -90,11 +90,13 @@
 		
 		recordVideo(requestId).then(function(recordedChunks){
 			isRecording = false;
+			
 			log("END Recording");
 			
 			infoDialog("Recording End, Click Download Button").then(function(e){
 				const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
 			    
+				//recorder = null;
 			    downloadButton.href = URL.createObjectURL(recordedBlob);
 			    downloadButton.download = "RecordedVideo_"+requestId+".webm";
 			});
@@ -104,12 +106,12 @@
 	function updateToggleRecordButton(requestId, enableRecording){
 		const btn = byId("toggle-record-"+requestId);
 		if(enableRecording){
-			btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Recording";
+			btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Rec";
 			btn.onclick = function(e){
 				startRecording(requestId);
 			}
 		} else {
-			btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Recording";
+			btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
 			btn.onclick = function(e){
 				stopRecording(requestId);
 			}

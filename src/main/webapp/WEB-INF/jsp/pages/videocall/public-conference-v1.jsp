@@ -37,14 +37,16 @@
 		    </c:if>
 			
 			<!-- 	<button class="btn btn-info  " onclick="redial()"><i class="fas fa-phone"></i>&nbsp;Redial</button> -->
-			<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
-			<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
-			<c:if test="${isRoomOwner == true }">
-				<button class="btn btn-danger  " onclick="invalidateRoom()"><i class="fas fa-times-circle"></i>&nbsp;Invalidate Room</button>
-			</c:if>
-			
-			<a style="margin-top" id="btn-download-recorded" class="btn btn-warning"><i class="fas fa-file-download"></i> Recorded Capture</a>
-			
+			<div style="display: grid; grid-template-columns: auto auto">
+				<button class="btn btn-danger  " onclick="leave()"><i class="fas fa-sign-out-alt"></i>&nbsp;Leave</button>
+				<button onclick="clearLog()" class="btn btn-secondary"><i class="fas fa-trash-alt"></i>&nbsp;Clear Log</button>
+				
+				<c:if test="${isRoomOwner == true }">
+					<button class="btn btn-danger  " onclick="invalidateRoom()"><i class="fas fa-times-circle"></i>&nbsp;Invalidate Room</button>
+				</c:if>
+				
+				<a style="margin-top" id="btn-download-recorded" class="btn btn-warning"><i class="fas fa-file-download"></i> Recorded Capture</a>
+			</div>
 		</div>
 	</div>
 	<div class="row">
@@ -266,7 +268,7 @@
 					onclick: function(e){
 						startRecording(requestId);
 					},
-					innerHTML: '<i class="fas fa-record-vinyl"></i> Recording'
+					innerHTML: '<i class="fas fa-record-vinyl"></i> Rec'
 				},
 			}
 		};
