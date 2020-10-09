@@ -137,7 +137,7 @@
 		if(resp.code == "00"){
 			byId("recording-timer").innerHTML = "Recording Time: "+ resp.message;
 		}else{
-			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML;
+			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML +" cause: "+resp.message;
 			forceStopRecording(peerId);
 		}
 	}
@@ -691,11 +691,12 @@
 		}, function(xhr) {
 			infoDone();
 			if(xhr.data && xhr.data.code == "00"){
-				callback();
+				callback(xhr.data);
 			}
 			
 		});
 	}
+	 
 	
 	function sendToWebsocketV2(message){
 		 if(!conn){

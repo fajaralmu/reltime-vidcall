@@ -64,6 +64,7 @@
 	var isRecording = false;
 	var recorder = null;
 	var recordingId = null;
+	var schedulerId = null;
 
 	function startRecording(requestId){
 		
@@ -74,8 +75,9 @@
 		
 		confirmDialog("Start Recording Peer "+requestId+" ?").then(function(ok){
 			if(ok){
-				startRecordPeer(requestId, function(){	
+				startRecordPeer(requestId, function(response){	
 					prepareAndRecord(requestId);
+					schedulerId = response.message;
 				});
 			}
 		});
@@ -171,9 +173,11 @@
 	
 	function stopRecording(requestId) {
 
-		confirmDialog("Stop recording ?").then(function(ok){
+		confirmDialog("Stop recording ?").then(function(ok) {
 			if(ok){
-				doStopRecording(requestId);
+				notifyStopRecording(function(resp) {
+					doStopRecording(requestId);
+				});
 			}
 		});
 	}
@@ -182,6 +186,22 @@
 		isRecording = false;
 		recorder.stop();
 		updateToggleRecordButton(requestId, true);
+	}
+	
+	function notifyStopRecording(callback) {
+		if(schedulerId == null){
+			return;
+		}
+		const url = "<spring:url value="/api/webrtcroom/stoprecording" />/"+schedulerId;
+		postReq(url, { }, function(xhr) {
+			infoDone();
+			if(xhr.data && xhr.data.code == "00"){
+				callback(xhr.data);
+			} else{
+				alert("Error");
+			}
+			
+		});
 	}
 
 </script>

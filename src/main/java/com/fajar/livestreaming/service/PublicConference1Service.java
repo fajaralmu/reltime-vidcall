@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,8 @@ public class PublicConference1Service {
 	private UserSessionService userSessionService;
 	@Autowired
 	private RealtimeService realtimeService;
+	
+	private final Map<String , SchedulerCallback> schedulerCallbacks = new HashMap<>();
 	
 	@Value("${app.streaming.maxRecordingTime}")
 	private Integer maxRecordingTime;
@@ -300,9 +303,12 @@ public class PublicConference1Service {
 		String roomId = request.getRoomId();
 		String peerId = request.getDestination();
 		String userRequestId = userSession.getRequestId();
+		String schedulerId = roomId+peerId+userRequestId;
 		
-		scheduler(new SchedulerCallback() {
+		SchedulerCallback callback = new SchedulerCallback() {
 
+			boolean running = true;
+			
 			@Override
 			public void action(int counter) {
 				WebResponse response = WebResponse.builder().counter(counter).message(DateUtil.secondToTimeString(counter)).requestId(peerId).build();
@@ -316,22 +322,57 @@ public class PublicConference1Service {
 			
 			@Override
 			public void end() {
-				WebResponse response = WebResponse.builder().code("09").message("END_RECORD").requestId(peerId).build();
+				WebResponse response = WebResponse.builder().code("09").message("RECORD_STOPPED").requestId(peerId).build();
 				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
+				removeSchedulerCallback(this.getId());
 			}
-			
-		} );
+
+			@Override
+			public String getId() {
+				return schedulerId;
+			}
+
+			@Override
+			public void stop() {
+				this.running = false;
+			}
+
+			@Override
+			public boolean isRunning() {
+				return running;
+			}
+		};
 		
+		scheduler(callback);
+		schedulerCallbacks.put(schedulerId, callback);
+		
+		return WebResponse.builder().message(schedulerId).build();
+	}
+	
+	public WebResponse stopRecording(HttpServletRequest httpRequest, String schedulerId) {
+		 
+		SchedulerCallback schedulerCallback = schedulerCallbacks.get(schedulerId);
+		
+		if(schedulerCallback == null) {
+			return WebResponse.builder().message("schedulerCallback NOT FOUND").build();
+		}
+		schedulerCallback.stop();
+		removeSchedulerCallback(schedulerId);
 		return new WebResponse();
 	}
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private void removeSchedulerCallback(String id) {
+		schedulerCallbacks.remove(id);
+	}
+	
 	private static void scheduler(SchedulerCallback schedulerCallback ) {
 		ThreadUtil.run(new Runnable() {
 			int counterTime = 0;
 			int maxTime = schedulerCallback.getMaxTime();
+			long delta = 1000; //1s
 			
 			@Override
 			public void run() {
@@ -339,9 +380,8 @@ public class PublicConference1Service {
 				log.info("Start Scheduler, max: {}", maxTime);
 				
 				long timeMillis = System.currentTimeMillis();
-				long delta = 1000; //1s
 				
-				while(counterTime < maxTime) {
+				while(counterTime < maxTime && schedulerCallback.isRunning()) {
 					long currentTime = new Date().getTime();
 					if(currentTime - timeMillis >= delta) {
 						timeMillis = currentTime;
@@ -360,32 +400,36 @@ public class PublicConference1Service {
 	static interface SchedulerCallback {
 		public void action(int counter);
 		public int getMaxTime();
-		default void end() {
-			log.info("Recording ended");
-		}
+		public String getId();
+		public void stop();
+		public boolean isRunning();
+		
+		default void end() { log.info("Recording ended"); }
 	}
 
 	public static void main(String[] args) {
-		SchedulerCallback schedulerCallback = new SchedulerCallback() {
-
-			@Override
-			public void action(int counter) {
-				
-				System.out.println("T: "+counter);
-			}
-
-			@Override
-			public int getMaxTime() {
-				 
-				return 15;
-			}
-			
-			public void end() {};
-			
-		};
-//		scheduler(schedulerCallback  );
-		System.out.println(DateUtil.secondToTimeString(6));
-		System.out.println(DateUtil.secondToTimeString(116));
-		System.out.println(DateUtil.secondToTimeString(90));
+//		SchedulerCallback schedulerCallback = new SchedulerCallback() {
+//
+//			@Override
+//			public void action(int counter) {
+//				
+//				System.out.println("T: "+counter);
+//			}
+//
+//			@Override
+//			public int getMaxTime() {
+//				 
+//				return 15;
+//			}
+//			
+//			public void end() {};
+//			
+//			
+//			
+//		};
+////		scheduler(schedulerCallback  );
+//		System.out.println(DateUtil.secondToTimeString(6));
+//		System.out.println(DateUtil.secondToTimeString(116));
+//		System.out.println(DateUtil.secondToTimeString(90));
 	}
 }
