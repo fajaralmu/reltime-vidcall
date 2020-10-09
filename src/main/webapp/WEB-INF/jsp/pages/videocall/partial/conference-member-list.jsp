@@ -72,7 +72,7 @@
 			return;
 		}
 		
-		confirmDialog("Record video ?").then(function(ok){
+		confirmDialog("Start Recording Peer "+requestId+" ?").then(function(ok){
 			if(ok){
 				prepareAndRecord(requestId);
 			}
@@ -98,9 +98,14 @@
 			    
 				//recorder = null;
 			    downloadButton.href = URL.createObjectURL(recordedBlob);
-			    downloadButton.download = "RecordedVideo_"+requestId+".webm";
+			    downloadButton.download = "RecordedVideo_"+requestId+ getDateString() + ".webm";
 			});
 		});
+	}
+	
+	function getDateString(){
+		const date = new Date();
+		return date.toISOString().replaceAll(":", "");
 	}
 	
 	function updateToggleRecordButton(requestId, enableRecording){
@@ -153,9 +158,14 @@
 	}
 	
 	function stopRecording(requestId) {
-		isRecording = false;
-		recorder.stop();
-		updateToggleRecordButton(requestId, true);
+
+		confirmDialog("Stop recording ?").then(function(ok){
+			if(ok){
+				isRecording = false;
+				recorder.stop();
+				updateToggleRecordButton(requestId, true);
+			}
+		});
 	}
 
 </script>
