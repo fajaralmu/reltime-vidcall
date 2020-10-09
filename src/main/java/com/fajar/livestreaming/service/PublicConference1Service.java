@@ -22,6 +22,7 @@ import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
 import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
 import com.fajar.livestreaming.util.DateUtil;
+import com.fajar.livestreaming.util.SchedulerUtil;
 import com.fajar.livestreaming.util.StringUtil;
 import com.fajar.livestreaming.util.ThreadUtil;
 
@@ -41,7 +42,7 @@ public class PublicConference1Service {
 	@Autowired
 	private RealtimeService realtimeService;
 	
-	private final Map<String , SchedulerCallback> schedulerCallbacks = new HashMap<>();
+	private final Map<String , SchedulerUtil.SchedulerCallback> schedulerCallbacks = new HashMap<>();
 	
 	@Value("${app.streaming.maxRecordingTime}")
 	private Integer maxRecordingTime;
@@ -305,7 +306,7 @@ public class PublicConference1Service {
 		String userRequestId = userSession.getRequestId();
 		String schedulerId = roomId+peerId+userRequestId;
 		
-		SchedulerCallback callback = new SchedulerCallback() {
+		SchedulerUtil.SchedulerCallback callback = new SchedulerUtil.SchedulerCallback() {
 
 			boolean running = true;
 			
@@ -321,8 +322,8 @@ public class PublicConference1Service {
 			}
 			
 			@Override
-			public void end() {
-				WebResponse response = WebResponse.builder().code("09").message("RECORD_STOPPED").requestId(peerId).build();
+			public void end(String cause) {
+				WebResponse response = WebResponse.builder().code("RECORD_STOPPED").message(cause).requestId(peerId).build();
 				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
 				removeSchedulerCallback(this.getId());
 			}
@@ -343,7 +344,7 @@ public class PublicConference1Service {
 			}
 		};
 		
-		scheduler(callback);
+		SchedulerUtil.registerScheduler(callback);
 		schedulerCallbacks.put(schedulerId, callback);
 		
 		return WebResponse.builder().message(schedulerId).build();
@@ -351,7 +352,7 @@ public class PublicConference1Service {
 	
 	public WebResponse stopRecording(HttpServletRequest httpRequest, String schedulerId) {
 		 
-		SchedulerCallback schedulerCallback = schedulerCallbacks.get(schedulerId);
+		SchedulerUtil.SchedulerCallback schedulerCallback = schedulerCallbacks.get(schedulerId);
 		
 		if(schedulerCallback == null) {
 			return WebResponse.builder().message("schedulerCallback NOT FOUND").build();
@@ -368,44 +369,7 @@ public class PublicConference1Service {
 		schedulerCallbacks.remove(id);
 	}
 	
-	private static void scheduler(SchedulerCallback schedulerCallback ) {
-		ThreadUtil.run(new Runnable() {
-			int counterTime = 0;
-			int maxTime = schedulerCallback.getMaxTime();
-			long delta = 1000; //1s
-			
-			@Override
-			public void run() {
-				
-				log.info("Start Scheduler, max: {}", maxTime);
-				
-				long timeMillis = System.currentTimeMillis();
-				
-				while(counterTime < maxTime && schedulerCallback.isRunning()) {
-					long currentTime = new Date().getTime();
-					if(currentTime - timeMillis >= delta) {
-						timeMillis = currentTime;
-						counterTime++;
-						
-						schedulerCallback.action(counterTime);
-					} 
-				}
-				
-				log.info("END Scheduler");
-				schedulerCallback.end();
-			}
-		});
-	}
 	
-	static interface SchedulerCallback {
-		public void action(int counter);
-		public int getMaxTime();
-		public String getId();
-		public void stop();
-		public boolean isRunning();
-		
-		default void end() { log.info("Recording ended"); }
-	}
 
 	public static void main(String[] args) {
 //		SchedulerCallback schedulerCallback = new SchedulerCallback() {

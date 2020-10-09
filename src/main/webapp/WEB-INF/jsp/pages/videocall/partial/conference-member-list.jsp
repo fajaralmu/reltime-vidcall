@@ -164,9 +164,8 @@
 		downloadButton.download = "";
 	}
 	
-	function forceStopRecording(requestId){
-		infoDialog("Recording time exceeds max recording time: "+maxRecordingTime+" s")
-		.then(function(e){ });
+	function forceStopRecording(requestId, message){
+		infoDialog(message).then(function(e){ });
 		
 		doStopRecording(requestId);
 	}

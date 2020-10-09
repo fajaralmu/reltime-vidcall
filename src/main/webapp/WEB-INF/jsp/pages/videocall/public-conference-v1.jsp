@@ -137,8 +137,8 @@
 		if(resp.code == "00"){
 			byId("recording-timer").innerHTML = "Recording Time: "+ resp.message;
 		}else{
-			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML +" cause: "+resp.message;
-			forceStopRecording(peerId);
+			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML +" cause: "+resp.code;
+			forceStopRecording(peerId, resp.message);
 		}
 	}
 	 
