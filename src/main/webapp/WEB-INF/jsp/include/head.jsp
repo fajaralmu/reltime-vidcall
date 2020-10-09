@@ -8,7 +8,13 @@
 <div class="header" style="height: auto">
   
 	<div class="page-header" style="color: blue">
-		<h1>${applicationHeaderLabel }</h1>
+		<div class="row">
+			<img class="col-1" style="margin-top:10px" width="50" height="50" src="<c:url value="/res/img/NC.png" />"  />
+			<h1 class="col-11"><a class="header-a" href="<c:url value="/index" />">${applicationHeaderLabel }</a></h1> 
+		<%-- 	<p class="col-1"></p>
+			<p class="col-11">${shopProfile.shortDescription }</p> --%>
+		</div>
+	 
 		<nav class="navbar  navbar-expand-lg ">
 			<div>
 				<ul class="navbar-nav ">
