@@ -149,5 +149,26 @@ public class DateUtil {
 		
 		return result ;
 	}
+	
+	/**
+	 * convert second unit to mm:ss pattern
+	 * @param rawSecond
+	 * @return
+	 */
+	public static String secondToTimeString(int rawSecond) {
+		
+		int minute = 0;
+		int second = 0;
+		
+		for (int i = 1; i <= rawSecond; i++, second++) {
+			if(second >= 60) {
+				minute++;
+				second = 0;
+			}
+		}
+		
+		return minute+":"+second;
+		
+	}
 
 }

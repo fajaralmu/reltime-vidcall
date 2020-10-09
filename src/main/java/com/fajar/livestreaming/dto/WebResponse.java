@@ -40,6 +40,8 @@ public class WebResponse implements Serializable {
 	
 	private WebRtcObject webRtcObject;
 	private Message chatMessage;
+	
+	private Integer counter;
  
 	 
 	public static WebResponse failedResponse() {

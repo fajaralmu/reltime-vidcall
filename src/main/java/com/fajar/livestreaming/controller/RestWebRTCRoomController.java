@@ -47,6 +47,11 @@ public class RestWebRTCRoomController extends BaseController{
 		return publicConference1Service.invalidateRoom(httpRequest, request);
 	}
 	
+	@PostMapping(value = "/api/webrtcroom/startrecording", produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse startRecordingPeer(@RequestBody WebRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		return publicConference1Service.startRecordingPeer(httpRequest, request);
+	}
+	
 	 
 	
 }

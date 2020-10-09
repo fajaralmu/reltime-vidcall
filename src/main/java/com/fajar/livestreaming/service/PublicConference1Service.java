@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.ConferenceData;
@@ -19,9 +20,14 @@ import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
 import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
+import com.fajar.livestreaming.util.DateUtil;
 import com.fajar.livestreaming.util.StringUtil;
+import com.fajar.livestreaming.util.ThreadUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PublicConference1Service {
 
 	@Autowired
@@ -33,6 +39,9 @@ public class PublicConference1Service {
 	private UserSessionService userSessionService;
 	@Autowired
 	private RealtimeService realtimeService;
+	
+	@Value("${app.streaming.maxRecordingTime}")
+	private Integer maxRecordingTime;
 
 	public String getRoomIdOfUser(HttpServletRequest httpRequest) {
 		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
@@ -285,4 +294,98 @@ public class PublicConference1Service {
 		return response;
 	}
 
+	public WebResponse startRecordingPeer(HttpServletRequest httpRequest, WebRequest request) {
+		
+		RegisteredRequest userSession = userSessionService.getRegisteredRequest(httpRequest);
+		String roomId = request.getRoomId();
+		String peerId = request.getDestination();
+		String userRequestId = userSession.getRequestId();
+		
+		scheduler(new SchedulerCallback() {
+
+			@Override
+			public void action(int counter) {
+				WebResponse response = WebResponse.builder().counter(counter).message(DateUtil.secondToTimeString(counter)).requestId(peerId).build();
+				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
+			}
+
+			@Override
+			public int getMaxTime() {
+				return maxRecordingTime;
+			}
+			
+			@Override
+			public void end() {
+				WebResponse response = WebResponse.builder().code("09").message("END_RECORD").requestId(peerId).build();
+				realtimeService.convertAndSend("/wsResp/recordingtimer/" + roomId+"/"+userRequestId, response);
+			}
+			
+		} );
+		
+		return new WebResponse();
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static void scheduler(SchedulerCallback schedulerCallback ) {
+		ThreadUtil.run(new Runnable() {
+			int counterTime = 0;
+			int maxTime = schedulerCallback.getMaxTime();
+			
+			@Override
+			public void run() {
+				
+				log.info("Start Scheduler, max: {}", maxTime);
+				
+				long timeMillis = System.currentTimeMillis();
+				long delta = 1000; //1s
+				
+				while(counterTime < maxTime) {
+					long currentTime = new Date().getTime();
+					if(currentTime - timeMillis >= delta) {
+						timeMillis = currentTime;
+						counterTime++;
+						
+						schedulerCallback.action(counterTime);
+					} 
+				}
+				
+				log.info("END Scheduler");
+				schedulerCallback.end();
+			}
+		});
+	}
+	
+	static interface SchedulerCallback {
+		public void action(int counter);
+		public int getMaxTime();
+		default void end() {
+			log.info("Recording ended");
+		}
+	}
+
+	public static void main(String[] args) {
+		SchedulerCallback schedulerCallback = new SchedulerCallback() {
+
+			@Override
+			public void action(int counter) {
+				
+				System.out.println("T: "+counter);
+			}
+
+			@Override
+			public int getMaxTime() {
+				 
+				return 15;
+			}
+			
+			public void end() {};
+			
+		};
+//		scheduler(schedulerCallback  );
+		System.out.println(DateUtil.secondToTimeString(6));
+		System.out.println(DateUtil.secondToTimeString(116));
+		System.out.println(DateUtil.secondToTimeString(90));
+	}
 }

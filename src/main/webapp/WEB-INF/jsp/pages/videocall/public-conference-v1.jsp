@@ -118,13 +118,27 @@
 				 _class.handlePeerConfirmJoin(resp);
 			}
 		};
+		const callbackRecordingTimer = {
+			subscribeUrl : "/wsResp/recordingtimer/${roomId }/${registeredRequest.requestId}",
+			callback : function(resp){
+				 _class.handleRecordingTimer(resp);
+			}
+		};
 		
 		connectToWebsocket(callbackMemberJoin, 
 				callbackMemberLeave, callbackWebRtcHandshake, 
 				callbackRoomInvalidated, callbackNewChat, 
-				callbackTogglePeerStream, callbackPeerConfirm);
-		
-
+				callbackTogglePeerStream, callbackPeerConfirm, callbackRecordingTimer);
+	}
+	
+	function handleRecordingTimer(resp){
+		const peerId = resp.requestId;
+		if(resp.code == "00"){
+			byId("recording-timer").innerHTML = resp.message+ " CODE: "+resp.code;
+		}else{
+			byId("recording-timer").innerHTML = "Stopped At "+ byId("recording-timer").innerHTML;
+			stopRecording(peerId);
+		}
 	}
 	 
 	
@@ -404,7 +418,7 @@
 	   	}
 	   	mediaStream
 	   		.then(function (stream) { app.handleStream (stream) })
-	   		.catch(function (err) { console.error(error) });	    	
+	   		.catch(function (error) { console.error(error) });	    	
 	}   
 	
 	function handleStream(stream){ 
@@ -564,8 +578,8 @@
 			log("Aborted bacause peer is null");
 			return;
 		}
-		console.debug(requestId, "handleOffer: ", offer);
 		
+		console.debug(requestId, "handleOffer: ", offer);
 		peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 		
 		console.debug("Will create answer");
@@ -666,6 +680,20 @@
 			roomId: '${roomId}',
 			destination: requestId
 		}); 
+	}
+	
+	function startRecordPeer(requestId, callback){
+		postReq("<spring:url value="/api/webrtcroom/startrecording" />", {
+			roomId : "${roomId}",
+			originId : "${registeredRequest.requestId}",
+			destination: requestId
+		}, function(xhr) {
+			infoDone();
+			if(xhr.data && xhr.data.code == "00"){
+				callback();
+			}
+			
+		});
 	}
 	
 	function sendToWebsocketV2(message){

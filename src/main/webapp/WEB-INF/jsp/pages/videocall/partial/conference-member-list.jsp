@@ -74,12 +74,12 @@
 		
 		confirmDialog("Start Recording Peer "+requestId+" ?").then(function(ok){
 			if(ok){
-				prepareAndRecord(requestId);
+				startRecordPeer(requestId, function(){	
+					prepareAndRecord(requestId);
+				});
 			}
 		});
 	}
-	
-	
 	
 	function prepareAndRecord(requestId){
 		log("Start Recording");
@@ -124,7 +124,7 @@
 	}
 	
 	function recordVideo(requestId) {
-
+		
 		const vid = byId("video-member-"+requestId);
 		
 		this.recordingId = requestId;
@@ -134,18 +134,23 @@
 		const data = [];
 		log("Will Start Recording");
 		
-		recorder.ondataavailable = event => data.push(event.data);
+		recorder.ondataavailable = function(event) { data.push(event.data); }
 		recorder.start();
 		 
 		const stopped = new Promise((resolve, reject) => {
+			
+			/* while(recorder.state != "inactive"){
+				byId("recording-timer").innerHTML = new Date();
+			} */
+			
 		    recorder.onstop = resolve;
 		    recorder.onerror = event => reject(event.name);
 		});
-	
+		
 		/* const recorded = wait(lengthInMS).then(
 		    () => recorder.state == "recording" && recorder.stop()
 		); */
-		 
+		
 		return Promise.all([
 		    stopped, //  recorded
 		  ])

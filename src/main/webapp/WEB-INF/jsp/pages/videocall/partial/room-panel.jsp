@@ -31,4 +31,5 @@
 		<a style="" id="btn-download-recorded" class="btn btn-warning"><i
 			class="fas fa-file-download"></i> Recorded Capture</a>
 	</div>
+	<p><span id="recording-timer"></span></p>
 </div>
