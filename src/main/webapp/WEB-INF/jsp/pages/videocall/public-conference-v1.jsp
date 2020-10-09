@@ -137,7 +137,7 @@
 		if(resp.code == "00"){
 			recordingTimer.innerHTML = "Recording Time: "+ resp.message;
 		}else{
-			recordingTimer.innerHTML = "Stopped At "+ recordingTimer.code +" cause: "+resp.message;
+			recordingTimer.innerHTML = "Stopped At "+ resp.code +" cause: "+resp.message;
 			forceStopRecording(peerId, resp.message);
 		}
 	}
@@ -159,7 +159,15 @@
 		
 		if(enabled){
 			dialPartner(requestId);
-		} else if(this.videoStream != null){  }
+		} else if(this.videoStream != null){
+			//stop recording if peer stream is used for recording
+			//TODO: simplify
+			if(requestId == recordingId){
+				notifyStopRecording(function(resp) {
+					doStopRecording(requestId);
+				});
+			}
+		}
 		
 		setVideoCover(requestId, enabled);
 	}
