@@ -1,28 +1,43 @@
 var maxRecordingTime;
 var currentCounter = 0; //0
+var lastDuration = 0;
 var deltaTime = 1000;
+var isRecording = false;
 
-function initRecordingTimer(){
+function initClientSideRecordingTimer(){
 	setTimeout(updateRecordingTime, deltaTime);
 }
 
 function updateRecordingTime(){
 	currentCounter++;
-	
-	if(currentCounter <= maxRecordingTime){
+	if(lastDuration < currentCounter){
+		lastDuration = currentCounter;
+	}
+	 
+	if(currentCounter <= maxRecordingTime && isRecording){
 		handleRecordingTimer({
 			code:"00", 
 			requestId: recordingId,
-			message: secondToTimeString(currentCounter)
+			message: secondToTimeString(lastDuration)
 			});
 		setTimeout(updateRecordingTime, deltaTime);
+		lastDuration = currentCounter;
 		
-	} else {
+	} else if(isRecording){
 		
 		handleRecordingTimer({
-			code:secondToTimeString(currentCounter), 
+			code:secondToTimeString(lastDuration), 
 			requestId: recordingId,  
 			message: "Exceeds Max Limit"
+				});
+		currentCounter = 0;
+		
+	} else if(!isRecording) {
+		
+		handleRecordingTimer({
+			code:secondToTimeString(lastDuration), 
+			requestId: recordingId,  
+			message: "Stopped by User"
 				});
 		currentCounter = 0;
 	}

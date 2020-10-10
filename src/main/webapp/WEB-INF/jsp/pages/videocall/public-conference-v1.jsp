@@ -165,7 +165,6 @@
 		if(enabled){
 			dialPartner(requestId);
 		} else if(this.videoStream != null){
-			 
 			stopRecording(requestId);
 		}
 		

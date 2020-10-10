@@ -62,7 +62,8 @@
 	const downloadButton = byId("btn-download-recorded");
 	const recordingTimer = byId("recording-timer");
 	
-	var isRecording = false;
+	isRecording = false;
+	
 	var recorder = null;
 	var recordingId = null; //peerID
 	var schedulerId = null;
@@ -78,7 +79,9 @@
 			if(ok){
 				startRecordPeer(requestId, function(response){	
 					prepareAndRecord(requestId);
-					initRecordingTimer();
+					
+					//Timer Client Side
+					initClientSideRecordingTimer();
 					schedulerId = response.message;
 				});
 			}
@@ -115,14 +118,18 @@
 	function updateToggleRecordButton(requestId, enableRecording){
 		const btn = byId("toggle-record-"+requestId);
 		if(enableRecording){
-			btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Rec";
-			btn.onclick = function(e){
-				startRecording(requestId);
+			if(btn){
+				btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Rec";
+				btn.onclick = function(e){
+					startRecording(requestId);
+				}
 			}
 		} else {
-			btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
-			btn.onclick = function(e){
-				stopRecordingOnClick(requestId);
+			if(btn){
+				btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
+				btn.onclick = function(e){
+					stopRecordingOnClick(requestId);
+				}
 			}
 		}
 	}
@@ -147,7 +154,10 @@
 				byId("recording-timer").innerHTML = new Date();
 			} */
 			
-		    recorder.onstop = resolve;
+		    recorder.onstop = function (e){  
+				currentCounter = 0;
+				resolve(e);
+			}
 		    recorder.onerror = event => reject(event.name);
 		});
 		
@@ -186,6 +196,7 @@
 			notifyStopRecording(function(resp) {
 				doStopRecording(requestId);
 			});
+			
 		}
 	}
 	
