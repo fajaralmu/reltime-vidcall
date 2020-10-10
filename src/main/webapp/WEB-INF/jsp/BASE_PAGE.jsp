@@ -10,7 +10,7 @@
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
 <meta name="description" content="${applicationDescription }">
-<meta property="og:title" content="${applicationHeaderLabel }" >
+<meta property="og:title" content="https://realtime-videocall.herokuapp.com/" >
 <meta property="og:url" content="<c:url value="/app/" />" >
 <meta property="og:description" content="${applicationDescription }">
 <meta property="og:site_name" content="${applicationHeaderLabel }">
