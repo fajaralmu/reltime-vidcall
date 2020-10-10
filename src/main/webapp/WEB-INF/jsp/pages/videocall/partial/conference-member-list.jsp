@@ -64,7 +64,7 @@
 	
 	var isRecording = false;
 	var recorder = null;
-	var recordingId = null;
+	var recordingId = null; //peerID
 	var schedulerId = null;
 
 	function startRecording(requestId){
@@ -78,6 +78,7 @@
 			if(ok){
 				startRecordPeer(requestId, function(response){	
 					prepareAndRecord(requestId);
+					initRecordingTimer();
 					schedulerId = response.message;
 				});
 			}
@@ -121,7 +122,7 @@
 		} else {
 			btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
 			btn.onclick = function(e){
-				stopRecording(requestId);
+				stopRecordingOnClick(requestId);
 			}
 		}
 	}
@@ -171,15 +172,21 @@
 		doStopRecording(requestId);
 	}
 	
-	function stopRecording(requestId) {
+	function stopRecordingOnClick(requestId) {
 
 		confirmDialog("Stop recording ?").then(function(ok) {
 			if(ok){
-				notifyStopRecording(function(resp) {
-					doStopRecording(requestId);
-				});
+				 stopRecording(requestId);
 			}
 		});
+	}
+	
+	function stopRecording(requestId){
+		if(requestId == recordingId){
+			notifyStopRecording(function(resp) {
+				doStopRecording(requestId);
+			});
+		}
 	}
 	
 	function doStopRecording(requestId) {

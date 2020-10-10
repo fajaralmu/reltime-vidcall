@@ -59,7 +59,9 @@
 	var videoEnabled = ${!videoEnabled};
 	var isJoined = ${isJoined};
 	var initialPeerCount = ${members.size()};
-	var maxRecordingTime = parseInt("${maxRecordingTime}");
+	
+	
+	maxRecordingTime = parseInt("${maxRecordingTime}");
 	
 	function prepare() {
 		const _class = this;
@@ -76,7 +78,7 @@
 		const callbackMemberJoin = {
 			subscribeUrl : "/wsResp/joinroom/${roomId }",
 			callback : function(response) {
-				//_class.initWebRtc(resp.requestId, true);
+				 
 				_class.handleMemberJoin(response);
 			}
 		};
@@ -85,6 +87,8 @@
 			callback : function(resp) {
 				peerConnections[resp.requestId] = null;
 				_class.removeMemberItem(resp.username, resp.requestId, resp.date);
+				
+				stopRecording(resp.requestId);
 			}
 		};
 		const callbackWebRtcHandshake = {
@@ -98,7 +102,8 @@
 			callback : function(resp){
 				infoDialog("Room has been invalidated").then(function(e){
 					window.location.reload();
-				})
+				});
+				stopRecording(resp.requestId);
 			}
 		};
 		const callbackNewChat = {
@@ -160,13 +165,8 @@
 		if(enabled){
 			dialPartner(requestId);
 		} else if(this.videoStream != null){
-			//stop recording if peer stream is used for recording
-			//TODO: simplify
-			if(requestId == recordingId){
-				notifyStopRecording(function(resp) {
-					doStopRecording(requestId);
-				});
-			}
+			 
+			stopRecording(requestId);
 		}
 		
 		setVideoCover(requestId, enabled);
@@ -544,6 +544,8 @@
 	}
 	
 	function handlePartnerLeave(data){
+		
+		
 	//	infoDialog("partner left the call").then(function(e){});
 	}
 	 

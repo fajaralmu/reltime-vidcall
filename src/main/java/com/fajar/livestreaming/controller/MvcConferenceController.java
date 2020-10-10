@@ -79,7 +79,7 @@ public class MvcConferenceController extends BaseController {
 	@CustomRequestInfo(
 		title = "Public Conference v1",
 		pageUrl = "pages/videocall/public-conference-v1", 
-		scriptPaths = "conference", 
+		scriptPaths = {"conference", "conference-timer"}, 
 		stylePaths = "conference")
 	public String publicconference(Model model, @PathVariable(name = "roomId") String roomId,
 			HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {

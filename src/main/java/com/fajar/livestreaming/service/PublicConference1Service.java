@@ -326,7 +326,7 @@ public class PublicConference1Service {
 			public boolean isRunning() { return running; }
 		};
 		
-		SchedulerUtil.registerScheduler(callback);
+//		SchedulerUtil.registerScheduler(callback);
 		
 		return WebResponse.builder().message(schedulerId).build();
 	}
@@ -338,8 +338,9 @@ public class PublicConference1Service {
 		if(schedulerCallback == null) {
 			return WebResponse.builder().message("schedulerCallback NOT FOUND").build();
 		}
-		schedulerCallback.stop();
-		removeSchedulerCallback(schedulerId);
+//		schedulerCallback.stop();
+//		removeSchedulerCallback(schedulerId);
+		
 		return new WebResponse();
 	}
 	
