@@ -1,5 +1,10 @@
 <html>
+<head>
+<title>Redirecting</title>
+<meta http-equiv="refresh"
+   content="0; url=https://realtime-videocall.herokuapp.com/app/index.html">
+</head>
 <body>
-<h2>Hello World!</h2>
+<p>Please wait......</p>
 </body>
 </html>
