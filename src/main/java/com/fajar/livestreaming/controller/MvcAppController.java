@@ -26,11 +26,11 @@ public class MvcAppController extends BaseController{
 		log.info("-----------------Mvc App Controller------------------");
 	}
 
-	@RequestMapping(value = { "/" })
-	@CustomRequestInfo(pageUrl = "pages/main-menu", title = "Nuswantoro.conf")
+	@RequestMapping(value = { "/" , "/index.html"})
+	@CustomRequestInfo(pageUrl = "pages/main-menu")
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
-		  
+		model.addAttribute("title", applicationHeaderLabel);
 		return basePage;
 	}
 

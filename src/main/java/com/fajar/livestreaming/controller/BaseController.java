@@ -37,17 +37,17 @@ public class BaseController {
 	protected UserSessionService userSessionService;
 	 
 	@Value("${app.header.label}")
-	private String applicationHeaderLabel;
+	protected String applicationHeaderLabel;
 	@Value("${app.header.description}")
-	private String applicationDescription;
+	protected String applicationDescription;
 	@Value("${app.footer.label}")
-	private String applicationFooterLabel;
+	protected String applicationFooterLabel;
 	@Value("${app.streaming.maxRecordingTime}")
-	private Integer maxRecordingTime;
+	protected Integer maxRecordingTime;
 	@Value("${app.streaming.recordingOutputFormat}")
-	private String recordingOutputFormat;
+	protected String recordingOutputFormat;
 	@Value("${app.streaming.recordingOutputExtension}")
-	private String recordingOutputExtension;
+	protected String recordingOutputExtension;
 	
 	@ModelAttribute("applicationHeaderLabel")
 	public String applicationHeaderLabel(HttpServletRequest request) {
