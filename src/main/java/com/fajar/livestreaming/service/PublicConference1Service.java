@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,16 +53,27 @@ public class PublicConference1Service {
 	}
 
 	public synchronized WebResponse generateRoomId(HttpServletRequest httpRequest) {
+		log.info("Generate Room Id");
+		
 		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
 		if (session == null) {
+			log.info("session not found!");
 			return null;
 		}
-		String newRoomId = StringUtil.generateRandomNumber(1) + StringUtil.generateRandomChar(4).toLowerCase();
+		String newRoomId = randomRoomId();
 		String oldRoomId = activeRoomsRepository.get(session.getRequestId());
+		
+		log.info("newRoomId: {}", newRoomId);
+		
 		activeRoomsRepository.put(session.getRequestId(), newRoomId);
 		updateconferenceDataRepository(session.getRequestId(), oldRoomId, newRoomId);
 
 		return WebResponse.builder().message(newRoomId).build();
+	}
+
+	private String randomRoomId() {
+		 
+		return StringUtil.generateRandomNumber(1) + StringUtil.generateRandomChar(4).toLowerCase();
 	}
 
 	public synchronized void updateconferenceDataRepository(String creatorId, String oldRoomId, String newRoomId) {

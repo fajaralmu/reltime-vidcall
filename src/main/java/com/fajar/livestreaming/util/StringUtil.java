@@ -30,7 +30,7 @@ public class StringUtil {
 	
 	public static String generateRandomNumber(int length) {
 
-		String random = "";
+		StringBuilder randomString = new StringBuilder();
 		if (length < 1) {
 			length = 1;
 		}
@@ -38,9 +38,9 @@ public class StringUtil {
 		for (int i = 0; i < length; i++) {
 
 			Integer n = rand.nextInt(9);
-			random += n;
+			randomString.append(n);
 		}
-		return random;
+		return randomString.toString();
 	}
 
 	public static void main(String[] xxx) {
