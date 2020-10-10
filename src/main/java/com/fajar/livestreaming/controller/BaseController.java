@@ -35,9 +35,11 @@ public class BaseController {
 	
 	@Autowired
 	protected UserSessionService userSessionService;
-	
+	 
 	@Value("${app.header.label}")
 	private String applicationHeaderLabel;
+	@Value("${app.header.description}")
+	private String applicationDescription;
 	@Value("${app.footer.label}")
 	private String applicationFooterLabel;
 	@Value("${app.streaming.maxRecordingTime}")
@@ -52,6 +54,13 @@ public class BaseController {
 		
 		return applicationHeaderLabel;
 	}
+	
+	@ModelAttribute("applicationDescription")
+	public String applicationDescription(HttpServletRequest request) {
+		
+		return applicationDescription;
+	}
+	
 	@ModelAttribute("applicationFooterLabel")
 	public String applicationFooterLabel(HttpServletRequest request) {
 		

@@ -15,8 +15,8 @@
 			<div class="col-11">
 				<h1 style="margin-left: 7px"> ${applicationHeaderLabel } </h1> 
 			</div>
-		<%-- 	<p class="col-1"></p>
-			<p class="col-11">${shopProfile.shortDescription }</p> --%>
+		  	<p class="col-1"></p>
+			<p class="col-11">${applicationDescription}</p>  
 		</div>
 	 
 		<nav class="navbar  navbar-expand-lg ">

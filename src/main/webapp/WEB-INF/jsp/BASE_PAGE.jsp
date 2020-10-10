@@ -9,6 +9,13 @@
 <head>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
+<meta name="description" content="${applicationDescription }">
+<meta property="og:title" content="${title }" />
+<meta property="og:url" content="<c:url value="/app/" />" />
+<meta property="og:description" content="${applicationDescription }">
+<meta property="og:image" content="<c:url value="/res/img/cap.png"></c:url>">
+<meta property="og:type" content="website" />
+
 <title>${title}</title>
 <link rel="icon" href="<c:url value="/res/img/javaEE.ico"></c:url >"
 	type="image/x-icon">
