@@ -10,10 +10,10 @@
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
 <meta name="description" content="${applicationDescription }">
-<meta property="og:title" content="${title }" />
+<meta property="og:title" content="${title } ${applicationHeaderLabel }" />
 <meta property="og:url" content="<c:url value="/app/" />" />
 <meta property="og:description" content="${applicationDescription }">
-<meta property="og:image" content="<c:url value="/res/img/cap.png"></c:url>">
+<meta property="og:image" content="<c:url value="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/War_Flag_of_Indonesia.png/800px-War_Flag_of_Indonesia.png"></c:url>">
 <meta property="og:type" content="website" />
 
 <title>${title}</title>

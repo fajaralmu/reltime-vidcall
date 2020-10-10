@@ -6,25 +6,23 @@
 
 <div>
 	<h2>Public Conference</h2>
-	<div class="border row">
+	<div class="border row" style="margin-bottom: 10px">
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
 			<div style="text-align: center;">
-				<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
-				<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
-			</div>
-			<div>
-			<div class="input-group mb-3">
-				<div class="input-group-prepend">
-				    <label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
-				</div>
-				<select id="select-stream-type" class="custom-select">
-					<option value="camera">Camera</option>
-					<c:if test="${isPhone==false }"><option value="screen">Screen</option></c:if>
-				</select>
+				<div style="display:grid; grid-template-columns: auto auto; grid-column-gap: 5px; grid-row-gap: 5px">
+					<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
+					<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
+					
+					<label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
+					<select id="select-stream-type" class="custom-select">
+						<option value="camera">Camera</option>
+						<c:if test="${isPhone==false }"><option value="screen">Screen</option></c:if>
+					</select>
 				</div>
 			</div>
+			
 		</div>
 		<div class="col-6"> 
 			<jsp:include page="partial/room-panel.jsp"></jsp:include>
