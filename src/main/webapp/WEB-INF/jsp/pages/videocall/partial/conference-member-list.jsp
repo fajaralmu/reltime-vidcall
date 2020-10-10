@@ -101,11 +101,11 @@
 			log("END Recording");
 			
 			infoDialog("Recording End, Click Download Button").then(function(e){
-				const recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-			    
-				//recorder = null;
+				
+				const recordedBlob = new Blob(recordedChunks, { type: "${recordingOutputFormat}" });
 			    downloadButton.href = URL.createObjectURL(recordedBlob);
-			    downloadButton.download = "RecordedVideo_"+requestId+ getDateString() + ".webm";
+			    downloadButton.download = "RecordedVideo_"+requestId+ getDateString() + "${recordingOutputExtension}";
+			    
 			});
 		});
 	}
@@ -117,20 +117,23 @@
 	
 	function updateToggleRecordButton(requestId, enableRecording){
 		const btn = byId("toggle-record-"+requestId);
+		if(btn == null){
+			return;	
+		}
 		if(enableRecording){
-			if(btn){
-				btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Rec";
-				btn.onclick = function(e){
-					startRecording(requestId);
-				}
+			
+			btn.innerHTML = "<i class=\"fas fa-record-vinyl\"></i> Rec";
+			btn.onclick = function(e){
+				startRecording(requestId);
 			}
+			
 		} else {
-			if(btn){
-				btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
-				btn.onclick = function(e){
-					stopRecordingOnClick(requestId);
-				}
+			 
+			btn.innerHTML = "<i class=\"fas fa-stop\"></i>&nbsp;<span class=\"spinner-grow spinner-grow-sm\" role=\"status\" aria-hidden=\"true\"></span> Rec";
+			btn.onclick = function(e){
+				stopRecordingOnClick(requestId);
 			}
+			 
 		}
 	}
 	
@@ -170,7 +173,7 @@
 		return Promise.all([
 		    stopped, //  recorded
 		  ])
-		.then(() => data);
+		.then(function() { return data; });
 	}
 	
 	function clearDownloadButtonProps(){
@@ -216,7 +219,7 @@
 			return;
 		}
 		const url = "<spring:url value="/api/webrtcroom/stoprecording" />/"+schedulerId;
-		postReq(url, { }, function(xhr) {
+		postReqEmptyBody(url, function(xhr) {
 			infoDone();
 			if(xhr.data && xhr.data.code == "00"){
 				callback(xhr.data);

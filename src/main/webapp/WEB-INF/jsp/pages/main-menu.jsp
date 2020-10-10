@@ -51,6 +51,8 @@
 								<li>Go To Dashboard</li>
 								<li>Generate Room Id</li>
 								<li>Enter Using Generated Room Id To Join</li>
+								<li>Max Recording Duration: ${maxRecordingTimeString }</li>
+								<li>Recording Format : ${recordingOutputFormat }</li>
 							</ul></li>
 						<li>Invalidate Session If You're Done</li>
 

@@ -34,6 +34,10 @@ function postReq(url, requestObject, callback, blob) {
 	request.send(param);
 }
 
+function postReqEmptyBody(url, callback){
+	postReq(url, {}, callback, false);
+}
+
 function loadEntityList(url, requestObject, callback) {
 	
 	postReq(url, requestObject,

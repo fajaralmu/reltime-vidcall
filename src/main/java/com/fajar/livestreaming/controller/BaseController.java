@@ -42,6 +42,10 @@ public class BaseController {
 	private String applicationFooterLabel;
 	@Value("${app.streaming.maxRecordingTime}")
 	private Integer maxRecordingTime;
+	@Value("${app.streaming.recordingOutputFormat}")
+	private String recordingOutputFormat;
+	@Value("${app.streaming.recordingOutputExtension}")
+	private String recordingOutputExtension;
 	
 	@ModelAttribute("applicationHeaderLabel")
 	public String applicationHeaderLabel(HttpServletRequest request) {
@@ -62,6 +66,16 @@ public class BaseController {
 	@ModelAttribute("maxRecordingTimeString")
 	public String maxRecordingTimeString() {
 		return DateUtil.secondToTimeString(maxRecordingTime);
+	}
+	
+	@ModelAttribute("recordingOutputFormat")
+	public String recordingOutputFormat() {
+		return recordingOutputFormat;
+	}
+	
+	@ModelAttribute("recordingOutputExtension")
+	public String recordingOutputExtension() {
+		return recordingOutputExtension;
 	}
 	
 	@ModelAttribute("registeredRequest")
