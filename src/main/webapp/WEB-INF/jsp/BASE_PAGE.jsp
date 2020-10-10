@@ -14,7 +14,7 @@
 <meta property="og:url" content="<c:url value="/app/" />" >
 <meta property="og:description" content="${applicationDescription }">
 <meta property="og:site_name" content="${applicationHeaderLabel }">
-<meta property="og:image" itemprop="image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/War_Flag_of_Indonesia.png/800px-War_Flag_of_Indonesia.png" >
+<meta property="og:image" itemprop="image" content="https://realtime-videocall.herokuapp.com/res/img/Flag_of_Indonesia_200.png" >
 <meta property="og:type" content="website" >
 
 <title>${title}</title>
