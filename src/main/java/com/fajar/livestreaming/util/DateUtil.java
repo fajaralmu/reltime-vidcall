@@ -167,7 +167,7 @@ public class DateUtil {
 			}
 		}
 		
-		return minute+":"+second;
+		return (minute > 9 ? minute: "0"+minute)+":"+(second > 9 ? second: "0"+second);
 		
 	}
 

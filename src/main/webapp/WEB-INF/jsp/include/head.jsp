@@ -9,8 +9,12 @@
   
 	<div class="page-header" style="color: blue">
 		<div class="row">
-			<img class="col-1" style="margin-top:10px" width="50" height="50" src="<c:url value="/res/img/NC.png" />"  />
-			<h1 class="col-11"><a class="header-a" href="<c:url value="/index" />">${applicationHeaderLabel }</a></h1> 
+			<div class="col-1" style="text-align: center;">
+				<img width="50" height="50" src="<c:url value="/res/img/NC.png" />"  />
+			</div>
+			<div class="col-11">
+				<h1><a class="header-a" href="<c:url value="/index" />">${applicationHeaderLabel }</a></h1> 
+			</div>
 		<%-- 	<p class="col-1"></p>
 			<p class="col-11">${shopProfile.shortDescription }</p> --%>
 		</div>

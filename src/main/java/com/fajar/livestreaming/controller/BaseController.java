@@ -59,6 +59,11 @@ public class BaseController {
 		return maxRecordingTime;
 	}
 	
+	@ModelAttribute("maxRecordingTimeString")
+	public String maxRecordingTimeString() {
+		return DateUtil.secondToTimeString(maxRecordingTime);
+	}
+	
 	@ModelAttribute("registeredRequest")
 	public RegisteredRequest getPublicRequestId(HttpServletRequest request) {
 		try {

@@ -5,6 +5,9 @@ var deltaTime = 1000;
 var isRecording = false;
 
 function initClientSideRecordingTimer(){
+	currentCounter = 0;
+	lastDuration = currentCounter;
+	
 	setTimeout(updateRecordingTime, deltaTime);
 }
 
@@ -42,16 +45,6 @@ function updateRecordingTime(){
 		currentCounter = 0;
 	}
 }
-
-//function handleRecordingTimer(resp){
-//	const peerId = resp.requestId;
-//	if(resp.code == "00"){
-//		recordingTimer.innerHTML = "Recording Time: "+ resp.message;
-//	}else{
-//		recordingTimer.innerHTML = "Stopped At "+ resp.code +" cause: "+resp.message;
-//		forceStopRecording(peerId, resp.message);
-//	}
-//}
 
 
 function secondToTimeString(rawSecond) {

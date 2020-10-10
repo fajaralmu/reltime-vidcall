@@ -148,17 +148,19 @@
 		recorder.ondataavailable = function(event) { data.push(event.data); }
 		recorder.start();
 		 
-		const stopped = new Promise((resolve, reject) => {
+		const stopped = new Promise(function(resolve, reject){
 			
 			/* while(recorder.state != "inactive"){
 				byId("recording-timer").innerHTML = new Date();
 			} */
 			
-		    recorder.onstop = function (e){  
+		    recorder.onstop = function (event){  
 				currentCounter = 0;
-				resolve(e);
+				resolve(event);
 			}
-		    recorder.onerror = event => reject(event.name);
+		    recorder.onerror = function (event) { 
+		    	reject(event.name); 
+		    }
 		});
 		
 		/* const recorded = wait(lengthInMS).then(
