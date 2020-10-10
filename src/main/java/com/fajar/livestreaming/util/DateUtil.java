@@ -159,6 +159,7 @@ public class DateUtil {
 		
 		int minute = 0;
 		int second = 0;
+		int hour = 0;
 		
 		for (int s = 1; s <= rawSecond; s++) {
 			second++;
@@ -167,13 +168,18 @@ public class DateUtil {
 				second = 0;
 			}
 			
+			if(minute > 59) {
+				hour++;
+				minute = 0;
+			}
+			
 		}
 		
-		return (minute > 9 ? minute: "0"+minute)+":"+(second > 9 ? second: "0"+second);
+		return (hour > 9 ? hour: "0"+hour)+":"+(minute > 9 ? minute: "0"+minute)+":"+(second > 9 ? second: "0"+second);
 		
 	}
 
 	public static void main(String[] args) {
-		System.out.println(secondToTimeString(120));
+		System.out.println(secondToTimeString(7230));
 	}
 }
