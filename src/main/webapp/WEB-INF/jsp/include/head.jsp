@@ -15,8 +15,9 @@
 			<div class="col-11">
 				<h1 style="margin-left: 7px"> ${applicationHeaderLabel } </h1> 
 			</div>
-		  	<p class="col-1"></p>
-			<p class="col-11">${applicationDescription}</p>  
+			<div class="col-12">
+			  	<p>${applicationDescription}</p>  
+			</div>
 		</div>
 	 
 		<nav class="navbar  navbar-expand-lg ">
