@@ -51,14 +51,15 @@ function secondToTimeString(rawSecond) {
 	
 	var minute = 0;
 	var second = 0;
-	
-	for (var i = 1; i <= rawSecond; i++, second++) {
-		if(second >= 60) {
+	 
+	for (var s = 1; s <= rawSecond; s++) {
+		second++;
+		if(second >  59) {
 			minute++;
 			second = 0;
 		}
 	}
-	
+	 
 	return (minute > 9 ? minute: "0"+minute )+":"+(second > 9 ? second: "0"+second );
 	
 }

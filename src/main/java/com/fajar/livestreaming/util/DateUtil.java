@@ -160,15 +160,20 @@ public class DateUtil {
 		int minute = 0;
 		int second = 0;
 		
-		for (int i = 1; i <= rawSecond; i++, second++) {
-			if(second >= 60) {
+		for (int s = 1; s <= rawSecond; s++) {
+			second++;
+			if(second >  59) {
 				minute++;
 				second = 0;
 			}
+			
 		}
 		
 		return (minute > 9 ? minute: "0"+minute)+":"+(second > 9 ? second: "0"+second);
 		
 	}
 
+	public static void main(String[] args) {
+		System.out.println(secondToTimeString(120));
+	}
 }
