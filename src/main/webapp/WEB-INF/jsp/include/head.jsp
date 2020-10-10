@@ -7,13 +7,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div class="header" style="height: auto">
   
-	<div class="page-header" style="color: blue">
+	<div class="page-header">
 		<div class="row">
 			<div class="col-1" style="text-align: center;">
 				<img width="50" height="50" src="<c:url value="/res/img/NC.png" />"  />
 			</div>
 			<div class="col-11">
-				<h1><a class="header-a" href="<c:url value="/index" />">${applicationHeaderLabel }</a></h1> 
+				<h1 style="margin-left: 7px"> ${applicationHeaderLabel } </h1> 
 			</div>
 		<%-- 	<p class="col-1"></p>
 			<p class="col-11">${shopProfile.shortDescription }</p> --%>

@@ -16,6 +16,15 @@ body {
 	text-align: center;
 }
 
+.page-header{
+	color: rgb(100, 100, 100);
+	padding: 10px;
+}
+
+a {
+	color: rgb(100, 100, 100);
+}
+
 .container {
 	margin: auto;
 	width: 95%;

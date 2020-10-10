@@ -3,7 +3,6 @@ package com.fajar.livestreaming.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.RegisteredRequest;
