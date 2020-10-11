@@ -55,7 +55,7 @@ public class UserSessionService {
 	}
 
 	private void removeSessionById(String requestId) {
-		sessionRepository.removeRequest(requestId);
+		sessionRepository.remove(requestId);
 	}
 
 	public void removeRegisteredRequest(HttpServletRequest request) {
@@ -166,6 +166,15 @@ public class UserSessionService {
 			return WebResponse.failed(e.getMessage());
 		}
 	}
+	
+	public WebResponse clearSessionById(String sessionID) {
+		try {
+			removeSessionById(sessionID);
+		}catch (Exception e) {
+			WebResponse.failed(e.getMessage());
+		}
+		return new WebResponse();
+	}
 
 	public WebResponse leavecall(HttpServletRequest httpRequest) {
 		RegisteredRequest userSession = getRegisteredRequest(httpRequest);
@@ -184,7 +193,7 @@ public class UserSessionService {
 	}
 
 	public void clearActiveCalls() {
-		activeCallsRepository.clear();
+		activeCallsRepository.clearAll();
 	}
 
 }

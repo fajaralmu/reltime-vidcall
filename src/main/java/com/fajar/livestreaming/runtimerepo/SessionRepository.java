@@ -1,5 +1,8 @@
 package com.fajar.livestreaming.runtimerepo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class SessionRepository {
+public class SessionRepository implements BaseRuntimeRepo<SessionData>{
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -91,7 +94,7 @@ public class SessionRepository {
 		return null;
 	}
 
-	public boolean removeRequest(String requestId) {
+	public boolean remove(String requestId) {
 		try {
 			SessionData sessionData = getData();
 			sessionData.remove(requestId);
@@ -100,5 +103,33 @@ public class SessionRepository {
 			return false;
 		}
 
+	}
+
+	@Override
+	public List<SessionData> getAll() {
+		List<SessionData> list = new ArrayList<SessionData>();
+		list.add(getData());
+		return list ;
+	}
+
+	@Override
+	public boolean deleteByKey(String key) {
+		
+		return remove(key);
+	}
+
+	@Override
+	public boolean clearAll() {
+		SessionData sessionData = getData();
+		sessionData.clear();
+		updateData(sessionData);
+		
+		return true;
+	}
+
+	@Override
+	public SessionData get(String key) {
+		 
+		return getData();
 	}
 }

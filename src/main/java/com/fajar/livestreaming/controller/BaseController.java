@@ -48,6 +48,8 @@ public class BaseController {
 	protected String recordingOutputFormat;
 	@Value("${app.streaming.recordingOutputExtension}")
 	protected String recordingOutputExtension;
+	@Value("${app.streaming.ice.iceStunServer}")
+	protected String iceStunServer;
 	
 	@ModelAttribute("applicationHeaderLabel")
 	public String applicationHeaderLabel(HttpServletRequest request) {
@@ -70,6 +72,11 @@ public class BaseController {
 	@ModelAttribute("maxRecordingTime")
 	public int maxRecordingTime() {
 		return maxRecordingTime;
+	}
+	
+	@ModelAttribute("iceStunServer")
+	public String iceStunServer() {
+		return iceStunServer;
 	}
 	
 	@ModelAttribute("maxRecordingTimeString")

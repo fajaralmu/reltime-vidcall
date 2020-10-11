@@ -60,6 +60,11 @@
 	
 	
 	maxRecordingTime = parseInt("${maxRecordingTime}");
+	rtcConfiguration = {
+		    "iceServers" : [ 
+		    	{ "url":"${iceStunServer}"  } 
+		    ]
+		};
 	
 	function prepare() {
 		const _class = this;

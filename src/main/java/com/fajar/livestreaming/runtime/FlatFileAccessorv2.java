@@ -24,6 +24,7 @@ public class FlatFileAccessorv2 {
 	@Value("temp/sessionv2/SESSIONS.txt")
 	private Resource sessionResourceFile;
 	private File sessionFile;
+	private String caronicalPath;
 
 	static final String EXTENSION = ".txt";
 
@@ -32,8 +33,12 @@ public class FlatFileAccessorv2 {
 
 		log.info("FlatFileAccessor inits.. ");
 		sessionFile = sessionResourceFile.getFile();
-
+		caronicalPath = sessionFile.getCanonicalPath();
 		log.info("sessionFile path: {}", sessionFile.getCanonicalPath());
+	}
+	
+	public String getRuntimePath() {
+		return caronicalPath;
 	}
 
 	public void putKeyValue(String key, String json) throws Exception {

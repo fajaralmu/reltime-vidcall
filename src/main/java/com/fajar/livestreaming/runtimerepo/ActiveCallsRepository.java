@@ -1,7 +1,9 @@
 package com.fajar.livestreaming.runtimerepo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -12,7 +14,7 @@ import com.fajar.livestreaming.dto.ActiveCalls;
 import com.fajar.livestreaming.runtime.TempSessionService;
 
 @Service
-public class ActiveCallsRepository {
+public class ActiveCallsRepository implements BaseRuntimeRepo<ActiveCalls> {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -81,7 +83,32 @@ public class ActiveCallsRepository {
 		return activeCalls.getData().containsKey(key);
 	}
 
-	public boolean clear() {
+	
+	public HashMap<String, Object> getMap() {
+		try {
+			return getData().getData();
+		}catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public List<ActiveCalls> getAll() {
+		List<ActiveCalls> list = new ArrayList<>();
+		list.add(getData()); 
+		return list ;
+	}
+	@Override
+	public boolean deleteByKey(String key) {
+		if(!containsKey(key)) {
+			return false;
+		}
+		ActiveCalls activeCalls = getData();
+		activeCalls.getData().remove(key);
+		return updateData(activeCalls);
+	}
+	@Override
+	public boolean clearAll() {
 
 		if (getData() == null) {
 			init();
@@ -91,12 +118,11 @@ public class ActiveCallsRepository {
 		return updateData(activeCalls);
 	}
 
-	public HashMap<String, Object> getMap() {
-		try {
-			return getData().getData();
-		}catch (Exception e) {
-			return null;
-		}
-	}
+	@Override
+	public ActiveCalls get(String key) {
+		 
+		return getData();
+	} 
+
 
 }

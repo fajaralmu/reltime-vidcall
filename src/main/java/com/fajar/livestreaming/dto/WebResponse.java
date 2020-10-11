@@ -2,6 +2,10 @@ package com.fajar.livestreaming.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class WebResponse implements Serializable {
 
 	/**
@@ -42,6 +47,8 @@ public class WebResponse implements Serializable {
 	private Message chatMessage;
 	
 	private Integer counter;
+	
+	private List resultList;
  
 	 
 	public static WebResponse failedResponse() {

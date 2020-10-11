@@ -17,7 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Service
-public class ActiveRoomsRepository {
+public class ActiveRoomsRepository implements BaseRuntimeRepo<ActiveRoomsRepository.ActiveRoomData>{
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -26,18 +26,9 @@ public class ActiveRoomsRepository {
 	public void init() {
 
 	}
-
-	public Object getData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean updateData(Object data) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public String get(String ownerId) {
+ 
+	@Override
+	public ActiveRoomData get(String ownerId) {
 
 		ActiveRoomData roomData = null;
 		try {
@@ -46,7 +37,7 @@ public class ActiveRoomsRepository {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return roomData == null ? null : roomData.getRoomId();
+		return roomData == null ? null : roomData;
 	}
 
 	public ActiveRoomData put(String ownerId, String roomId) {
@@ -79,7 +70,7 @@ public class ActiveRoomsRepository {
 	}
 
 	public boolean validateCode(String roomId) {
-		List<ActiveRoomData> rooms = tempSessionService.getAllFiles(ActiveRoomData.class);
+		List<ActiveRoomData> rooms = getAll();
 		for (ActiveRoomData activeRoomData : rooms) {
 			if (activeRoomData.getRoomId().equals(roomId)) {
 				return true;
@@ -92,6 +83,7 @@ public class ActiveRoomsRepository {
 	@Builder
 	@AllArgsConstructor
 	@NoArgsConstructor
+	public
 	static class ActiveRoomData implements Serializable {
 		/**
 		* 
@@ -102,5 +94,29 @@ public class ActiveRoomsRepository {
 		private String roomId;
 		private String ownerId;
 	}
+
+	@Override
+	public   List<ActiveRoomData> getAll() {
+		
+		return tempSessionService.getAllFiles(ActiveRoomData.class);
+	}
+
+
+	@Override
+	public boolean deleteByKey(String key) {
+		
+		return remove(key);
+	}
+
+
+	@Override
+	public boolean clearAll() {
+		List<ActiveRoomData> rooms = getAll();
+		for (ActiveRoomData activeRoomData : rooms) {
+			deleteByKey(activeRoomData.getRoomId());
+		}
+		return false;
+	}
+	
 
 }

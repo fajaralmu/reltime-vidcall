@@ -1,5 +1,7 @@
 package com.fajar.livestreaming.runtimerepo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +11,7 @@ import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.runtime.TempSessionService;
 
 @Service
-public class ConferenceDataRepository {
+public class ConferenceDataRepository implements BaseRuntimeRepo<ConferenceData> {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -97,6 +99,27 @@ public class ConferenceDataRepository {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+	}
+
+	@Override
+	public List<ConferenceData> getAll() {
+		 
+		return tempSessionService.getAllFiles(ConferenceData.class);
+	}
+
+	@Override
+	public boolean deleteByKey(String key) {
+		 
+		return remove(key);
+	}
+
+	@Override
+	public boolean clearAll() {
+		List<ConferenceData> rooms = getAll();
+		for (ConferenceData conferenceData : rooms) {
+			deleteByKey(conferenceData.getRoomId());
+		}
+		return false;
 	}
 
 }

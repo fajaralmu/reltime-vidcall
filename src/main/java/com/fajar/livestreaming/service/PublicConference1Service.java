@@ -19,6 +19,7 @@ import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
+import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository.ActiveRoomData;
 import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
 import com.fajar.livestreaming.util.DateUtil;
 import com.fajar.livestreaming.util.SchedulerUtil;
@@ -49,7 +50,12 @@ public class PublicConference1Service {
 			return null;
 		}
 
-		return activeRoomsRepository.get(session.getRequestId());
+		ActiveRoomsRepository.ActiveRoomData roomData = getRoomData(session.getRequestId());
+		return roomData == null ? null : roomData.getRoomId();
+	}
+	
+	private ActiveRoomsRepository.ActiveRoomData getRoomData(String requestId){
+		return activeRoomsRepository.get(requestId);
 	}
 
 	public synchronized WebResponse generateRoomId(HttpServletRequest httpRequest) {
@@ -60,8 +66,10 @@ public class PublicConference1Service {
 			log.info("session not found!");
 			return null;
 		}
+		
+		ActiveRoomData roomData = getRoomData(session.getRequestId());
+		String oldRoomId = roomData == null ? null : roomData.getRoomId();
 		String newRoomId = randomRoomId();
-		String oldRoomId = activeRoomsRepository.get(session.getRequestId());
 		
 		log.info("newRoomId: {}", newRoomId);
 		

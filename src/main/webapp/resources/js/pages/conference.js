@@ -5,11 +5,12 @@ const peerConnections = {};
 var conn = null; 
 var dataChannel = null;
 
-//html elements
+//MUST BE DECLARED
 var memberList;
 var eventLog;
 var infoChatCount;
-var infoLogCount;
+var infoLogCount; 
+var rtcConfiguration;
 
 const HandshakeHandler = {
 	"offer" : function(requestId, data) {
@@ -64,12 +65,8 @@ function updatePeerConnection(requestId, obj){
 }
 
 function generatePeerConnection(requestId) {
-	var configuration2 = {
-		    "iceServers" : [ 
-		    	{ "url":"stun:stun2.1.google.com:19302"  } 
-		    ]
-		};
-	const peerConnection = new RTCPeerConnection( configuration2, {//configuration2, {
+	
+	const peerConnection = new RTCPeerConnection( rtcConfiguration, {//configuration2, {
 	    optional : [ {
 	        RtpDataChannels : true
 	    } ]
