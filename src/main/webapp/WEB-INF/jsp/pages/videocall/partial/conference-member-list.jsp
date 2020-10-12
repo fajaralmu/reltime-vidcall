@@ -29,24 +29,30 @@
 							</h1>
 						</div>
 					</c:if>
-					<div class="btn-group"
-						style="display: ${member.conferenceMemberData.streamEnabled? 'block' : 'none'}"
-						role="group" id="video-control-${member.requestId }">
-						<button class="btn"
-							onclick="toggleVideoPlay('video-member-${member.requestId }', this);">
-							<i class="fas fa-pause"></i>
-						</button>
-						<button class="btn"
-							onclick="toggleVideoMute('video-member-${member.requestId }', this);">
-							<i class="fas fa-volume-down"></i>
-						</button>
-						<button class="btn btn-info btn-sm"
-							onclick="dialPartner('${member.requestId}')">
-							<i class="fas fa-phone"></i>&nbsp;Dial
-						</button>
-						<button class="btn btn-secondary btn-sm"
-							onclick="startRecording('${member.requestId}')" id="toggle-record-${member.requestId}"><i class="fas fa-record-vinyl"></i> Rec</button>
+					<div style="display: ${member.conferenceMemberData.streamEnabled? 'block' : 'none'}"
+						 id="video-control-${member.requestId }">
+						<div class="btn-group"role="group">
+							<button class="btn btn-secondary btn-sm" onclick="toggleVideoPlay('video-member-${member.requestId }', this);">
+								<i class="fas fa-pause"></i>
+							</button>
+							<button class="btn btn-secondary btn-sm" onclick="toggleVideoMute('video-member-${member.requestId }', this);">
+								<i class="fas fa-volume-down"></i>
+							</button>
+							<button class="btn btn-secondary btn-sm" onclick="showMemberFullscreen('video-member-${member.requestId }');">
+								<i class="fas fa-expand"></i>
+							</button>
 						</div>
+					
+						<div class="btn-group" role="group" id="group-dial-record">
+							<button class="btn btn-info btn-sm" onclick="dialPartner('${member.requestId}')">
+								<i class="fas fa-phone"></i>&nbsp;Dial
+							</button>
+							<button class="btn btn-secondary btn-sm" onclick="startRecording('${member.requestId}')" id="toggle-record-${member.requestId}">
+								<i class="fas fa-record-vinyl"></i> Rec
+							</button>
+						</div>
+					</div>
+					
 				</c:if>
 				<c:if test="${member.requestId == registeredRequest.requestId }">
 					<h3 class="center-aligned bg-light">You</h3>

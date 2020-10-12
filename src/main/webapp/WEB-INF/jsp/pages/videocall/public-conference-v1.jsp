@@ -6,7 +6,7 @@
 
 <div>
 	<h2>Public Conference</h2>
-	<div class="border row" style="margin-bottom: 10px">
+	<div id="main-view" class="border row" style="margin-bottom: 10px">
 		<div class="col-6" style="text-align: center;" >
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
@@ -28,6 +28,7 @@
 			<jsp:include page="partial/room-panel.jsp"></jsp:include>
 		</div>
 	</div>
+	<jsp:include page="partial/conference-fullscreen.jsp"></jsp:include>
 	<div class="row">
 		<div class="col-6">
 			<jsp:include page="partial/conference-member-list.jsp"></jsp:include>
@@ -239,37 +240,54 @@
 				style: {visibility: 'hidden'}
 			},
 			ch4: {
-				tagName: 'div', className: 'btn-group',
+				tagName: 'div', 
 				id: 'video-control-'+requestId,
-				role: 'group',
-				ch1: {
-					tagName: 'button', className: 'btn',
-					innerHTML : '<i class="fas fa-pause"></i>',
-					onclick: function(e){
-						toggleVideoPlay('video-member-'+requestId, e.target); 
-					}
-				},
-				ch2: {
-					tagName: 'button', className: 'btn',
-					innerHTML : "<i class=\"fas fa-volume-mute\"></i>",
-					onclick: function(e){
-						toggleVideoMute('video-member-'+requestId, e.target);
-					}
-				},
-				ch3: {
-					tagName: 'button', className: 'btn btn-info btn-sm',
-					onclick: function(e){
-						dialPartner(requestId);
+				ch1:{ 
+					tagName: 'div',
+					className: 'btn-group',
+					role: 'group',
+					ch1: {
+						tagName: 'button', className: 'btn btn-secondary btn-sm',
+						innerHTML : '<i class="fas fa-pause"></i>',
+						onclick: function(e){
+							toggleVideoPlay('video-member-'+requestId, e.target); 
+						}
 					},
-					innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
-				},
-				ch4: {
-					tagName: 'button', className: 'btn btn-secondary btn-sm',
-					id:'toggle-record-'+requestId,
-					onclick: function(e){
-						startRecording(requestId);
+					ch2: {
+						tagName: 'button', className: 'btn btn-secondary btn-sm',
+						innerHTML : "<i class=\"fas fa-volume-mute\"></i>",
+						onclick: function(e){
+							toggleVideoMute('video-member-'+requestId, e.target);
+						}
 					},
-					innerHTML: '<i class="fas fa-record-vinyl"></i> Rec'
+					ch3: {
+						tagName: 'button', className: 'btn btn-secondary btn-sm',
+						innerHTML : "<i class=\"fas fa-expand\"></i>",
+						onclick: function(e){
+							showMemberFullscreen('video-member-'+requestId);
+						}
+					},
+				},
+				ch2:{ 
+					tagName: 'div',
+					className: 'btn-group',
+					id: 'group-dial-record',
+					role: 'group',
+					ch1: {
+						tagName: 'button', className: 'btn btn-info btn-sm',
+						onclick: function(e){
+							dialPartner(requestId);
+						},
+						innerHTML: '<i class="fas fa-phone"></i>&nbsp;Dial'
+					},
+					ch2: {
+						tagName: 'button', className: 'btn btn-secondary btn-sm',
+						id:'toggle-record-'+requestId,
+						onclick: function(e){
+							startRecording(requestId);
+						},
+						innerHTML: '<i class="fas fa-record-vinyl"></i> Rec'
+					},
 				},
 			}
 		};

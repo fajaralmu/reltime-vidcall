@@ -22,8 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UtilityService {
 
-	@Autowired
-	private PublicConference1Service publicConference1Service;
+	
 	@Autowired
 	private ActiveCallsRepository activeCallsRepository;
 	@Autowired
