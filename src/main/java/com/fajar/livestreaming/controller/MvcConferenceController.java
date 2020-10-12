@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,8 @@ public class MvcConferenceController extends BaseController {
 	private StreamingService streamingService;
 	@Autowired
 	private PublicConference1Service publicConference1Service;
+	
+	 
 
 	public MvcConferenceController() {
 		log.info("-----------------Mvc Conference Controller------------------");
@@ -100,8 +103,8 @@ public class MvcConferenceController extends BaseController {
 		model.addAttribute("videoEnabled", false);
 		model.addAttribute("roomId", roomId);
 		//default fullscreenCanvas
-		model.addAttribute("canvasWidth", 600);
-		model.addAttribute("canvasHeight", 400);
+		model.addAttribute("canvasWidth", bindedValues.getDefaultFullScreenWidth());
+		model.addAttribute("canvasHeight", bindedValues.getDefaultFullScreenHeight());
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
 		
 		return basePage;

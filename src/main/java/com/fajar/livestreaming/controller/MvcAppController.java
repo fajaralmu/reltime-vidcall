@@ -34,8 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MvcAppController extends BaseController{  
 	 
 
-	@Value("${app.admin.pass}")
-	private String adminPass;
+	
 	@Autowired
 	private FlatFileAccessorv2 fileAccessorv2;
 	
@@ -49,7 +48,7 @@ public class MvcAppController extends BaseController{
 	@CustomRequestInfo(pageUrl = "pages/main-menu")
 	public String sessionlist(Model model,
 			HttpServletRequest request, HttpServletResponse response)  {
-		model.addAttribute("title", applicationHeaderLabel);
+		model.addAttribute("title", bindedValues.getApplicationHeaderLabel());
 		return basePage;
 	}
 
@@ -59,7 +58,7 @@ public class MvcAppController extends BaseController{
 	public String adminData(@PathVariable(name="pass") String path, Model model,
 			HttpServletRequest request, HttpServletResponse response)  { 
 		
-		if(adminPass.equals(path) == false) {
+		if(bindedValues.getAdminPass().equals(path) == false) {
 			throw new IllegalAccessError("NOT ALLOWED");
 		}
 		model.addAttribute("runtimeData", fileAccessorv2.getRuntimePath());

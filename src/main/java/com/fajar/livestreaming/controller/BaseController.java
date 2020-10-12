@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fajar.livestreaming.dto.KeyValue;
 import com.fajar.livestreaming.dto.RegisteredRequest;
+import com.fajar.livestreaming.service.BindedValues;
 import com.fajar.livestreaming.service.UserSessionService;
 import com.fajar.livestreaming.util.DateUtil;
 
@@ -36,62 +36,50 @@ public class BaseController {
 	@Autowired
 	protected UserSessionService userSessionService;
 	 
-	@Value("${app.header.label}")
-	protected String applicationHeaderLabel;
-	@Value("${app.header.description}")
-	protected String applicationDescription;
-	@Value("${app.footer.label}")
-	protected String applicationFooterLabel;
-	@Value("${app.streaming.maxRecordingTime}")
-	protected Integer maxRecordingTime;
-	@Value("${app.streaming.recordingOutputFormat}")
-	protected String recordingOutputFormat;
-	@Value("${app.streaming.recordingOutputExtension}")
-	protected String recordingOutputExtension;
-	@Value("${app.streaming.ice.iceStunServer}")
-	protected String iceStunServer;
+	@Autowired
+	protected BindedValues bindedValues;
 	
 	@ModelAttribute("applicationHeaderLabel")
 	public String applicationHeaderLabel(HttpServletRequest request) {
 		
-		return applicationHeaderLabel;
+		return bindedValues.getApplicationHeaderLabel();
 	}
 	
 	@ModelAttribute("applicationDescription")
 	public String applicationDescription(HttpServletRequest request) {
 		
-		return applicationDescription;
+		return bindedValues.getApplicationDescription();
 	}
 	
 	@ModelAttribute("applicationFooterLabel")
 	public String applicationFooterLabel(HttpServletRequest request) {
 		
-		return applicationFooterLabel;
+		return bindedValues.getApplicationFooterLabel();
 	}
 	
 	@ModelAttribute("maxRecordingTime")
 	public int maxRecordingTime() {
-		return maxRecordingTime;
+		return bindedValues.getMaxRecordingTime();
 	}
 	
 	@ModelAttribute("iceStunServer")
 	public String iceStunServer() {
-		return iceStunServer;
+		return bindedValues.getIceStunServer();
 	}
 	
 	@ModelAttribute("maxRecordingTimeString")
 	public String maxRecordingTimeString() {
-		return DateUtil.secondToTimeString(maxRecordingTime);
+		return DateUtil.secondToTimeString(bindedValues.getMaxRecordingTime());
 	}
 	
 	@ModelAttribute("recordingOutputFormat")
 	public String recordingOutputFormat() {
-		return recordingOutputFormat;
+		return bindedValues.getRecordingOutputFormat();
 	}
 	
 	@ModelAttribute("recordingOutputExtension")
 	public String recordingOutputExtension() {
-		return recordingOutputExtension;
+		return bindedValues.getRecordingOutputExtension();
 	}
 	
 	@ModelAttribute("registeredRequest")
