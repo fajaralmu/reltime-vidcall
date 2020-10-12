@@ -58,7 +58,6 @@
 	var isJoined = ${isJoined};
 	var initialPeerCount = ${members.size()};
 	
-	
 	maxRecordingTime = parseInt("${maxRecordingTime}");
 	rtcConfiguration = {
 		    "iceServers" : [ 
@@ -228,13 +227,9 @@
 			tagName : 'div',className: 'col-6',
 			id : "member-item-" + requestId,
 			ch1 : {
-				tagName : 'h5',
+				tagName : 'span',
 				innerHTML : '<i class="fas fa-user-circle"></i>&nbsp;'+username + (isRoomCreator? '<small><i class="fas fa-headset"></i></small>':''), 
-			},
-			ch2 : {
-				tagName : 'p',
-				innerHTML : 'Date: ' + new Date(date)
-			},
+			}, 
 			ch3: {
 				tagName: 'video',className: 'border',
 				id: 'video-member-'+requestId,

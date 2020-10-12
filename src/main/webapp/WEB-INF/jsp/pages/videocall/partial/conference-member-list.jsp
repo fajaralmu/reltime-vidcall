@@ -9,13 +9,13 @@
 	<div class="row">
 		<c:forEach var="member" items="${members}">
 			<div class="col-6" id="member-item-${member.requestId}">
-				<h5>
-					<i class="fas fa-user-circle"></i>&nbsp;${member.username }
+				<span>
 					<c:if test="${true ==  member.roomCreator}">
-						<small><i class="fas fa-headset"></i></small>
+						 <i class="fas fa-headset"></i> 
 					</c:if>
-				</h5>
-				<p>${member.created }</p>
+					<i class="fas fa-user-circle"></i>&nbsp;${member.username } 
+				</span>
+				<%-- <p>${member.created }</p> --%>
 				<c:if test="${member.requestId != registeredRequest.requestId }">
 					<video class="border"
 						style="visibility: hidden; display: ${member.conferenceMemberData.streamEnabled? 'block' : 'none'}"
