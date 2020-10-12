@@ -28,8 +28,7 @@
 			</button>
 		</c:if>
 	
-		<a style="" id="btn-download-recorded" class="btn btn-warning"><i
-			class="fas fa-file-download"></i> Recorded Capture</a>
+		
 	</div>
 	
 </div>

@@ -32,6 +32,8 @@
 	<div id="recording-info">
 		<p><i class="fas fa-stopwatch"></i>&nbsp;<span id="recording-timer">No recording is running</span></p>
 		<p>Max Recording Duration: ${maxRecordingTime} seconds ( ${maxRecordingTimeString} )</p>
+		<a style="" id="btn-download-recorded" class="btn btn-warning btn-sm"><i
+			class="fas fa-file-download"></i> Recorded Capture</a>
 	</div>
 	<div class="row">
 		<div class="col-6">

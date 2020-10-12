@@ -52,7 +52,6 @@ public class MvcConferenceController extends BaseController {
 		streamingService.setActive(request);
 
 		model.addAttribute("partnerId", partnerId);
-
 		model.addAttribute("partnerInfo", partnerSession);
 
 		return basePage;
