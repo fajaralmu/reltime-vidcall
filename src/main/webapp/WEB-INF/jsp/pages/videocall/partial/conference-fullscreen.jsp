@@ -5,12 +5,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div style="display: none" id="fullscreen-view">
 	<div class="card">
-		<div class="card-header"><h2><i class="fas fa-expand"></i>&nbsp;FullScreen View <small></small></h2></div>
+		<div class="card-header"><i class="fas fa-expand"></i>&nbsp;FullScreen View</div>
 		<div class="card-body" style="text-align: center">
 			<canvas id="fullscreen-canvas" ></canvas>
 		</div>
 		<div class="card-footer">
 			<button id="close-fullscreen" class="btn btn-secondary">Close</button>
+			<button class="btn btn-warning" onclick="incrementCanvasSize(5)" ><i class="fas fa-search-plus"></i> Zoom In</button>
+			<button class="btn btn-warning" onclick="incrementCanvasSize(-5)" ><i class="fas fa-search-minus"></i> Zoom Out</button>
 		</div>
 	</div>
 </div>
@@ -30,6 +32,14 @@
 	function setCanvasSize(width, height){
 		canvas.width = width;
 		canvas.height = height;
+	}
+	
+	function incrementCanvasSize(value){
+		const p = value/100;
+		const currentWidth = canvas.width;
+		const currentHeight = canvas.height;
+		
+		setCanvasSize(currentWidth+ (p*currentWidth), currentHeight+ (p*currentHeight) );
 	}
 	
 	function hideFullscreen(){
