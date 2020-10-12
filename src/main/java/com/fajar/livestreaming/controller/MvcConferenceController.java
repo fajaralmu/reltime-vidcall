@@ -99,6 +99,9 @@ public class MvcConferenceController extends BaseController {
 		model.addAttribute("isJoined", isJoined);
 		model.addAttribute("videoEnabled", false);
 		model.addAttribute("roomId", roomId);
+		//default fullscreenCanvas
+		model.addAttribute("canvasWidth", 600);
+		model.addAttribute("canvasHeight", 400);
 		model.addAttribute("members", publicConference1Service.getMemberList(roomId));
 		
 		return basePage;

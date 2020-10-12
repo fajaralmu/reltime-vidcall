@@ -29,6 +29,10 @@
 		</div>
 	</div>
 	<jsp:include page="partial/conference-fullscreen.jsp"></jsp:include>
+	<div id="recording-info">
+		<p><i class="fas fa-stopwatch"></i>&nbsp;<span id="recording-timer">No recording is running</span></p>
+		<p>Max Recording Duration: ${maxRecordingTime} seconds ( ${maxRecordingTimeString} )</p>
+	</div>
 	<div class="row">
 		<div class="col-6">
 			<jsp:include page="partial/conference-member-list.jsp"></jsp:include>

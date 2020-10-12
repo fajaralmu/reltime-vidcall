@@ -5,20 +5,19 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div style="display: none" id="fullscreen-view">
 	<div class="card">
-		<div class="card-header">FullScreen View <small></small></div>
-		<div class="card-body">
-			<canvas id="fullscreen-canvas" width="400" height="300"></canvas>
+		<div class="card-header"><h2><i class="fas fa-expand"></i>&nbsp;FullScreen View <small></small></h2></div>
+		<div class="card-body" style="text-align: center">
+			<canvas id="fullscreen-canvas" ></canvas>
 		</div>
 		<div class="card-footer">
 			<button id="close-fullscreen" class="btn btn-secondary">Close</button>
 		</div>
 	</div>
-
-
 </div>
 <script>
-	const canvasHeight = 300;
-	const canvasWidth = 400;
+
+	const canvasWidth = parseInt("${canvasWidth }");
+	const canvasHeight = parseInt("${canvasHeight }");
 	
 	const fullscreenView = byId("fullscreen-view");
 	const mainView = byId("main-view");
@@ -28,6 +27,11 @@
 	var isFullscreen = false;
 	var fullscreenVideoElement = null;
 	 
+	function setCanvasSize(width, height){
+		canvas.width = width;
+		canvas.height = height;
+	}
+	
 	function hideFullscreen(){
 		fullscreenView.style.display = "none"; 
 		canvasClear();
@@ -66,11 +70,10 @@
 		if(fullscreenVideoElement && isFullscreen){
 			setTimeout(drawVideo, 1);
 		}
-		
 	}
 	
 	function showMainView(){
-		mainView.style.display = "block";
+		mainView.style.display = ""; //to keep grid view
 	}
 	
 	function showMemberFullscreen(videoId){
@@ -83,4 +86,6 @@
 		hideFullscreen();
 		showMainView();
 	}
+	
+	setCanvasSize(canvasWidth, canvasHeight);
 </script>
