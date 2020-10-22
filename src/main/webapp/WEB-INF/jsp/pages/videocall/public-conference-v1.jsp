@@ -14,7 +14,7 @@
 				<div style="display:grid; grid-template-columns: auto auto; grid-column-gap: 5px; grid-row-gap: 5px">
 					<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
 					<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
-					
+					<input type="checkbox" id="audio-mute" class="form-control"><label>Mute Audio</label>
 					<label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
 					<select id="select-stream-type" class="custom-select">
 						<option value="camera">Camera</option>
@@ -58,6 +58,7 @@
 	const chatList = byId("chat-list");
 	const inputChatMessage = byId("input-chat-message"); 
 	const selectStreamType = byId("select-stream-type");
+	const inputAudioMute = byId("audio-mute");
 	
 	const onloadCallbacks = [];
 	
@@ -178,9 +179,7 @@
 		}
 		
 		setVideoCover(requestId, enabled);
-	}
-	
-	
+	}	
 	
 	function handleNewChat(resp){
 		const chatMessage = resp.chatMessage;
@@ -437,7 +436,7 @@
 			log("Total Peer Count: "+totalPeer);
 			return;
 		}
-		const config = { video: true, audio: true };
+		const config = { video: true, audio: inputAudioMute.checked == false };
 		
 		var mediaStream; 
 	   	

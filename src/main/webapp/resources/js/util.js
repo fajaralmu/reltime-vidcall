@@ -252,8 +252,8 @@ function stringifyStyleObject(styleObject){
 
 /**
  * 
- * @param object
- * @returns <DOM>
+ * @param {Object} object
+ * @returns {HtmlElement} htmlElement
  */
 function createHtmlTag(object){
 	if(null == object){
