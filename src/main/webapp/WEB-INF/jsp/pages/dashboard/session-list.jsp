@@ -22,7 +22,11 @@
 				<c:if test="${registeredRequest.requestId != session.requestId }">
 					<%-- <a class="btn btn-success"
 						href="<spring:url value="/stream/videocall" />/${session.requestId }"><i class="fas fa-phone"></i> Call v1 (WebSocket)</a>
-					 --%><button onclick="call(this, '${session.requestId }')" class="btn btn-success"
+					 --%>
+					 <a class="btn btn-success"
+						href="<spring:url value="/dashboard/chatting/${session.requestId }" />"><i class="fas fa-comments"></i> Chatting</a>
+					  
+					 <button onclick="call(this, '${session.requestId }')" class="btn btn-success"
 						location="<spring:url value="/stream/videocallv2" />/${session.requestId }"><i class="fas fa-phone"></i> Call v2 (WebRTC)</button>
 				</c:if> 
 				 
@@ -88,12 +92,14 @@
 	function generateHtmlTextForSession(newRegisteredRequest) {
 		const urlStream = "<spring:url value="/stream/videocall" />";
 		const urlStreamv2 = "<spring:url value="/stream/videocallv2" />";
+		const urlChatting = "<spring:url value="/dashboard/chatting" />";
 		const requestId = newRegisteredRequest.requestId;
 		const username = newRegisteredRequest.username;
 		const isActive = newRegisteredRequest.active;
 		const createdDate = newRegisteredRequest.created;
 		const videoCallUrl = urlStream+"/"+requestId; 
 		const videoCallUrlv2 = urlStreamv2+"/"+requestId; 
+		const chattingUrl = urlChatting+"/"+requestId; 
 		
 		const htmlv2 = createHtmlTag({
 			'tagName':"div",
@@ -126,6 +132,12 @@
 				'href': videoCallUrl,
 				'innerHTML': "<i class=\"fas fa-phone\"></i> Call v1 (WebSocket)"
 			}, */
+		 	'ch5':{
+				'tagName': "a",
+				'class': "btn btn-success",
+				'href': chattingUrl,
+				'innerHTML': "<i class=\"fas fa-comments\"></i> Chatting"
+			},  
 			'ch6':{
 				'tagName': "button",
 				'class': "btn btn-success",

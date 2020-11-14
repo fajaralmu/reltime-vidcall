@@ -22,14 +22,25 @@ public class Message implements Serializable {
 	@Builder.Default
 	private Date date = new Date();
 	private String requestId;
+	private String receiverRequestId;
 	private String username;
 	private String body;
 	
-	public static Message create(RegisteredRequest session, String body) {
+	public static Message create(RegisteredRequest sender, RegisteredRequest receiver, String body) {
 		Message message =new Message();
 		message.setBody(body);
-		message.setRequestId(session.getRequestId());
-		message.setUsername(session.getUsername());
+		message.setRequestId(sender.getRequestId());
+		message.setUsername(sender.getUsername());
+		message.setReceiverRequestId(receiver.getRequestId());
+		
+		return message;
+		
+	}
+	public static Message create(RegisteredRequest sender,  String body) {
+		Message message =new Message();
+		message.setBody(body);
+		message.setRequestId(sender.getRequestId());
+		message.setUsername(sender.getUsername()); 
 		
 		return message;
 		

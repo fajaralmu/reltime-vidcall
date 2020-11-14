@@ -33,6 +33,18 @@
 					<button class="btn btn-primary" onclick="goToExistingRoom()">Submit</button>
 				</div>
 			</div>
+			
+			<div class="card">
+				<div class="card-header">Go To Chat Message</div>
+				<div class="card-body">
+					<p>Enter Partner Id</p>
+					<input type="text" class="form-control onenter"  on-enter="goToChattingPage()" placeholder="Existing Room Id" id="input-message-partner" />
+					
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary" onclick="goToChattingPage()">Submit</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -42,6 +54,7 @@
 	const roomId = byId("room-id");
 	const roomLink = byId("room-link");
 	const roomIdExisting = byId("input-existing-room");
+	const partnerIdForChatting = byId("input-message-partner");
 	var currentRoomId = "${roomId}";
 	
 	function goToExistingRoom(){
@@ -50,6 +63,14 @@
 			return;
 		}
 		window.location.href = "<spring:url value="/stream/publicconference/" />"+roomIdExisting.value;
+	}
+	
+	function goToChattingPage(){
+		if(null == partnerIdForChatting.value){
+			infoDialog("Please specify partnerIdForChatting!").then(function(e){});
+			return;
+		}
+		window.location.href = "<spring:url value="/dashboard/chatting/" />"+partnerIdForChatting.value;
 	}
 	
 	function generateRoomId(){
