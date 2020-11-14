@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div>
-	<h2><i class="fas fa-comments"></i>&nbsp;Chat Message With: ${partner.username}</h2>
+	<h2><i class="fas fa-comments"></i>&nbsp;Chatting With: ${partner.username}</h2>
 	<div class="row">
 		<div class="col-6">
 			<form id="message-form">
@@ -19,7 +19,7 @@
 		<div class="col-6">
 			<div id="chatting-message" style="overflow: scroll; height: 500px; padding: 10px">
 				<c:forEach items="${messages }" var="message">
-					<div class="session-item" >  
+					<div class="alert ${registeredRequest.requestId == message.requestId ? 'alert-success':'alert-secondary' }" >  
 						<c:if test="${registeredRequest.requestId == message.requestId }">
 							<b>You</b>
 						</c:if>
@@ -43,6 +43,7 @@
 					var response = (xhr.data);
 					if(response && response.code == "00"){  
 						chatMessage.value = "";
+						addChattingMessage(response);
 					}else if(response){
 					}else{
 						alert("Server Error");
@@ -52,14 +53,14 @@
 	
 	function subscribeWebsocket(){
 		const _class = this;
-		const callbackNewChatting = {
-				subscribeUrl : "/wsResp/newchatting/${partner.requestId}",
+		const callbackIncomingMessage = {
+				subscribeUrl : "/wsResp/newchatting/${registeredRequest.requestId}",
 				callback : function(resp) {
 					_class.addChattingMessage(resp);
 				}
 
 			};
-		connectToWebsocket(callbackNewChatting);
+		connectToWebsocket(callbackIncomingMessage);
 	}
 	
 	function addChattingMessage(response){
@@ -69,10 +70,11 @@
 	}
 	
 	function generateChatMessageElement(message){
-		const htmlv2 = createHtmlTag({ 'tagName':"div", 'class': "session-item",
+		const alertType = message.requestId == "${registeredRequest.requestId}" ? "alert-success" : "alert-secondary";
+		const htmlv2 = createHtmlTag({ 'tagName':"div", 'class': "alert "+alertType,
 			'ch1':{
 				'tagName': "b",
-				'innerHTML': message.requestId == "${partner.requestId}" ? partner.username : "You"
+				'innerHTML': message.requestId == "${partner.requestId}" ? "${partner.username}" : "You"
 			},
 			'ch2':{
 				'tagName': "p", 'innerHTML': message.body

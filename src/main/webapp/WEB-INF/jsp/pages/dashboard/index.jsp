@@ -35,7 +35,7 @@
 			</div>
 			
 			<div class="card">
-				<div class="card-header">Go To Chat Message</div>
+				<div class="card-header">Go To Chatting Page</div>
 				<div class="card-body">
 					<p>Enter Partner Id</p>
 					<input type="text" class="form-control onenter"  on-enter="goToChattingPage()" placeholder="Existing Room Id" id="input-message-partner" />
