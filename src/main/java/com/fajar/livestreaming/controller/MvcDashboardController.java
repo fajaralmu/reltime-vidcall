@@ -40,7 +40,7 @@ public class MvcDashboardController extends BaseController {
 	private RealChatService realChatService;
 
 	public MvcDashboardController() {
-		log.info("-----------------Mvc App Controller------------------");
+		log.info("-----------------MvcDashboardController------------------");
 	}
 
 	@RequestMapping(value = { "/" })
@@ -63,7 +63,7 @@ public class MvcDashboardController extends BaseController {
 	}
 	
 	@RequestMapping(value = { "/chatting/{partnerId}" })
-	@CustomRequestInfo(title = "Chat Message", pageUrl = "pages/dashboard/chatting")
+	@CustomRequestInfo(title = "Chatting", pageUrl = "pages/dashboard/chatting")
 	public String chatmessage(Model model, @PathVariable(name="partnerId")String partnerId,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		 RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);

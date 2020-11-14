@@ -35,5 +35,6 @@ public class WebRequest implements Serializable {
 	
 	private boolean accept;
 	private boolean streamEnabled;
+	private boolean typing;
 
 }

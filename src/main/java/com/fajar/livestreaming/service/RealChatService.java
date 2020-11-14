@@ -44,4 +44,12 @@ public class RealChatService {
 		return chatMessageData.getMessages();
 	}
 
+	public WebResponse sendTypingStatus(WebRequest request) {
+		WebResponse response = WebResponse.builder().typing(request.isTyping()).build();
+		String origin = request.getOriginId(),
+				destination = request.getDestination();
+		realtimeService.convertAndSend("/wsResp/typingstatus/"+origin+"/"+destination, response);
+		return response;
+	}
+
 }

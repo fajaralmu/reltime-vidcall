@@ -16,11 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
-import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
-import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
-import com.fajar.livestreaming.runtimerepo.SessionRepository;
-import com.fajar.livestreaming.service.PublicConference1Service;
 import com.fajar.livestreaming.service.UtilityService;
 
 @CrossOrigin

@@ -146,7 +146,13 @@
 				const onEnter = element.getAttribute("on-enter");
 				
 				if(onEnter) {
+					const originalKeyup = element.onkeyup;
 					element.onkeyup = function(event){
+						
+						if(originalKeyup){
+							originalKeyup(event);
+						}
+						
 						if (event.keyCode === 13) { //when key is 'Enter'
 						    event.preventDefault(); 
 						    eval(onEnter);

@@ -15,6 +15,7 @@
 				</div>
 				<button type="submit" class="btn btn-primary">Send</button>
 			</form>
+			<p id="is-typing"></p>
 		</div>
 		<div class="col-6">
 			<div id="chatting-message" style="overflow: scroll; height: 500px; padding: 10px">
@@ -60,7 +61,22 @@
 				}
 
 			};
-		connectToWebsocket(callbackIncomingMessage);
+		const callbackPartnerIsTyping = {
+				subscribeUrl : "/wsResp/typingstatus/${partner.requestId}/${registeredRequest.requestId}",
+				callback : function(resp) {
+					_class.infoPartnerIsTyping(resp);
+				}
+
+			};
+		connectToWebsocket(callbackIncomingMessage, callbackPartnerIsTyping);
+	}
+	
+	function infoPartnerIsTyping(response){
+		if(response.typing){
+			byId("is-typing").innerHTML = "${partner.username} is typing";
+		} else {
+			byId("is-typing").innerHTML = "";
+		}
 	}
 	
 	function addChattingMessage(response){
@@ -84,6 +100,22 @@
 			},
 		});
 		return htmlv2;
+	}
+	
+	function sendTypingInfoViaWebsocket(isTyping){
+		sendToWebsocket("/app/chatting/typingstatus", {
+			originId : "${registeredRequest.requestId}",
+			destination : "${partner.requestId}",
+			typing: isTyping
+		});
+	}
+	
+	byId("chat-message").onkeydown = function(e){
+		sendTypingInfoViaWebsocket(true);
+	}
+	
+	byId("chat-message").onkeyup = function(e){
+		sendTypingInfoViaWebsocket(false);
 	}
 	
 	byId("message-form").onsubmit = function(e){

@@ -37,6 +37,7 @@ public class WebResponse implements Serializable {
 	private String eventId;
 	
 	private boolean onlineStatus;
+	private boolean typing;
 	private boolean accept;
 	private boolean roomCreator;
 	private boolean streamEnabled;
