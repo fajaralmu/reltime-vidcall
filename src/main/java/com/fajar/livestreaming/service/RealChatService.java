@@ -35,7 +35,7 @@ public class RealChatService {
 		Message storedMessage = chatMessageRepository.storeMessage(sender, receiver, webRequest.getMessage());
 		WebResponse response = WebResponse.builder().chatMessage(storedMessage).build();
 		response.setRequestId(sender.getRequestId());
-		realtimeService.convertAndSend("/wsResp/chatmessage/"+receiverId, response);
+		realtimeService.convertAndSend("/wsResp/newchatting/"+receiverId, response);
 		return response;
 	}
 

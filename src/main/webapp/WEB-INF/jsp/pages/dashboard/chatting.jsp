@@ -17,8 +17,7 @@
 			</form>
 		</div>
 		<div class="col-6">
-			<div>
-				<h3>Message</h3>
+			<div id="chatting-message" style="overflow: scroll; height: 400px">
 				<c:forEach items="${messages }" var="message">
 					<div class="session-item" >  
 						<c:if test="${registeredRequest.requestId == message.requestId }">
@@ -52,9 +51,49 @@
 				});
 	}
 	
+	function subscribeWebsocket(){
+		const _class = this;
+		const callbackNewChatting = {
+				subscribeUrl : "/wsResp/newchatting/${partner.requestId}",
+				callback : function(resp) {
+					_class.addChattingMessage(resp);
+				}
+
+			};
+		connectToWebsocket(callbackNewChatting);
+	}
+	
+	function addChattingMessage(response){
+		const chatElement = generateChatMessageElement(response.chatMessage);
+		byId("chatting-message").appendChild(chatElement);
+		
+	}
+	
+	function generateChatMessageElement(message){
+		const htmlv2 = createHtmlTag({
+			'tagName':"div",
+			'class': "session-item",
+			'id':requestId,
+			'ch1':{
+				'tagName': "b",
+				'innerHTML': message.requestId == "${partner.requestId}" ? partner.username : "You"
+			},
+			'ch2':{
+				'tagName': "p",
+				'innerHTML': message.body
+			},
+			'ch3':{
+				'tagName': "p",
+				'innerHTML': message.date
+			},
+		});
+	}
+	
 	byId("message-form").onsubmit = function(e){
 		e.preventDefault();
 		sendMessage();
 	}
+	
+	subscribeWebsocket();
 	
 </script>
