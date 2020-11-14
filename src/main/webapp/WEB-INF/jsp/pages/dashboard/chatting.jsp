@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div>
-	<h2>Chat Message With: ${partner.username}</h2>
+	<h2><i class="fas fa-comments"></i>&nbsp;Chat Message With: ${partner.username}</h2>
 	<div class="row">
 		<div class="col-6">
 			<form id="message-form">
@@ -17,7 +17,7 @@
 			</form>
 		</div>
 		<div class="col-6">
-			<div id="chatting-message" style="overflow: scroll; height: 400px">
+			<div id="chatting-message" style="overflow: scroll; height: 500px; padding: 10px">
 				<c:forEach items="${messages }" var="message">
 					<div class="session-item" >  
 						<c:if test="${registeredRequest.requestId == message.requestId }">
@@ -42,9 +42,8 @@
 					infoDone();
 					var response = (xhr.data);
 					if(response && response.code == "00"){  
-						 
+						chatMessage.value = "";
 					}else if(response){
-						//infoDialog(response.message).then(function(e){});
 					}else{
 						alert("Server Error");
 					}
@@ -70,23 +69,19 @@
 	}
 	
 	function generateChatMessageElement(message){
-		const htmlv2 = createHtmlTag({
-			'tagName':"div",
-			'class': "session-item",
-			'id':requestId,
+		const htmlv2 = createHtmlTag({ 'tagName':"div", 'class': "session-item",
 			'ch1':{
 				'tagName': "b",
 				'innerHTML': message.requestId == "${partner.requestId}" ? partner.username : "You"
 			},
 			'ch2':{
-				'tagName': "p",
-				'innerHTML': message.body
+				'tagName': "p", 'innerHTML': message.body
 			},
 			'ch3':{
-				'tagName': "p",
-				'innerHTML': message.date
+				'tagName': "p", 'innerHTML': new Date(message.date)
 			},
 		});
+		return htmlv2;
 	}
 	
 	byId("message-form").onsubmit = function(e){
