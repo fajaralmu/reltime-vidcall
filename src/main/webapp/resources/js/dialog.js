@@ -1,4 +1,9 @@
+function randomId(){
+	return new Date().getTime();
+}
+
 function confirmDialog(msg, prop) {
+	const randomId = randomId();
 	const property = prop?prop: {
 		yesIcon: null,
 		noIcon: null,
@@ -44,6 +49,7 @@ function confirmDialog(msg, prop) {
 							ch1 : {
 								style : { margin : 'auto', style:{width:'max-content'} },
 								ch1:{
+									id: 'confirm-yes-'+randomId,
 									tagName : 'button',
 									innerHTML : property.yesHtml,
 									className : 'btn btn-primary',
@@ -54,6 +60,7 @@ function confirmDialog(msg, prop) {
 									}
 								},
 								ch2:{
+									id: 'confirm-no-'+randomId,
 									tagName : 'button',
 									innerHTML : property.noHtml,
 									style: {margin: '3px'},
@@ -71,10 +78,12 @@ function confirmDialog(msg, prop) {
 		})
 
 		document.body.prepend(dialog);
+		byId('confirm-yes-'+randomId).focus();
 	});
 }
 
 function promptDialog(msg, inputType) {
+	const randomId = randomId();
 	return new Promise(function(resolve, reject) {
 		const dialog = createHtmlTag({
 			tagName : 'div',
@@ -151,6 +160,7 @@ function promptDialog(msg, inputType) {
 
 
 function infoDialog(msg) {
+	const randomId = randomId();
 	return new Promise(function(resolve, reject) {
 		const dialog = createHtmlTag({
 			tagName : 'div',
@@ -176,6 +186,7 @@ function infoDialog(msg) {
 							ch1 : {
 								style : { margin : 'auto' },
 								tagName : 'button',
+								id:'confirm-yes-'+randomId,
 								innerHTML : 'Ok',
 								className : 'btn btn-primary',
 								onclick : function(e) {
@@ -191,6 +202,7 @@ function infoDialog(msg) {
 		})
 
 		document.body.prepend(dialog);
+		byId('confirm-yes-'+randomId).focus();
 	});
 }
 

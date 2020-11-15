@@ -74,7 +74,7 @@
 
 <script type="text/javascript">
 	const inputUserName = byId("input-username");
-	const buttonRegister = byId("btn-register");
+	
 </script>
 <c:if test="${registeredRequest != null }">
 	<script type="text/javascript">
@@ -105,6 +105,7 @@
 </c:if>
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
+		const buttonRegister = byId("btn-register");
 		byId("form-register").onsubmit = function(e) {
 			e.preventDefault();
 			registerSession();
