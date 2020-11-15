@@ -8,43 +8,48 @@
 	<h2>Dashboard</h2>
 	<div class="row">
 		<div class="col-6">
-			<div class="card">
-				<div class="card-header">Generate Room Id</div>
-				<div class="card-body">
-					<p><i class="fas fa-key"></i>&nbsp;Room Id <span id="room-id">${roomId == null ? "Not Generated" : roomId}</span></p>
-					<p><i class="fas fa-link"></i>&nbsp;Link <a  id="room-link"></a></p> 
+			<form onsubmit="return false">
+				<div class="card">
+					<div class="card-header">Generate Room Id</div>
+					<div class="card-body">
+						<p><i class="fas fa-key"></i>&nbsp;Room Id <span id="room-id">${roomId == null ? "Not Generated" : roomId}</span></p>
+						<p><i class="fas fa-link"></i>&nbsp;Link <a  id="room-link"></a></p> 
+					</div>
+					<div class="card-footer">
+						<button class="btn btn-primary" onclick="generateRoomId()" id="footer-info">
+							${roomId != null? 'Update Room Id' : 'Generate Room Id'}</button>
+						<button class="btn btn-danger" onclick="invalidateRoom()" >Invalidate Room</button>
+					</div>
 				</div>
-				<div class="card-footer">
-					<button class="btn btn-primary" onclick="generateRoomId()" id="footer-info">
-						${roomId != null? 'Update Room Id' : 'Generate Room Id'}</button>
-					<button class="btn btn-danger" onclick="invalidateRoom()" >Invalidate Room</button>
-				</div>
-			</div>
+			</form>
 		</div>
 		<div class="col-6">
-			<div class="card">
-				<div class="card-header">Go To Existing Room</div>
-				<div class="card-body">
-					<p>Enter Existing Room</p>
-					<input type="text" class="form-control onenter"  on-enter="goToExistingRoom()" placeholder="Existing Room Id" id="input-existing-room" />
-					
+			<form onsubmit="goToExistingRoom(); return false;">
+				<div class="card">
+					<div class="card-header">Go To Existing Room</div>
+					<div class="card-body">
+						<p>Enter Existing Room</p>
+						<input type="text" class="form-control" placeholder="Existing Room Id" id="input-existing-room" />
+						
+					</div>
+					<div class="card-footer">
+						<input type="submit" class="btn btn-primary" value="Submit"/>
+					</div>
 				</div>
-				<div class="card-footer">
-					<button class="btn btn-primary" onclick="goToExistingRoom()">Submit</button>
+			</form>
+			<form onsubmit="goToChattingPage(); return false;">
+				<div class="card">
+					<div class="card-header">Go To Chatting Page</div>
+					<div class="card-body">
+						<p>Enter Partner Id</p>
+						<input type="text" class="form-control" placeholder="Existing Room Id" id="input-message-partner" />
+						
+					</div>
+					<div class="card-footer">
+						<input type="submit" class="btn btn-primary" value="Submit"/>
+					</div>
 				</div>
-			</div>
-			
-			<div class="card">
-				<div class="card-header">Go To Chatting Page</div>
-				<div class="card-body">
-					<p>Enter Partner Id</p>
-					<input type="text" class="form-control onenter"  on-enter="goToChattingPage()" placeholder="Existing Room Id" id="input-message-partner" />
-					
-				</div>
-				<div class="card-footer">
-					<button class="btn btn-primary" onclick="goToChattingPage()">Submit</button>
-				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>
