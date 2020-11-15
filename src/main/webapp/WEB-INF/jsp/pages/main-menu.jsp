@@ -8,30 +8,33 @@
 	<h2>Main Menu</h2>
 	<div class="row">
 		<div class="col-6">
-			<div class="card">
-				<div class="card-header">
-					<i class="fas fa-address-card"></i>&nbsp;Request Information
+			<form id="form-register">
+				<div class="card">
+					<div class="card-header">
+						<i class="fas fa-address-card"></i>&nbsp;Request Information
+					</div>
+					<div class="card-body">
+						<p>
+							Request ID : <span class="font-weight-bold" id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId }
+							</span>
+						</p>
+						<p>Alias:</p>
+						<input class="form-control onenter" on-enter="registerSession()"
+							id="input-username" placeholder="type username"
+							${registeredRequest == null? "" : "disabled" }
+							value="${registeredRequest == null? null : registeredRequest.username }" />
+					</div>
+					<div class="card-footer">
+						<c:if test="${registeredRequest == null }">
+							<input type="submit" id="btn-register" class="btn btn-info"
+								value="Register" />
+						</c:if>
+						<c:if test="${registeredRequest != null }">
+							<input type="submit" class="btn btn-danger" value="Invalidate" />
+						</c:if>
+					</div>
 				</div>
-				<div class="card-body">
-					<p>
-						Request ID : <span class="font-weight-bold" id="req-id-generated">${registeredRequest == null? 'Not Generated' : registeredRequest.requestId }
-						</span>
-					</p>
-					<p>Alias:</p>
-					<input class="form-control onenter" on-enter="registerSession()" id="input-username" placeholder="type username"
-						${registeredRequest == null? "" : "disabled" }
-						value="${registeredRequest == null? null : registeredRequest.username }" />
-				</div>
-				<div class="card-footer">
-					<c:if test="${registeredRequest == null }">
-						<button id="btn-register" class="btn btn-info"
-							onclick="registerSession()">Register</button>
-					</c:if>
-					<c:if test="${registeredRequest != null }">
-						<button class="btn btn-danger" onclick="invalidate()">Invalidate</button>
-					</c:if>
-				</div>
-			</div>
+			</form>
 		</div>
 		<div class="col-6">
 			<div class="card">
@@ -72,33 +75,40 @@
 <script type="text/javascript">
 	const inputUserName = byId("input-username");
 	const buttonRegister = byId("btn-register");
-
-	
 </script>
 <c:if test="${registeredRequest != null }">
 	<script type="text/javascript">
-		function invalidate() {
-			confirmDialog("Do you want to invalidate session?").then(function(ok) {
-				if (ok) {
-					doInvalidate();
-				}
-			})
+		byId("form-register").onsubmit = function(e) {
+			e.preventDefault();
+			invalidate();
 		}
-		
+		function invalidate() {
+			confirmDialog("Do you want to invalidate session?").then(
+					function(ok) {
+						if (ok) {
+							doInvalidate();
+						}
+					})
+		}
+
 		function doInvalidate() {
 			const requestObject = {};
-			postReq("<spring:url value="/api/stream/invalidate" />", requestObject,
-					function(xhr) {
+			postReq("<spring:url value="/api/stream/invalidate" />",
+					requestObject, function(xhr) {
 						infoDone();
 						var response = (xhr.data);
 						window.location.reload();
 					});
 		}
 	</script>
-	
+
 </c:if>
 <c:if test="${registeredRequest == null }">
 	<script type="text/javascript">
+		byId("form-register").onsubmit = function(e) {
+			e.preventDefault();
+			registerSession();
+		}
 		function registerSession() {
 			confirmDialog("Do you want to Register Session?").then(
 					function(ok) {
