@@ -46,7 +46,7 @@ public class RestAppController extends BaseController{
 	@PostMapping(value = "/api/stream/register", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse register(@RequestBody WebRequest request, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) { 
-		RegisteredRequest registeredRequest = userSessionService.registerSession(request, httpRequest);;
+		RegisteredRequest registeredRequest = userSessionService.registerSession(request, httpRequest, httpResponse);
 		return WebResponse.builder().registeredRequest(registeredRequest).build();
 	}
 	

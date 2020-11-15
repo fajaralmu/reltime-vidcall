@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
 import com.fajar.livestreaming.runtimerepo.SessionRepository;
+import com.fajar.livestreaming.util.Encryptions;
 import com.fajar.livestreaming.util.MapUtil;
 import com.fajar.livestreaming.util.StringUtil;
 
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserSessionService {
 
 	private static final String HEADER_REQUEST_ID = "request-id";
+	private static final String HEADER_REQUEST_KEY = "request_key";
 
 	@Autowired
 	private SessionRepository sessionRepository; 
@@ -109,7 +112,7 @@ public class UserSessionService {
 		if (null != storedInHttpSession) {
 			requestId = storedInHttpSession.getRequestId();
 		}else {
-			requestId = request.getHeader(HEADER_REQUEST_ID);
+			requestId = decodeRawRequestId(request.getHeader(HEADER_REQUEST_KEY));
 		}
 		
 		if(null != requestId) {
@@ -128,13 +131,15 @@ public class UserSessionService {
 		}
 	}
 
-	public RegisteredRequest registerSession(WebRequest request, HttpServletRequest httpRequest) {
+	public RegisteredRequest registerSession(WebRequest request, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 		RegisteredRequest newRegisteredRequest = createNewRequest(request.getUsername(), httpRequest);
 		
 		setSessionAttributeSessionData(httpRequest, newRegisteredRequest);
 		
 		registerNewSession(newRegisteredRequest);
 		realtimeService.sendUpdateSessionExistance(newRegisteredRequest, true);
+		
+		httpResponse.addHeader("request_key", newRegisteredRequest.getEncodedRequestId());
 
 		return newRegisteredRequest;
 	}
@@ -146,6 +151,7 @@ public class UserSessionService {
 	private RegisteredRequest createNewRequest(String username, HttpServletRequest httpRequest) {
 		final String requestId = randomRequestId();
 		RegisteredRequest registeredRequest = RegisteredRequest.newSession(username, requestId, httpRequest);
+		registeredRequest.setEncodedRequestId(encodeRequestId(requestId));
 		return registeredRequest;
 	}
 
@@ -194,6 +200,22 @@ public class UserSessionService {
 
 	public void clearActiveCalls() {
 		activeCallsRepository.clearAll();
+	}
+	
+	private String decodeRawRequestId(String raw) {	
+		try {
+			return Encryptions.decodeBase64(raw);
+		}catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private String encodeRequestId(String requestId) {
+		try {
+			return Encryptions.encodeBase64(requestId);
+		}catch (Exception e) {
+			return null;
+		}
 	}
 
 }

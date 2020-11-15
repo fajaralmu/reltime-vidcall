@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 
 	@PostConstruct
 	public void init() {
-
+		
 	}
 
 	@Override

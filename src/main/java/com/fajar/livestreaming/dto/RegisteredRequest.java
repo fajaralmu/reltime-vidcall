@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +36,9 @@ public class RegisteredRequest implements Serializable{/**
 	private String userAgent;
 	 
 	private String ipAddress; 
-	 
-//	private  List<? extends BaseEntity> messages;
+	
+	@JsonIgnore
+	private String encodedRequestId;
 	 
 	private boolean active;
 	

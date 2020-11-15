@@ -31,7 +31,7 @@
 	</bean>
 
 	<!-- Configuration for Redis Client -->
-	<bean id="jedisPoolConfig"
+	<!-- <bean id="jedisPoolConfig"
 		class="redis.clients.jedis.JedisPoolConfig">
 
 	</bean>
@@ -47,7 +47,7 @@
 		class="org.springframework.data.redis.core.RedisTemplate"
 		p:connection-factory-ref="jedisConnectionFactory">
 	</bean>
-
+ -->
 	<!-- web app custom config -->
 	<!-- <bean id="webAppConfig" class="com.fajar.shoppingmart.service.WebConfigService"> 
 		<property name="basePage" value="BASE_PAGE"></property> <property name="martCode" 
