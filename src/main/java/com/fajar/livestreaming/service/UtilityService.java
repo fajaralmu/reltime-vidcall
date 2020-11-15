@@ -13,6 +13,7 @@ import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
 import com.fajar.livestreaming.runtimerepo.BaseRuntimeRepo;
+import com.fajar.livestreaming.runtimerepo.ChatMessageRepository;
 import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
 import com.fajar.livestreaming.runtimerepo.SessionRepository;
 
@@ -31,6 +32,8 @@ public class UtilityService {
 	private ConferenceDataRepository conferenceDataRepository;
 	@Autowired
 	private SessionRepository sessionRepository;
+	@Autowired
+	private ChatMessageRepository chatMessageRepository;
 	
 	final Map<String, BaseRuntimeRepo> runtimeRepo = new HashMap<String, BaseRuntimeRepo>();
 	
@@ -41,6 +44,7 @@ public class UtilityService {
 		runtimeRepo.put("activeroom", this.activeRoomsRepository);
 		runtimeRepo.put("session", this.sessionRepository);
 		runtimeRepo.put("conferencedata", this.conferenceDataRepository);
+		runtimeRepo.put("chatmessage", this.chatMessageRepository);
 	}
 	
 	

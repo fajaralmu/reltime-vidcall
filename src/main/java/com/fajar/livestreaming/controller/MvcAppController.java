@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fajar.livestreaming.annotation.CustomRequestInfo;
 import com.fajar.livestreaming.dto.AdminQuickLink;
-import com.fajar.livestreaming.runtime.FlatFileAccessorv2;
+import com.fajar.livestreaming.service.runtime.FlatFileAccessorv2;
 
 import lombok.extern.slf4j.Slf4j;
 

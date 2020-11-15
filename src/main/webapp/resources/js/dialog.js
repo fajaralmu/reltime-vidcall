@@ -1,9 +1,9 @@
-function randomId(){
+function getRandomId(){
 	return new Date().getTime();
 }
 
 function confirmDialog(msg, prop) {
-	const randomId = randomId();
+	const randomId = getRandomId();
 	const property = prop?prop: {
 		yesIcon: null,
 		noIcon: null,
@@ -83,7 +83,7 @@ function confirmDialog(msg, prop) {
 }
 
 function promptDialog(msg, inputType) {
-	const randomId = randomId();
+	const randomId = getRandomId();
 	return new Promise(function(resolve, reject) {
 		const dialog = createHtmlTag({
 			tagName : 'div',
@@ -160,7 +160,7 @@ function promptDialog(msg, inputType) {
 
 
 function infoDialog(msg) {
-	const randomId = randomId();
+	const randomId = getRandomId();
 	return new Promise(function(resolve, reject) {
 		const dialog = createHtmlTag({
 			tagName : 'div',

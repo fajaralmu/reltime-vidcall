@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.ActiveCalls;
-import com.fajar.livestreaming.runtime.TempSessionService;
+import com.fajar.livestreaming.service.runtime.TempSessionService;
 
 @Service
 public class ActiveCallsRepository implements BaseRuntimeRepo<ActiveCalls> {

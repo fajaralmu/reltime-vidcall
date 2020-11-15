@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fajar.livestreaming.controller.BaseController;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.service.RealChatService;
+import com.fajar.livestreaming.service.ChattingService;
 
 @CrossOrigin
 @RestController
@@ -22,7 +22,7 @@ public class WebSocketChattingController extends BaseController {
 	Logger log = LoggerFactory.getLogger(WebSocketChattingController.class);
 
 	@Autowired
-	private RealChatService realChatService; 
+	private ChattingService realChatService; 
 
 	public WebSocketChattingController() {
 		log.info("------------------WebSocketChattingController-----------------");

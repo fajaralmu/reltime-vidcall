@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fajar.livestreaming.annotation.Authenticated;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
-import com.fajar.livestreaming.service.RealChatService;
+import com.fajar.livestreaming.service.ChattingService;
 
 @CrossOrigin
 @RestController 
@@ -26,7 +26,7 @@ public class RestChatMessageController extends BaseController{
 	Logger log = LoggerFactory.getLogger(RestChatMessageController.class); 
 	  
 	@Autowired
-	private RealChatService realChatService;
+	private ChattingService realChatService;
 	 
 	
 	public RestChatMessageController() {
@@ -39,8 +39,13 @@ public class RestChatMessageController extends BaseController{
 	}
 	 
 	@PostMapping(value = "/api/chatting/send/{receiverId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse sendMessage(@RequestBody WebRequest webRequest, @PathVariable(name = "receiverId") String receiverId, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+	public WebResponse sendMessage(@RequestBody WebRequest webRequest, @PathVariable(name = "receiverId") String receiverId, HttpServletRequest httpRequest) {
 		return realChatService.sendMessage(webRequest, receiverId, httpRequest);
+	}
+	
+	@PostMapping(value = "/api/chatting/partnerinfo/{partnerId}",  produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse sendMessage(@PathVariable(name = "partnerId") String partnerId, HttpServletResponse httpResponse) throws Exception {
+		return realChatService.getPartnerInfo(partnerId, httpResponse);
 	}
 	
 	 

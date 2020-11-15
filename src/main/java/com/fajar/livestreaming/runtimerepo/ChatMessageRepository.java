@@ -11,14 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
-import com.fajar.livestreaming.runtime.TempSessionService;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+import com.fajar.livestreaming.service.runtime.TempSessionService;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Builder.Default;
 
 @Service
 public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageRepository.ChatMessageData> {

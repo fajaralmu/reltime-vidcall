@@ -16,7 +16,7 @@ import com.fajar.livestreaming.annotation.CustomRequestInfo;
 import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.PublicConference1Service;
-import com.fajar.livestreaming.service.RealChatService;
+import com.fajar.livestreaming.service.ChattingService;
 import com.fajar.livestreaming.service.StreamingService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class MvcDashboardController extends BaseController {
 	@Autowired
 	private PublicConference1Service publicConference1Service;
 	@Autowired
-	private RealChatService realChatService;
+	private ChattingService realChatService;
 
 	public MvcDashboardController() {
 		log.info("-----------------MvcDashboardController------------------");

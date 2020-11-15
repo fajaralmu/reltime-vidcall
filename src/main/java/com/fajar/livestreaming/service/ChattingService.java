@@ -3,8 +3,10 @@ package com.fajar.livestreaming.service;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.Message;
@@ -15,7 +17,7 @@ import com.fajar.livestreaming.runtimerepo.ChatMessageRepository;
 import com.fajar.livestreaming.runtimerepo.ChatMessageRepository.ChatMessageData;
 
 @Service
-public class RealChatService {
+public class ChattingService {
 	
 	@Autowired
 	private RealtimeService realtimeService;
@@ -42,6 +44,16 @@ public class RealChatService {
 	public List<Message> getChatMessagesBetween(RegisteredRequest sender, RegisteredRequest partner) {
 		ChatMessageData chatMessageData = chatMessageRepository.getChatMessage(sender, partner);
 		return chatMessageData.getMessages();
+	}
+	
+	public WebResponse getPartnerInfo(String partnerId, HttpServletResponse response) {
+		RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
+		
+		if(null == partner) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+			return WebResponse.failed("not found");
+		}
+		return WebResponse.builder().registeredRequest(partner).build();
 	}
 
 	public WebResponse sendTypingStatus(WebRequest request) {

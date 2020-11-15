@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fajar.livestreaming.dto.ConferenceData;
 import com.fajar.livestreaming.dto.ConferenceMember;
 import com.fajar.livestreaming.dto.Message;
-import com.fajar.livestreaming.runtime.TempSessionService;
+import com.fajar.livestreaming.service.runtime.TempSessionService;
 
 @Service
 public class ConferenceDataRepository implements BaseRuntimeRepo<ConferenceData> {

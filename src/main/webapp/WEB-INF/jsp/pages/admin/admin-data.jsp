@@ -13,14 +13,15 @@
 			<ol>
 				<li>Runtime Data: ${runtimeData } </li>
 				<c:forEach items="${quickLinks }" var="linkItem">
-					<li>
+					<li><form onsubmit="return false">
 						<p>${linkItem.label } <i>Link: ${linkItem.link }</i></p>
-						<c:if test="${linkItem.hasPathVariable == true}">
-							<c:forEach items="${linkItem.pathVariableNameList }" var="pathVariable">
-							 	<label>${pathVariable.value }</label><input id="input-${pathVariable.value }-${linkItem.id }" type="text" class="form-control" placeholder="${pathVariable.value }" />
-							</c:forEach>
-						</c:if>
-						<button id="${linkItem.id }" class="btn btn-info btn-sm quick-link" link="${linkItem.link }" variablename="${linkItem.pathVariableName }" hasvariable="${linkItem.hasPathVariable }" >Action</button>
+							<c:if test="${linkItem.hasPathVariable == true}">
+								<c:forEach items="${linkItem.pathVariableNameList }" var="pathVariable">
+								 	<label>${pathVariable.value }</label><input id="input-${pathVariable.value }-${linkItem.id }" type="text" class="form-control" placeholder="${pathVariable.value }" />
+								</c:forEach>
+							</c:if>
+							<button id="${linkItem.id }" class="btn btn-info btn-sm quick-link" link="${linkItem.link }" variablename="${linkItem.pathVariableName }" hasvariable="${linkItem.hasPathVariable }" >Action</button>
+						</form>
 					</li>
 				</c:forEach>
 			</ol>

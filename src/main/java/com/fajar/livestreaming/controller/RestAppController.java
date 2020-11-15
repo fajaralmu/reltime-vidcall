@@ -54,7 +54,6 @@ public class RestAppController extends BaseController{
 	public WebResponse invalidate(HttpServletRequest httpRequest,	HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
-	}  
-	 
+	}	 
 	
 }
