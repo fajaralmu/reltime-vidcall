@@ -225,6 +225,7 @@
 
 	</dependencies>
 	<build>
+	
 		<finalName>livestreaming</finalName>
 		<plugins>
 
@@ -273,4 +274,24 @@
 			</plugin>
 		</plugins>
 	</build>
+<profiles>
+		<profile>
+			<id>dto</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<classifier>dto</classifier>
+							<!-- command to build: mvn clean install -P dto  -->
+							<includes>
+								<include>**/fajar/livestreaming/dto/*</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

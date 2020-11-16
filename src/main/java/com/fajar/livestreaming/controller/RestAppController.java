@@ -54,6 +54,14 @@ public class RestAppController extends BaseController{
 	public WebResponse invalidate(HttpServletRequest httpRequest,	HttpServletResponse httpResponse) { 
 		userSessionService.removeSessioon(httpRequest);
 		return new WebResponse();
-	}	 
+	}
+	
+	@PostMapping(value = "/api/stream/getuser", produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse invalidate(HttpServletRequest httpRequest) { 
+		 
+		return WebResponse.builder().registeredRequest(
+				userSessionService.getRegisteredRequest(httpRequest)
+				).build();
+	}
 	
 }
