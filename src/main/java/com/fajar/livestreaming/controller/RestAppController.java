@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,11 +58,14 @@ public class RestAppController extends BaseController{
 	}
 	
 	@PostMapping(value = "/api/stream/getuser", produces = MediaType.APPLICATION_JSON_VALUE)
-	public WebResponse invalidate(HttpServletRequest httpRequest) { 
+	public WebResponse getuser(HttpServletRequest httpRequest, HttpServletResponse httpServletResponse) { 
 		 
-		return WebResponse.builder().registeredRequest(
-				userSessionService.getRegisteredRequest(httpRequest)
-				).build();
+		RegisteredRequest account = userSessionService.getRegisteredRequest(httpRequest);
+		if(null == account) {
+			httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
+			return WebResponse.failed("Not Found");
+		}
+		return WebResponse.builder().registeredRequest(account).build();
 	}
 	
 }
