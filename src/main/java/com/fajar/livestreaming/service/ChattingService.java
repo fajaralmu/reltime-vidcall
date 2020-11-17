@@ -48,6 +48,13 @@ public class ChattingService {
 		return chatMessageData.getMessages();
 	}
 	
+	public WebResponse getChatMessagesBetween(String partnerId, HttpServletRequest httpServletRequest) {
+		RegisteredRequest sender = userSessionService.getRegisteredRequest(httpServletRequest);
+		RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
+		List<Message> messages = getChatMessagesBetween(sender, partner);
+		return WebResponse.builder().resultList(messages).build();
+	}
+	
 	public WebResponse getPartnerInfo(String partnerId, HttpServletResponse response) {
 		RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
 		
