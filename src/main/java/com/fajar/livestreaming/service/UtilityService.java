@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveRoomsRepository;
 import com.fajar.livestreaming.runtimerepo.BaseRuntimeRepo;
 import com.fajar.livestreaming.runtimerepo.ChatMessageRepository;
 import com.fajar.livestreaming.runtimerepo.ConferenceDataRepository;
-import com.fajar.livestreaming.runtimerepo.SessionRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +31,7 @@ public class UtilityService {
 	@Autowired
 	private ConferenceDataRepository conferenceDataRepository;
 	@Autowired
-	private SessionRepository sessionRepository;
+	private AccountSessionRepository sessionRepository;
 	@Autowired
 	private ChatMessageRepository chatMessageRepository;
 	

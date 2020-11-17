@@ -43,6 +43,7 @@ public class ChattingService {
 
 	public List<Message> getChatMessagesBetween(RegisteredRequest sender, RegisteredRequest partner) {
 		ChatMessageData chatMessageData = chatMessageRepository.getChatMessage(sender, partner);
+		userSessionService.addChatHistory(sender.getRequestId(), partner.getRequestId());
 		return chatMessageData.getMessages();
 	}
 	

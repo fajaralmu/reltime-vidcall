@@ -1,12 +1,9 @@
 package com.fajar.livestreaming.service;
 
-import static com.fajar.livestreaming.runtimerepo.SessionRepository.SESSION_ATTR_SESS_DATA;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -20,10 +17,9 @@ import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
-import com.fajar.livestreaming.runtimerepo.SessionRepository;
 import com.fajar.livestreaming.util.Encryptions;
-import com.fajar.livestreaming.util.MapUtil;
 import com.fajar.livestreaming.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +30,10 @@ public class UserSessionService {
 
 	private static final String HEADER_REQUEST_ID = "request-id";
 	private static final String HEADER_REQUEST_KEY = "request_key";
-
+	public static final String SESSION_ATTR_SESS_DATA = "session-data";
+	public static final String SESSION_TRIAL_ONE = "1";
 	@Autowired
-	private SessionRepository sessionRepository; 
+	private AccountSessionRepository sessionRepository; 
 
 	@Autowired
 	private ActiveCallsRepository activeCallsRepository; 
@@ -50,11 +47,11 @@ public class UserSessionService {
 	}
  
 	public void registerNewSession(RegisteredRequest request) {  
-		sessionRepository.registerNewSession(request);
+		sessionRepository.update(request);
 	}
 
 	public RegisteredRequest getRegisteredRequestById(String requestId) {
-		return sessionRepository.getRequest(requestId);
+		return sessionRepository.get(requestId);
 	}
 
 	private void removeSessionById(String requestId) {
@@ -78,8 +75,7 @@ public class UserSessionService {
 	} 
 
 	public List<RegisteredRequest> getAvaliableRequests() {
-		Map<String, RegisteredRequest> registeredApps = sessionRepository.getData().getRegisteredApps();
-		return MapUtil.mapToList(registeredApps);
+		return sessionRepository.getAll();
 	}
 
 	public boolean isRegistered(HttpServletRequest request) {
@@ -216,6 +212,12 @@ public class UserSessionService {
 		}catch (Exception e) {
 			return null;
 		}
+	}
+
+	public WebResponse addChatHistory(String senderId, String partnerId) {
+		
+		sessionRepository.addChattingPartner(senderId, partnerId);
+		return new WebResponse();
 	}
 
 }
