@@ -1,5 +1,6 @@
 package com.fajar.livestreaming.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,20 @@ public class ChattingService {
 				destination = request.getDestination();
 		realtimeService.convertAndSend("/wsResp/typingstatus/"+origin+"/"+destination, response);
 		return response;
+	}
+
+	public WebResponse getChattingList(HttpServletRequest httpRequest) {
+		RegisteredRequest session = userSessionService.getRegisteredRequest(httpRequest);
+		
+		List<String> partnerIds = session.getChattingPartnerList();		
+		List<RegisteredRequest> chattingPartners = new ArrayList<RegisteredRequest>();
+		
+		for (String partnerId : partnerIds) {
+			chattingPartners.add(userSessionService.getRegisteredRequestById(partnerId));
+		}
+		
+		return WebResponse.builder().resultList(chattingPartners).build();
+		
 	}
 
 }
