@@ -1,6 +1,7 @@
 package com.fajar.livestreaming.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,7 +94,11 @@ public class ChattingService {
 		List<RegisteredRequest> chattingPartners = new ArrayList<RegisteredRequest>();
 		
 		for (String partnerId : partnerIds) {
-			chattingPartners.add(userSessionService.getRegisteredRequestById(partnerId));
+			RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId); 
+			Date lastMessageDate = chatMessageRepository.getLastMessageDate(session, partner);
+			//TODO: move to appropriate field
+			partner.setCreated(lastMessageDate);
+			chattingPartners.add(partner);
 		}
 		
 		return WebResponse.builder().resultList(chattingPartners).build();
