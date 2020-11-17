@@ -14,8 +14,10 @@ import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ChatMessageRepository;
 import com.fajar.livestreaming.runtimerepo.ChatMessageRepository.ChatMessageData;
+import com.fajar.livestreaming.util.ThreadUtil;
 
 @Service
 public class ChattingService {
@@ -26,6 +28,8 @@ public class ChattingService {
 	private ChatMessageRepository chatMessageRepository;
 	@Autowired
 	private UserSessionService userSessionService;
+	@Autowired
+	private AccountSessionRepository accountSessionRepository;
 
 	public WebResponse sendMessage(WebRequest webRequest, String receiverId, HttpServletRequest httpRequest) {
 		
@@ -38,8 +42,17 @@ public class ChattingService {
 		Message storedMessage = chatMessageRepository.storeMessage(sender, receiver, webRequest.getMessage());
 		WebResponse response = WebResponse.builder().chatMessage(storedMessage).build();
 		response.setRequestId(sender.getRequestId());
+		
 		realtimeService.convertAndSend("/wsResp/newchatting/"+receiverId, response);
+		updateReceiverPartnerOrder(receiver, sender);
 		return response;
+	}
+
+	private void updateReceiverPartnerOrder(RegisteredRequest receiver, RegisteredRequest sender) {
+		ThreadUtil.run(()->{
+			receiver.setChattingPartnerFirstOrder(sender.getRequestId());
+			accountSessionRepository.update(receiver);
+		});
 	}
 
 	public List<Message> getChatMessagesBetween(RegisteredRequest sender, RegisteredRequest partner) {

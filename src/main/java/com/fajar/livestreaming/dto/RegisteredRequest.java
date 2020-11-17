@@ -1,11 +1,16 @@
 package com.fajar.livestreaming.dto;
 
+import static com.fajar.livestreaming.util.CollectionUtil.setFirstOrder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,7 +57,7 @@ public class RegisteredRequest implements Serializable{/**
 	private ConferenceMember conferenceMemberData;
 	
 	@Default
-	private List<String> chattingPartnerList = new ArrayList<>();
+	private LinkedList<String> chattingPartnerList = new LinkedList<>();
 
 	public static RegisteredRequest newSession(String username, String requestId, HttpServletRequest httpRequest) {
 		RegisteredRequest registeredRequest = new RegisteredRequest();
@@ -70,14 +75,26 @@ public class RegisteredRequest implements Serializable{/**
 		}
 	}
 	
+	public void setChattingPartnerFirstOrder(String partnerId) {
+		if(chattingPartnerList.indexOf(partnerId)<0) {
+			return;
+		}
+		setFirstOrder(partnerId, chattingPartnerList);
+	}
+	
+
 	public static void main(String[] args) {
 		List<String> list = new ArrayList<String>();
-		list.add("ABC");
-		list.add("EBC");
-		list.add("EBC");
-		list.add("FBC");
-		
-		System.out.println(list.indexOf("EBC"));
+		list.add("A");
+		list.add("C");
+		list.add("B");
+		list.add("D");
+		list.add("E");
+		list.add("K");
+		list.add("R");
+		System.out.println(list);
+		setFirstOrder("B", list);
+		System.out.println(list);
 	}
 	
 }

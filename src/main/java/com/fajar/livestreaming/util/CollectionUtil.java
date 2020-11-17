@@ -1,5 +1,6 @@
 package com.fajar.livestreaming.util;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import com.fajar.livestreaming.dto.KeyValue;
 
@@ -148,6 +151,14 @@ public class CollectionUtil {
 		return resultArray;
 	}
  
-	 
+
+	public static <T extends Serializable> List<T> setFirstOrder(T partnerId, List<T> chattingPartnerList2) {
+		List<T> duplicate =(List<T>)  SerializationUtils.clone((Serializable)  chattingPartnerList2);
+		chattingPartnerList2.clear();
+		chattingPartnerList2.add(partnerId);
+		duplicate.remove(partnerId);
+		chattingPartnerList2.addAll(duplicate);
+		return chattingPartnerList2;
+	}
 
 }
