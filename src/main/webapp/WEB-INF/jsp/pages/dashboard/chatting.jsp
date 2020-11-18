@@ -120,6 +120,10 @@
 	
 	byId("message-form").onsubmit = function(e){
 		e.preventDefault();
+		if(chatMessage.value == null || chatMessage.value == ""){
+			return;
+		}
+		
 		sendMessage();
 	}
 	
