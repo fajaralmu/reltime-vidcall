@@ -285,6 +285,7 @@
 						<configuration>
 							<classifier>dto</classifier>
 							<!-- command to build: mvn clean install -P dto  -->
+								<!-- <packaging>war</packaging> -->
 							<includes>
 								<include>**/fajar/livestreaming/dto/*</include>
 							</includes>
