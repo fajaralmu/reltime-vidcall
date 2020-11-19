@@ -94,11 +94,15 @@ public class ChattingService {
 		List<RegisteredRequest> chattingPartners = new ArrayList<RegisteredRequest>();
 		
 		for (String partnerId : partnerIds) {
-			RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId); 
-			Date lastMessageDate = chatMessageRepository.getLastMessageDate(session, partner);
-			//TODO: move to appropriate field
-			partner.setCreated(lastMessageDate);
-			chattingPartners.add(partner);
+			try {
+				RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId); 
+				Date lastMessageDate = chatMessageRepository.getLastMessageDate(session, partner);
+				//TODO: move to appropriate field
+				partner.setCreated(lastMessageDate);
+				chattingPartners.add(partner);
+			}catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
 		return WebResponse.builder().resultList(chattingPartners).build();
