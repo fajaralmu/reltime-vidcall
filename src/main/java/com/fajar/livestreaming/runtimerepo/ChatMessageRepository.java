@@ -1,27 +1,20 @@
 package com.fajar.livestreaming.runtimerepo;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.crypto.random.CryptoRandomFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fajar.livestreaming.dto.ChattingData;
 import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.runtime.TempSessionService;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Service
-public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageRepository.ChatMessageData> {
+public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 
 	@Autowired
 	private TempSessionService tempSessionService;
@@ -32,11 +25,11 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 	}
 
 	@Override
-	public ChatMessageData get(String messageDataKey) {
+	public ChattingData get(String messageDataKey) {
 
-		ChatMessageData roomData = null;
+		ChattingData roomData = null;
 		try {
-			roomData = tempSessionService.get(messageDataKey, ChatMessageData.class);
+			roomData = tempSessionService.get(messageDataKey, ChattingData.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -44,8 +37,9 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 	}
 
 	public synchronized Message storeMessage(RegisteredRequest sender, RegisteredRequest receiver, String body) {
-		ChatMessageData chatMessageData = getChatMessage(sender, receiver);
-		chatMessageData.addMessage(sender, receiver, body);
+		ChattingData chatMessageData = getChatMessage(sender, receiver);
+		Message message = Message.create(sender, receiver, body);
+		chatMessageData.addMessage(message);
 
 		try {
 			tempSessionService.put(chatMessageData.getKey(), chatMessageData);
@@ -55,17 +49,17 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 		return chatMessageData == null ? null : chatMessageData.getLatestMessage();
 	}
 
-	public synchronized ChatMessageData getChatMessage(RegisteredRequest sender, RegisteredRequest receiver) {
+	public synchronized ChattingData getChatMessage(RegisteredRequest sender, RegisteredRequest receiver) {
 		String senderId = sender.getRequestId();
 		String receiverId = receiver.getRequestId();
 
-		ChatMessageData chatMessageData = get(senderId + "_" + receiverId);
+		ChattingData chatMessageData = get(senderId + "_" + receiverId);
 		if (null == chatMessageData) {
 			chatMessageData = get(receiverId + "_" + senderId);
 		}
 
 		if (null == chatMessageData) {
-			chatMessageData = new ChatMessageData();
+			chatMessageData = new ChattingData();
 			chatMessageData.setKey(senderId + "_" + receiverId);
 		}
 
@@ -74,7 +68,7 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 
 	public boolean remove(String messageDataKey) {
 		try {
-			tempSessionService.remove(messageDataKey, ChatMessageData.class);
+			tempSessionService.remove(messageDataKey, ChattingData.class);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,33 +76,11 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 		}
 	}
 
-	@Data
-	@Builder
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class ChatMessageData implements Serializable {
-		/**
-		* 
-		*/
-		private static final long serialVersionUID = 5112666284732804863L;
-		@Builder.Default
-		private Date date = new Date();
-		private String key;
-		@Default
-		private List<Message> messages = new java.util.ArrayList<>();
-		private Message latestMessage;
-
-		public void addMessage(RegisteredRequest sender, RegisteredRequest receiver, String body) {
-			setLatestMessage(Message.create(sender, receiver, body));
-			messages.add(getLatestMessage());
-		}
-
-	}
-
+	
 	@Override
-	public List<ChatMessageData> getAll() {
+	public List<ChattingData> getAll() {
 
-		return tempSessionService.getAllFiles(ChatMessageData.class);
+		return tempSessionService.getAllFiles(ChattingData.class);
 	}
 
 	@Override
@@ -119,15 +91,15 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChatMessageReposit
 
 	@Override
 	public boolean clearAll() {
-		List<ChatMessageData> rooms = getAll();
-		for (ChatMessageData activeRoomData : rooms) {
+		List<ChattingData> rooms = getAll();
+		for (ChattingData activeRoomData : rooms) {
 			deleteByKey(activeRoomData.getKey());
 		}
 		return false;
 	}
 
 	public Date getLastMessageDate(RegisteredRequest sender, RegisteredRequest partner) {
-		ChatMessageData chatMessageData = getChatMessage(sender, partner);
+		ChattingData chatMessageData = getChatMessage(sender, partner);
 		if (null == chatMessageData) {
 			return new Date();
 		}

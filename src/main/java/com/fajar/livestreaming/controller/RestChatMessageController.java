@@ -75,6 +75,11 @@ public class RestChatMessageController extends BaseController{
 	public WebResponse getMessages(@PathVariable(name = "partnerId") String partnerId, HttpServletRequest httpRequest) throws Exception {
 		return realChatService.getChatMessagesBetween(partnerId, httpRequest);
 	}
+	
+	@PostMapping(value = "/api/chatting/chattingdata",  produces = MediaType.APPLICATION_JSON_VALUE)
+	public WebResponse chattingData(HttpServletRequest httpRequest)   {
+		return realChatService.getChattingData(httpRequest);
+	}
 	 
 	
 }

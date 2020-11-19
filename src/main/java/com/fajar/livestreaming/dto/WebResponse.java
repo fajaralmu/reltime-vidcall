@@ -1,6 +1,7 @@
 package com.fajar.livestreaming.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -50,6 +52,12 @@ public class WebResponse implements Serializable {
 	private Integer counter;
 	
 	private List resultList;
+	@Default
+	private List<ChattingData> chattingDataList = new ArrayList<>();
+	@Default
+	private List<RegisteredRequest> chattingPartnerList = new ArrayList<>();
+	@Default
+	private List<Message> messageList = new ArrayList<>();
  
 	 
 	public static WebResponse failedResponse() {

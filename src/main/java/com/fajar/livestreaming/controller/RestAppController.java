@@ -1,5 +1,7 @@
 package com.fajar.livestreaming.controller;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fajar.livestreaming.dto.ChattingData;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
+import com.fajar.livestreaming.service.ChattingService;
 import com.fajar.livestreaming.service.RealtimeService;
 
 @CrossOrigin
@@ -26,6 +30,8 @@ public class RestAppController extends BaseController{
 	
 	@Autowired
 	private RealtimeService realtimeUserService; 
+	@Autowired
+	private ChattingService chattingService;
 	 
 	
 	public RestAppController() {
@@ -65,7 +71,12 @@ public class RestAppController extends BaseController{
 			httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
 			return WebResponse.failed("Not Found");
 		}
-		return WebResponse.builder().registeredRequest(account).build();
+		List<ChattingData> chattingDataList = chattingService.getChattingDataList(account);
+		List<RegisteredRequest> chattingPartnerList = chattingService.getChattingPartners(account);
+		return WebResponse.builder().registeredRequest(account).
+				chattingPartnerList(chattingPartnerList).
+				chattingDataList(chattingDataList ).
+				build();
 	}
 	
 }
