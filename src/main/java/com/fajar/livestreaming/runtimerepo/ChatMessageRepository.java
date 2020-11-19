@@ -62,6 +62,7 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 			chatMessageData = new ChattingData();
 			chatMessageData.setKey(senderId + "_" + receiverId);
 		}
+		chatMessageData.setPartner(receiver);
 
 		return chatMessageData;
 	}

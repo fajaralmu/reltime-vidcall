@@ -25,6 +25,7 @@ public class ChattingData implements Serializable {
 	@Default
 	private List<Message> messages = new java.util.ArrayList<>();
 	private Message latestMessage;
+	private RegisteredRequest partner;
 
 	public void addMessage(Message message) {
 		setLatestMessage(message);
