@@ -20,7 +20,10 @@ import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ChatMessageRepository;
 import com.fajar.livestreaming.util.ThreadUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ChattingService {
 
 	@Autowired
@@ -147,6 +150,7 @@ public class ChattingService {
 			RegisteredRequest receiver = userSessionService.getRegisteredRequestById(partnerId);
 			if (null != sender && receiver != null) {
 				chatMessageRepository.markMessageAsRead(sender, receiver);
+				log.info("marked as read.....");
 			}
 		});
 	}

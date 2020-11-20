@@ -13,7 +13,11 @@ import com.fajar.livestreaming.dto.Message;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.runtime.TempSessionService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
+
 public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 
 	@Autowired
@@ -37,31 +41,40 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 	}
 
 	public synchronized Message storeMessage(RegisteredRequest sender, RegisteredRequest receiver, String body) {
-		ChattingData chatMessageData = getChattingData(sender, receiver);
+		ChattingData senderChattingData = getChattingData(sender, receiver);
+		ChattingData receiverChattingData = getChattingData(receiver, sender);
+		receiverChattingData.addUnreadMessage();
+		
 		Message message = Message.create(sender, receiver, body);
-		chatMessageData.addUnreadMessage();
-		chatMessageData.addMessage(message);
-
+		
+		senderChattingData.addMessage(message);
+		receiverChattingData.addMessage(message);
+		 
+		boolean result1 = updateChattingData(senderChattingData);
+		boolean result2 = updateChattingData(receiverChattingData);
+		 
+		return result1 && result2 ? senderChattingData.getLatestMessage():null; 
+	}
+	
+	public boolean updateChattingData(ChattingData chattingData) {
 		try {
-			tempSessionService.put(chatMessageData.getKey(), chatMessageData);
-		} catch (Exception e) {
-			e.printStackTrace();
+			tempSessionService.put(chattingData.getKey(), chattingData);
+			return true;
+		}catch (Exception e) {
+			log.error("ERROR updateChattingData: {}", e);
+			return false;
 		}
-		return chatMessageData == null ? null : chatMessageData.getLatestMessage();
 	}
 
 	public synchronized ChattingData getChattingData(RegisteredRequest sender, RegisteredRequest receiver) {
 		String senderId = sender.getRequestId();
 		String receiverId = receiver.getRequestId();
-
-		ChattingData chatMessageData = get(senderId + "_" + receiverId);
-		if (null == chatMessageData) {
-			chatMessageData = get(receiverId + "_" + senderId);
-		}
-
+		final String key = "SENDER_"+senderId + "_RECEIVER_" + receiverId;
+		ChattingData chatMessageData = get(key);
+		
 		if (null == chatMessageData) {
 			chatMessageData = new ChattingData();
-			chatMessageData.setKey(senderId + "_" + receiverId);
+			chatMessageData.setKey(key);
 		}
 		chatMessageData.setPartner(receiver);
 

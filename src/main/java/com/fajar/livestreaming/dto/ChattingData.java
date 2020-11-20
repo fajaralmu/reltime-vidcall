@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -27,7 +29,8 @@ public class ChattingData implements Serializable {
 	private Message latestMessage;
 	private RegisteredRequest partner;
 
-	public void addMessage(Message message) {
+	public void addMessage(Message _message) {
+		Message message = SerializationUtils.clone(_message);
 		setLatestMessage(message);
 		messages.add(message);
 	}
