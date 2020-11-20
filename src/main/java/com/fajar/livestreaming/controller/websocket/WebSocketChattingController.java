@@ -37,9 +37,16 @@ public class WebSocketChattingController extends BaseController {
 	/////////////////////////////////////// //////////////////////////////////////////
 
 	@MessageMapping("/chatting/typingstatus")
-	public WebResponse stream(WebRequest request) throws IOException {
+	public WebResponse typingstatus(WebRequest request) throws IOException {
 		
 		return realChatService.sendTypingStatus(request);
+	}
+	
+	@MessageMapping("/chatting/markmessageasread")
+	public WebResponse markmessageasread(WebRequest request) throws IOException {
+		
+		realChatService.markMessageAsRead(request);
+		return null;
 	}
 
 }

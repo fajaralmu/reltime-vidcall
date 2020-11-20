@@ -57,7 +57,7 @@ public class ChattingService {
 	}
 
 	public List<Message> getChatMessagesBetween(RegisteredRequest sender, RegisteredRequest partner) {
-		ChattingData chatMessageData = chatMessageRepository.getChatMessage(sender, partner);
+		ChattingData chatMessageData = chatMessageRepository.getChattingData(sender, partner);
 		userSessionService.addChatHistory(sender.getRequestId(), partner.getRequestId());
 		return chatMessageData.getMessages();
 	}
@@ -141,11 +141,23 @@ public class ChattingService {
 
 		for (RegisteredRequest chattingPartner : chattingPartners) {
 
-			ChattingData chattindData = chatMessageRepository.getChatMessage(registeredRequest, chattingPartner);
+			ChattingData chattindData = chatMessageRepository.getChattingData(registeredRequest, chattingPartner);
 			chattingDataList.add(chattindData);
 
 		}
 		return chattingDataList;
+	}
+
+	public void markMessageAsRead(WebRequest request) {
+		ThreadUtil.run(()->{
+			String partnerId = request.getPartnerId();
+			String requestId = request.getOriginId();
+			RegisteredRequest sender = userSessionService.getRegisteredRequestById(requestId);
+			RegisteredRequest receiver = userSessionService.getRegisteredRequestById(partnerId);
+			if (null != sender && receiver != null) {
+				chatMessageRepository.markMessageAsRead(sender, receiver);
+			}
+		});
 	}
 
 }

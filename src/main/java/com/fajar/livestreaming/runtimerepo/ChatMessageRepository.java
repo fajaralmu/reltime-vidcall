@@ -37,8 +37,9 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 	}
 
 	public synchronized Message storeMessage(RegisteredRequest sender, RegisteredRequest receiver, String body) {
-		ChattingData chatMessageData = getChatMessage(sender, receiver);
+		ChattingData chatMessageData = getChattingData(sender, receiver);
 		Message message = Message.create(sender, receiver, body);
+		chatMessageData.addUnreadMessage();
 		chatMessageData.addMessage(message);
 
 		try {
@@ -49,7 +50,7 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 		return chatMessageData == null ? null : chatMessageData.getLatestMessage();
 	}
 
-	public synchronized ChattingData getChatMessage(RegisteredRequest sender, RegisteredRequest receiver) {
+	public synchronized ChattingData getChattingData(RegisteredRequest sender, RegisteredRequest receiver) {
 		String senderId = sender.getRequestId();
 		String receiverId = receiver.getRequestId();
 
@@ -77,7 +78,6 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 		}
 	}
 
-	
 	@Override
 	public List<ChattingData> getAll() {
 
@@ -100,11 +100,25 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 	}
 
 	public Date getLastMessageDate(RegisteredRequest sender, RegisteredRequest partner) {
-		ChattingData chatMessageData = getChatMessage(sender, partner);
+		ChattingData chatMessageData = getChattingData(sender, partner);
 		if (null == chatMessageData) {
 			return new Date();
 		}
 		return chatMessageData.getLatestMessage() == null ? new Date() : chatMessageData.getLatestMessage().getDate();
 	}
 
+	public boolean markMessageAsRead(RegisteredRequest sender, RegisteredRequest receiver) {
+		ChattingData chatMessageData = getChattingData(sender, receiver);
+		if (null == chatMessageData) {
+			return false;
+		}
+		chatMessageData.removeUnreadMessage();
+		try {
+			tempSessionService.put(chatMessageData.getKey(), chatMessageData);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
