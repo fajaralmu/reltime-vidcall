@@ -65,7 +65,7 @@ public class RestChatMessageController extends BaseController{
 			 response.setStatus(HttpStatus.NOT_FOUND.value());
 			 throw new RuntimeException("partner not found");
 		 }
-		 if(sender.getReferrer().equals(partner.getReferrer())) {
+		 if(sender.getRequestId().equals(partner.getRequestId())) {
 			 response.setStatus(HttpStatus.BAD_REQUEST.value());
 			 throw new RuntimeException("partner not found");
 		 }
