@@ -86,25 +86,8 @@ public class ChattingService {
 		return response;
 	}
 
-	public WebResponse getChattingList(HttpServletRequest httpRequest) {
-		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequest(httpRequest);
-
-		List<String> partnerIds = registeredRequest.getChattingPartnerList();
-		List<RegisteredRequest> chattingPartners = new ArrayList<RegisteredRequest>();
-
-		for (String partnerId : partnerIds) {
-			try {
-				RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
-				Date lastMessageDate = chatMessageRepository.getLastMessageDate(registeredRequest, partner);
-				// TODO: move to appropriate field
-				partner.setCreated(lastMessageDate);
-				chattingPartners.add(partner);
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-
-		return WebResponse.builder().resultList(chattingPartners).chattingPartnerList(chattingPartners).build();
+	public WebResponse getChattingDataWithPartner(HttpServletRequest httpRequest) {
+		return getChattingData(httpRequest, true);
 
 	}
 
@@ -126,19 +109,27 @@ public class ChattingService {
 		return chattingPartners;
 	}
 
-	public WebResponse getChattingData(HttpServletRequest httpRequest) {
+	public WebResponse getChattingData(HttpServletRequest httpRequest, boolean withPartners) {
 		RegisteredRequest registeredRequest = userSessionService.getRegisteredRequest(httpRequest);
-		List<ChattingData> chattingDataList = getChattingDataList(registeredRequest);
+		List<RegisteredRequest> chattingPartners = getChattingPartners(registeredRequest);
+		List<ChattingData> chattingDataList = getChattingDataList(registeredRequest, chattingPartners);
+		
 		WebResponse webResponse = new WebResponse();
 		webResponse.setChattingDataList(chattingDataList);
+		if(withPartners) {
+			webResponse.setChattingPartnerList(chattingPartners);
+		}
 		return webResponse;
 	}
 
 	public List<ChattingData> getChattingDataList(RegisteredRequest registeredRequest) {
-		List<String> partnerIds = registeredRequest.getChattingPartnerList();
-		List<ChattingData> chattingDataList = new ArrayList<ChattingData>();
+		
 		List<RegisteredRequest> chattingPartners = getChattingPartners(registeredRequest);
-
+		return getChattingDataList(registeredRequest, chattingPartners);
+	}
+	
+	public List<ChattingData> getChattingDataList(RegisteredRequest registeredRequest, List<RegisteredRequest> chattingPartners){
+		List<ChattingData> chattingDataList = new ArrayList<ChattingData>();
 		for (RegisteredRequest chattingPartner : chattingPartners) {
 
 			ChattingData chattindData = chatMessageRepository.getChattingData(registeredRequest, chattingPartner);

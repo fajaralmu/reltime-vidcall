@@ -52,7 +52,7 @@ public class RestChatMessageController extends BaseController{
 	
 	@PostMapping(value = "/api/chatting/chattinglist", produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse chattingList(HttpServletRequest httpRequest) {
-		return realChatService.getChattingList(httpRequest);
+		return realChatService.getChattingDataWithPartner(httpRequest);
 	}
 	
 	@PostMapping(value = { "/api/chatting/initialize/{partnerId}" }) 
@@ -78,7 +78,7 @@ public class RestChatMessageController extends BaseController{
 	
 	@PostMapping(value = "/api/chatting/chattingdata",  produces = MediaType.APPLICATION_JSON_VALUE)
 	public WebResponse chattingData(HttpServletRequest httpRequest)   {
-		return realChatService.getChattingData(httpRequest);
+		return realChatService.getChattingData(httpRequest, false);
 	}
 	 
 	
