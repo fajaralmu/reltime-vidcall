@@ -68,6 +68,7 @@ public class ChattingService {
 	public WebResponse getChatMessagesBetween(String partnerId, HttpServletRequest httpServletRequest) {
 		RegisteredRequest sender = userSessionService.getRegisteredRequest(httpServletRequest);
 		RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
+		chatMessageRepository.markMessageAsRead(sender, partner);
 		List<Message> messages = getChatMessagesBetween(sender, partner);
 		return WebResponse.builder().resultList(messages).messageList(messages).build();
 	}
@@ -110,6 +111,9 @@ public class ChattingService {
 			}
 		}
 		return chattingPartners;
+	}
+	public WebResponse getChattingDataOnly(HttpServletRequest httpRequest) {
+		return getChattingData(httpRequest, false);
 	}
 
 	public WebResponse getChattingData(HttpServletRequest httpRequest, boolean withPartners) {
