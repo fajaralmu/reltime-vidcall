@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,6 +62,11 @@ public class RestChatMessageController extends BaseController{
 		 RegisteredRequest partner = userSessionService.getRegisteredRequestById(partnerId);
 		 RegisteredRequest sender = userSessionService.getRegisteredRequest(request);
 		 if(null == partner) {
+			 response.setStatus(HttpStatus.NOT_FOUND.value());
+			 throw new RuntimeException("partner not found");
+		 }
+		 if(sender.getReferrer().equals(partner.getReferrer())) {
+			 response.setStatus(HttpStatus.BAD_REQUEST.value());
 			 throw new RuntimeException("partner not found");
 		 }
 		return userSessionService.addChatHistory(sender.getRequestId(), partnerId);
