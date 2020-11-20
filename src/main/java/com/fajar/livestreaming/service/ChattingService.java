@@ -44,15 +44,17 @@ public class ChattingService {
 			return null;
 		}
 		Message storedMessage = chatMessageRepository.storeMessage(sender, receiver, webRequest.getMessage());
+		
 		WebResponse response = WebResponse.builder().chatMessage(storedMessage).build();
 		response.setRequestId(sender.getRequestId());
 
 		realtimeService.convertAndSend("/wsResp/newchatting/" + receiverId, response);
-		updateReceiverPartnerOrder(receiver, sender);
+		updateReceiverPartnerOrder(sender, receiver);
+		chatMessageRepository.markMessageAsRead(sender, receiver);
 		return response;
 	}
 
-	private void updateReceiverPartnerOrder(RegisteredRequest receiver, RegisteredRequest sender) {
+	private void updateReceiverPartnerOrder(RegisteredRequest sender, RegisteredRequest receiver) {
 		ThreadUtil.run(() -> {
 			receiver.setChattingPartnerFirstOrder(sender.getRequestId());
 			accountSessionRepository.update(receiver);
