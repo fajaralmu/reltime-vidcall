@@ -121,13 +121,16 @@ public class ChatMessageRepository implements BaseRuntimeRepo<ChattingData> {
 	}
 
 	public boolean markMessageAsRead(RegisteredRequest sender, RegisteredRequest receiver) {
+		log.info("markMessageAsRead sender: {}, partner: {}", sender.getUsername(), receiver.getUsername());
 		ChattingData chatMessageData = getChattingData(sender, receiver);
 		if (null == chatMessageData) {
+			log.info("markMessageAsRead Chat message not found");
 			return false;
 		}
 		chatMessageData.removeUnreadMessage();
 		try {
 			tempSessionService.put(chatMessageData.getKey(), chatMessageData);
+			log.info("marking message as read success");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
