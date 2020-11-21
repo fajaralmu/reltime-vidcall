@@ -15,12 +15,13 @@ import com.fajar.livestreaming.controller.BaseController;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.service.ChattingService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @CrossOrigin
 @RestController
 public class WebSocketChattingController extends BaseController {
-	Logger log = LoggerFactory.getLogger(WebSocketChattingController.class);
-
+	
 	@Autowired
 	private ChattingService realChatService; 
 
