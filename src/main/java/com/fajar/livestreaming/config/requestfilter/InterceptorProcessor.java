@@ -69,10 +69,13 @@ public class InterceptorProcessor {
 
 			if (null == userSessionService.getRegisteredRequest(request)) {
 				printNotAuthenticated(response, true);
+				log.info("NOT Authorized");
 				return false;
 
 			}
+			//log.info("REQUEST AUTHORIZED");
 		}
+		
 		return true;
 	}
 

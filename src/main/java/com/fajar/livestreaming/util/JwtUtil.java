@@ -72,11 +72,11 @@ public class JwtUtil {
 				System.out.println("signature not match");
 				return false;
 			}
-			byte[] headerDecoded = decoder.decode(header);
-			byte[] payloadDecoded = decoder.decode(payload);
-			
-			System.out.println("header: "+ new String(headerDecoded));
-			System.out.println("payload: "+ new String(payloadDecoded));
+//			byte[] headerDecoded = decoder.decode(header);
+//			byte[] payloadDecoded = decoder.decode(payload);
+//			
+//			System.out.println("header: "+ new String(headerDecoded));
+//			System.out.println("payload: "+ new String(payloadDecoded));
 			return true;
 		}catch (Exception e) { 
 			e.printStackTrace();

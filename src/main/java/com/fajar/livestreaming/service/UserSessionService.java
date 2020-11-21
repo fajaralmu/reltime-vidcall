@@ -118,7 +118,8 @@ public class UserSessionService {
 
 	private RegisteredRequest getRegisteredRequestFromJwt(HttpServletRequest request) {
 		String jwt = (request.getHeader(HEADER_REQUEST_KEY));
-		return JwtUtil.getRegisteredRequest(jwt);
+		RegisteredRequest registeredRequest = JwtUtil.getRegisteredRequest(jwt);
+		return getRegisteredRequestById(registeredRequest.getRequestId());
 	}
 
 	public void removeSessioon(HttpServletRequest request) {
