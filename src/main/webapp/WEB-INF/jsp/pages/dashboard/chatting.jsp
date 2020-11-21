@@ -123,7 +123,7 @@
 		if(chatMessage.value == null || chatMessage.value == ""){
 			return;
 		}
-		
+		sendTypingInfoViaWebsocket(false);
 		sendMessage();
 	}
 	
