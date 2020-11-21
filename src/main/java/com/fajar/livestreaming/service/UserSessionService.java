@@ -15,11 +15,13 @@ import org.springframework.stereotype.Service;
 
 import com.fajar.livestreaming.config.LogProxyFactory;
 import com.fajar.livestreaming.dto.RegisteredRequest;
+import com.fajar.livestreaming.dto.SessionData;
 import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
 import com.fajar.livestreaming.util.Encryptions;
+import com.fajar.livestreaming.util.JwtUtil;
 import com.fajar.livestreaming.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -107,15 +109,16 @@ public class UserSessionService {
 		
 		if (null != storedInHttpSession) {
 			requestId = storedInHttpSession.getRequestId();
-		}else {
-			requestId = decodeRawRequestId(request.getHeader(HEADER_REQUEST_KEY));
-		}
-		
-		if(null != requestId) {
 			return getRegisteredRequestById(requestId);
+		}else {
+			
+			return getRegisteredRequestFromJwt(request);
 		}
+	}
 
-		return null;
+	private RegisteredRequest getRegisteredRequestFromJwt(HttpServletRequest request) {
+		String jwt = (request.getHeader(HEADER_REQUEST_KEY));
+		return JwtUtil.getRegisteredRequest(jwt);
 	}
 
 	public void removeSessioon(HttpServletRequest request) {
@@ -147,7 +150,7 @@ public class UserSessionService {
 	private RegisteredRequest createNewRequest(String username, HttpServletRequest httpRequest) {
 		final String requestId = randomRequestId();
 		RegisteredRequest registeredRequest = RegisteredRequest.newSession(username, requestId, httpRequest);
-		registeredRequest.setEncodedRequestId(encodeRequestId(requestId));
+		registeredRequest.setEncodedRequestId(generateJwt(registeredRequest));
 		return registeredRequest;
 	}
 
@@ -198,17 +201,18 @@ public class UserSessionService {
 		activeCallsRepository.clearAll();
 	}
 	
-	private String decodeRawRequestId(String raw) {	
+	private boolean validateJwt(String raw) {	
 		try {
-			return Encryptions.decodeBase64(raw);
+			return JwtUtil.validateJWT(raw);
 		}catch (Exception e) {
-			return null;
+			return false;
 		}
 	}
 	
-	private String encodeRequestId(String requestId) {
+	private String generateJwt(RegisteredRequest registeredRequest) {
 		try {
-			return Encryptions.encodeBase64(requestId);
+			SessionData sessionData = SessionData.builder().requestId(registeredRequest.getRequestId()).valid(true).build();
+			return JwtUtil.generateJWT(sessionData, registeredRequest);
 		}catch (Exception e) {
 			return null;
 		}

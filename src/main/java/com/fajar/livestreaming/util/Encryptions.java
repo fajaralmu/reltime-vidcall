@@ -1,18 +1,27 @@
 package com.fajar.livestreaming.util;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.crypto.cipher.CryptoCipher;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory;
 import org.apache.commons.crypto.cipher.CryptoCipherFactory.CipherProvider;
 import org.apache.commons.crypto.utils.Utils;
+
+import com.fajar.livestreaming.dto.RegisteredRequest;
+import com.fajar.livestreaming.dto.SessionData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Encryptions {
 	static final SecretKeySpec key = new SecretKeySpec(getUTF8Bytes("1234567890123456"), "AES");
@@ -20,7 +29,7 @@ public class Encryptions {
 	static final String sampleInput = "hello world!";
 	static final String transform = "AES/CBC/PKCS5Padding";
 	static final CryptoCipher encipher = encipher();
-	
+	static final ObjectMapper mapper = new ObjectMapper();
 	public static String encodeBase64(String input) {
 		String encoded = Base64.getEncoder().encodeToString(input.getBytes());
 		return encoded;  
@@ -32,6 +41,7 @@ public class Encryptions {
 		return decoded;
 	}
 
+	 
 	public static void main2(final String[] args) throws Exception {
 
 		// Creates a CryptoCipher instance with the transformation and properties.
@@ -62,15 +72,7 @@ public class Encryptions {
 	static final byte[] sample = new byte[] { -49, 93, 117, 64, -46, -117, -62, 74, -55, 124, -49, 121, -110, 43, -77,
 			-107 };
 
-	public static void main(String[] args) throws Exception {
-		decrypt(sample, 16);
-		String encoded = Base64.getEncoder().encodeToString("Hello".getBytes());
-		System.out.println(encoded); // Outputs "SGVsbG8="
-
-		String decoded = new String(Base64.getDecoder().decode(encoded.getBytes()));
-		System.out.println(decoded); // Outputs "Hello"
-	}
-
+	 
 	private static CryptoCipher encipher() {
 		try {
 			CryptoCipher result = Utils.getCipherInstance(transform, encipherProperties());
