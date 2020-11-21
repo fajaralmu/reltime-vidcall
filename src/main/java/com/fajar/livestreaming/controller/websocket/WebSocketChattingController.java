@@ -38,13 +38,13 @@ public class WebSocketChattingController extends BaseController {
 
 	@MessageMapping("/chatting/typingstatus")
 	public WebResponse typingstatus(WebRequest request) throws IOException {
-		
+		log.info("websocket send typingstatus");
 		return realChatService.sendTypingStatus(request);
 	}
 	
 	@MessageMapping("/chatting/markmessageasread")
 	public WebResponse markmessageasread(WebRequest request) throws IOException {
-		
+		log.info("websocket send markmessageasread");
 		realChatService.markMessageAsRead(request);
 		return null;
 	}
