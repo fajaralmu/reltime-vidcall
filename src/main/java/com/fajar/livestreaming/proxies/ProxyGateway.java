@@ -128,16 +128,22 @@ public class ProxyGateway {
 	}
 
 	private Map<String, String> extractHeader(HttpServletRequest httpRequest) {
+		log.info("==========HEADERS {}===========", httpRequest.getRequestURI());
 		Map<String, String> headers = new HashMap<>();
 		Enumeration<String> headerNames = httpRequest.getHeaderNames();
 		if (headerNames != null) {
 			while (headerNames.hasMoreElements()) {
 				String name = headerNames.nextElement();
 				String value = httpRequest.getHeader(name);
+				if (name.toLowerCase().equals("accept-encoding")) {
+					log.info("!!! header is skipped: {}", name);
+					continue;
+				}
 				headers.put(name, value);
+				log.info("{}:{}", name, value);
 			}
 		}
-
+		log.info("===============");
 		return headers;
 	}
 
