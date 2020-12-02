@@ -41,12 +41,7 @@ public class StringUtil {
 			randomString.append(n);
 		}
 		return randomString.toString();
-	}
-
-	public static void main(String[] xxx) {
-
-		 System.out.println(extractCamelCase("fajarAmKkkk"));
-	}
+	} 
 
 	public static String addZeroBefore(Integer number) {
 		return number < 10 ? "0" + number : number.toString();
@@ -95,6 +90,12 @@ public class StringUtil {
 		}
 		
 		return result.toString();
+	}
+	public static void main(String[] args) {
+		String msg = "CONNECT\naccept-version:1.1,1.0\nheart-beat:10000,10000\n\n\u0000";
+		System.out.println(msg);
+		System.out.println("CONNECTED\nversion:1.1\nheart-beat:0,0\n\n\u0000");
+		System.out.println("SUBSCRIBE\nid:sub-884\ndestination:/wsResp/newchatting/7d51ritp\n\n\u0000");
 	}
 
 }
