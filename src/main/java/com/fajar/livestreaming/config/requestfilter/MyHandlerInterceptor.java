@@ -27,6 +27,11 @@ public class MyHandlerInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 		log.info("[preHandle][" + request + "]" + "[" + request.getMethod() + "]");
+		
+		if (request.getMethod().toLowerCase().equals("options")) {
+			return true;
+		}
+		
 		HandlerMethod handlerMethod = interceptorProcessor.getHandlerMethod(request);
 
 		if (handlerMethod != null && interceptorProcessor.isApi(handlerMethod)) {
