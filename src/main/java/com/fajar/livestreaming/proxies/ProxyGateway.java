@@ -36,6 +36,7 @@ public class ProxyGateway {
 
 	public void proxyPost(String path, HttpServletRequest httpRequest, HttpServletResponse httpServletResponse)
 			throws IOException {
+		System.out.println("Post to: "+path);
 		Map<String, String> headers = extractHeader(httpRequest);
 		String payload = getPayload(httpRequest);
 		try {
@@ -49,6 +50,9 @@ public class ProxyGateway {
 
 			HttpHeaders responseHeaders = response.getHeaders();
 			mapResponseHeader(responseHeaders, httpServletResponse);
+			
+			System.out.println("Response:");
+			System.out.println(response.getBody());
 
 			httpServletResponse.setStatus(response.getStatusCodeValue());
 			httpServletResponse.getWriter().write(response.getBody());
@@ -60,7 +64,11 @@ public class ProxyGateway {
 			httpServletResponse.setStatus(e.getRawStatusCode());
 			mapResponseHeader(e.getResponseHeaders(), httpServletResponse);
 			httpServletResponse.getWriter().write(e.getResponseBodyAsString());
-		}
+		} catch (Exception e) {
+			httpServletResponse.setStatus(500);
+			httpServletResponse.setContentType("application/json");
+			httpServletResponse.getWriter().write("{\"message\":\""+e.getMessage()+"\"}");
+		} 
 	}
 
 	private void redirect(ResponseEntity<String> response, HttpServletRequest httpRequest,
