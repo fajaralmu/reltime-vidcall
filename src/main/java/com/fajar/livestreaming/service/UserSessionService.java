@@ -20,7 +20,6 @@ import com.fajar.livestreaming.dto.WebRequest;
 import com.fajar.livestreaming.dto.WebResponse;
 import com.fajar.livestreaming.runtimerepo.AccountSessionRepository;
 import com.fajar.livestreaming.runtimerepo.ActiveCallsRepository;
-import com.fajar.livestreaming.util.Encryptions;
 import com.fajar.livestreaming.util.JwtUtil;
 import com.fajar.livestreaming.util.StringUtil;
 
@@ -119,6 +118,9 @@ public class UserSessionService {
 	private RegisteredRequest getRegisteredRequestFromJwt(HttpServletRequest request) {
 		String jwt = (request.getHeader(HEADER_REQUEST_KEY));
 		RegisteredRequest registeredRequest = JwtUtil.getRegisteredRequest(jwt);
+		if (null == registeredRequest) {
+			return null;
+		}
 		return getRegisteredRequestById(registeredRequest.getRequestId());
 	}
 

@@ -79,7 +79,7 @@ public class JwtUtil {
 //			System.out.println("payload: "+ new String(payloadDecoded));
 			return true;
 		}catch (Exception e) { 
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		return false;

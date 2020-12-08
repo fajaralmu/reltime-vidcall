@@ -6,26 +6,31 @@
 
 <div>
 	<h2>Public Conference</h2>
-	<div id="main-view" class="border row" style="margin-bottom: 10px">
-		<div class="col-6" style="text-align: center;" >
-			<video height="200" width="200" muted="muted" controls id="my-video"></video>  
-			<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
-			<div style="text-align: center;">
-				<div style="display:grid; grid-template-columns: auto auto; grid-column-gap: 5px; grid-row-gap: 5px">
-					<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
-					<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
-					<input type="checkbox" id="audio-mute" class="form-control"><label>Mute Audio</label>
-					<label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
-					<select id="select-stream-type" class="custom-select">
-						<option value="camera">Camera</option>
-						<c:if test="${isPhone==false }"><option value="screen">Screen</option></c:if>
-					</select>
+	<div id="main-view" style="margin-bottom: 10px">
+		<div class="card">
+			<div class="card-header"><i class="fas fa-house-user"></i>&nbsp;Conference Data</div>
+			<div class="card-body row">
+				<div class="col-6" style="text-align: center;" >
+			
+					<video height="200" width="200" muted="muted" controls id="my-video"></video>  
+					<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
+					<div style="text-align: center;">
+						<div style="display:grid; grid-template-columns: auto auto; grid-column-gap: 5px; grid-row-gap: 5px">
+							<button onclick="togglePeerStream(true)" class="btn btn-outline-primary btn-sm">Enable Video</button>
+							<button onclick="togglePeerStream(false)"  class="btn btn-outline-danger btn-sm">Disable Video</button>
+							<input type="checkbox" id="audio-mute" class="form-control"><label>Mute Audio</label>
+							<label class="input-group-text" for="inputGroupSelect01">Stream Type</label>
+							<select id="select-stream-type" class="custom-select">
+								<option value="camera">Camera</option>
+								<c:if test="${isPhone==false }"><option value="screen">Screen</option></c:if>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-6"> 
+					<jsp:include page="partial/room-panel.jsp"></jsp:include>
 				</div>
 			</div>
-			
-		</div>
-		<div class="col-6"> 
-			<jsp:include page="partial/room-panel.jsp"></jsp:include>
 		</div>
 	</div>
 	<jsp:include page="partial/conference-fullscreen.jsp"></jsp:include>

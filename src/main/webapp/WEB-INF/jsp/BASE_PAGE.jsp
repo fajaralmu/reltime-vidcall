@@ -79,18 +79,13 @@
 	<input id="request-id" value="${requestId }" type="hidden" />
 	<input id="registered-request-id" value="${registeredRequestId }" type="hidden" />  
 	<div id="loading-div"></div>
-	<div class="container">
-		<div>
-			<jsp:include page="include/head.jsp"></jsp:include>
-		</div>
-		<div>
+	<div class="container-fluid ">
+		<jsp:include page="include/head.jsp"></jsp:include>
+		<div class="container-fluid">
 			<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
 		</div>
+		<jsp:include page="include/foot.jsp"></jsp:include>
 		
-		<div>
-			<jsp:include page="include/foot.jsp"></jsp:include>
-		</div>
-
 	</div>
 	<script type="text/javascript">
 		document.body.onload = function() {

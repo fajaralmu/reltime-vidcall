@@ -52,7 +52,7 @@ public class ProxyGateway {
 			mapResponseHeader(responseHeaders, httpServletResponse);
 			
 			System.out.println("Response:");
-			System.out.println(response.getBody());
+//			System.out.println(response.getBody());
 
 			httpServletResponse.setStatus(response.getStatusCodeValue());
 			httpServletResponse.getWriter().write(response.getBody());
