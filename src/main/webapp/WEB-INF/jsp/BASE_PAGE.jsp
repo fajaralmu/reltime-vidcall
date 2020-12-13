@@ -81,8 +81,13 @@
 	<div id="loading-div"></div>
 	<div class="container-fluid ">
 		<jsp:include page="include/head.jsp"></jsp:include>
-		<div class="container-fluid">
-			<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
+		<div class="container-fluid row">
+			<div class="col col-md-2 sidebar-custom">
+				<jsp:include page="include/sidebar.jsp"></jsp:include>
+			</div>
+			<div class="col">
+				<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
+			</div>
 		</div>
 		<jsp:include page="include/foot.jsp"></jsp:include>
 		

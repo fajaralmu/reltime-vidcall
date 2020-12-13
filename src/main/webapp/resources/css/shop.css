@@ -16,7 +16,7 @@ body {
 	text-align: center;
 }
 
-.page-header{
+.page-header {
 	color: rgb(100, 100, 100);
 	padding: 10px;
 }
@@ -88,6 +88,24 @@ a :hover {
 /******MENUS*******/
 ul#menu-1 li {
 	display: inline;
+}
+
+@media screen and (max-width: 991px) {
+	.navbar-custom {
+		display: block;
+	}
+	.sidebar-custom {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 992px) {
+	.navbar-custom {
+		display: none;
+	}
+	.sidebar-custom {
+		display: block;
+	}
 }
 
 /******* REPORT *******/

@@ -1,9 +1,11 @@
 package com.fajar.livestreaming.proxies;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,13 +35,24 @@ public class ProxyGateway {
 	@PostConstruct
 	public void init() {
 		buildRestTemplate();
-	}
+	} 
 
 	public void proxyPost(String path, HttpServletRequest httpRequest, HttpServletResponse httpServletResponse)
 			throws IOException {
 		System.out.println("Post to: "+path);
+		StringBuilder recorder = new StringBuilder();
+		
 		Map<String, String> headers = extractHeader(httpRequest);
 		String payload = getPayload(httpRequest);
+		
+		recorder.append("Endpoint: "+path+"\n");
+		recorder.append("Method: "+httpRequest.getMethod()+"\n");
+		recorder.append("========= REQUEST ==========\n");
+		recorder.append(printMap(headers));
+		recorder.append("========= payload ==========\n");
+		recorder.append(payload);
+		Object responsePayload = null;
+		int statusCode = 200;
 		try {
 			ResponseEntity<String> response = restTemplate.postForEntity(path, httpEntity(payload, headers),
 					String.class);
@@ -50,27 +64,51 @@ public class ProxyGateway {
 
 			HttpHeaders responseHeaders = response.getHeaders();
 			mapResponseHeader(responseHeaders, httpServletResponse);
+			responsePayload = response.getBody();
 			
-			System.out.println("Response:");
-//			System.out.println(response.getBody());
-
-			httpServletResponse.setStatus(response.getStatusCodeValue());
-			httpServletResponse.getWriter().write(response.getBody());
 		} catch (HttpClientErrorException e) {
-			httpServletResponse.setStatus(e.getRawStatusCode());
+			statusCode = (e.getRawStatusCode());
 			mapResponseHeader(e.getResponseHeaders(), httpServletResponse);
-			httpServletResponse.getWriter().write(e.getResponseBodyAsString());
+			responsePayload = e.getResponseBodyAsString();
+			
 		} catch (HttpServerErrorException e) {
-			httpServletResponse.setStatus(e.getRawStatusCode());
+			statusCode = (e.getRawStatusCode());
 			mapResponseHeader(e.getResponseHeaders(), httpServletResponse);
-			httpServletResponse.getWriter().write(e.getResponseBodyAsString());
+			responsePayload = e.getResponseBodyAsString();
+			
 		} catch (Exception e) {
-			httpServletResponse.setStatus(500);
+			statusCode = (500);
 			httpServletResponse.setContentType("application/json");
-			httpServletResponse.getWriter().write("{\"message\":\""+e.getMessage()+"\"}");
-		} 
+			responsePayload = "{\"message\":\""+e.getMessage()+"\"}";
+			
+		} finally {
+			httpServletResponse.setStatus(statusCode);
+			httpServletResponse.getWriter().write(String.valueOf(responsePayload));
+			Collection<String> headerNames = httpServletResponse.getHeaderNames();
+			Map headerMap = new HashMap<>();
+			headerNames.forEach(name->{
+				headerMap.put(name, httpServletResponse.getHeader(name));
+			});
+			
+			recorder.append("========= RESPONSE ==========\n");
+			recorder.append("Status: "+statusCode+"\n");
+			recorder.append(printMap(headerMap));
+			recorder.append("========= palyload ==========\n");
+			recorder.append(String.valueOf(responsePayload)+"\n");
+			writeRequestRecord(path, recorder.toString());
+		}
 	}
-
+	static void writeRequestRecord(String path, String data) {
+		if (path.startsWith("https://")) { return; }
+		path = path.replace('/', '_').replace(':', '-');
+		try {
+			File file = new File("D:\\request_record\\"+new Date().getTime()+ path+".txt");
+			FileUtils.writeStringToFile(file, data);
+		}catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+	}
 	private void redirect(ResponseEntity<String> response, HttpServletRequest httpRequest,
 			HttpServletResponse httpServletResponse) throws IOException {
 		String html = response.getBody();
@@ -80,12 +118,14 @@ public class ProxyGateway {
 
 	}
 
-	static void mapResponseHeader(HttpHeaders responseHeaders, HttpServletResponse httpServletResponse) {
+	static Map mapResponseHeader(HttpHeaders responseHeaders, HttpServletResponse httpServletResponse) {
+		Map responseHeaderMap = new HashMap<>();
 		responseHeaders.forEach((name, values) -> {
 			String[] valueAsArray = values.toArray(new String[values.size()]);
 //			responseHeaderMap.put(name, String.join(",", valueAsArray));
 			httpServletResponse.setHeader(name, String.join(",", valueAsArray));
 		});
+		return responseHeaderMap;
 	}
 
 	public void proxyGet(String path, HttpServletRequest httpRequest, HttpServletResponse httpServletResponse)
@@ -154,13 +194,18 @@ public class ProxyGateway {
 		log.info("===============");
 		return headers;
 	}
+	
+	private String printMap(Map map) {
+		StringBuilder sb = new StringBuilder();
+		for (Object key : map.keySet()) {
+			sb.append(key+" : "+map.get(key)+"\n");
+		}
+		return sb.toString();
+	}
 
 	public static <T> HttpEntity<T> httpEntity(T payload, Map<String, String> header) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setConnection("close");
-//        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-////        headers.add("Accept-Encoding", "identity");
-//        headers.add("Accept", "application/json");
 		if (null != header) {
 			for (Map.Entry<String, String> entry : header.entrySet()) {
 				headers.add(entry.getKey(), entry.getValue());

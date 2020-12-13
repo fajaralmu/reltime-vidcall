@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.HandlerMapping;
@@ -26,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProxiesController {
 	
 	String host = "https://developmentmode.000webhostapp.com/";
+//	String host = "http://localhost:8000";
 
 	@Autowired
 	private ProxyGateway gateway;

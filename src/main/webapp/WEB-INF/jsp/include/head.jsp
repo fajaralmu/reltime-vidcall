@@ -20,9 +20,10 @@
 			</div>
 		</div>
 	 
-		<nav class="navbar  navbar-expand-lg ">
+		<!-- <nav class="navbar navbar-expand-lg "> -->
+		<nav class="navbar-custom">
 			<div>
-				<ul class="navbar-nav ">
+				<ul class="navbar-nav">
 					<li class="nav-item "><a
 						href="<spring:url value="/app/"></spring:url>"><i
 							class="fas fa-home"></i>&nbsp;Main Menu </a></li>
