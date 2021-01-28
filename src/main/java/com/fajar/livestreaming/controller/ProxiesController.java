@@ -23,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProxiesController {
 	
-	String host = "https://developmentmode.000webhostapp.com/";
-//	String host = "http://localhost:8000";
+//	String host = "https://developmentmode.000webhostapp.com/";
+	String host = "http://localhost:8000/";
 
 	@Autowired
 	private ProxyGateway gateway;
