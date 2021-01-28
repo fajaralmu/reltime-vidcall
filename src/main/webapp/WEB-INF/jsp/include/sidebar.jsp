@@ -41,15 +41,15 @@
 	</div>
 </nav>
 <script>
-	const activeInfo = byId("active-call-info-sidebar");
+	const activeInfoSidebar = byId("active-call-info-sidebar");
 
 	function handleLeaveCallingSidebar() {
-		if (!activeInfo || activeCall == false) {
+		if (!activeInfoSidebar || activeCall == false) {
 			return;
 		}
 		leaveCalling(function(response) {
-			activeInfo.innerHTML = "<i class=\"fas fa-phone\"></i>&nbsp;Calling Enabled";
-			activeCall = false;
+			activeInfoSidebar.innerHTML = "<i class=\"fas fa-phone\"></i>&nbsp;Calling Enabled";
+			activeInfoSidebar = false;
 		});
 	}
 </script>

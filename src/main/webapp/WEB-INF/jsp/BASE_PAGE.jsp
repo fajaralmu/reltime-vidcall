@@ -82,9 +82,9 @@
 	<div class="container-fluid ">
 		<jsp:include page="include/head.jsp"></jsp:include>
 		<div class="container-fluid row">
-			<div class="col col-md-2 sidebar-custom">
+			<%-- <div class="col col-md-2 sidebar-custom">
 				<jsp:include page="include/sidebar.jsp"></jsp:include>
-			</div>
+			</div> --%>
 			<div class="col">
 				<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
 			</div>
