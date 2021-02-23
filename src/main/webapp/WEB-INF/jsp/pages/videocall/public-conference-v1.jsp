@@ -74,9 +74,9 @@
 	maxRecordingTime = parseInt("${maxRecordingTime}");
 	rtcConfiguration = {
 		    "iceServers" : [ 
-		    	{ "urls":"stun:${iceStunServer}"  } 
+		    	{ "urls":["stun:${iceStunServer}"]  } 
 		    	,{
-		    	      "urls":"turn:${iceTurnServer.url}",
+		    	      "urls":["turn:${iceTurnServer.url}"],
 		    	      "username": "${iceTurnServer.username}",
 		    	      "credential":"${iceTurnServer.password}"
 		    	    }
