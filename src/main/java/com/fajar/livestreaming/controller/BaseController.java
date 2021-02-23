@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fajar.livestreaming.dto.KeyValue;
 import com.fajar.livestreaming.dto.RegisteredRequest;
 import com.fajar.livestreaming.service.BindedValues;
+import com.fajar.livestreaming.service.TurnServerProperty;
 import com.fajar.livestreaming.service.UserSessionService;
 import com.fajar.livestreaming.util.DateUtil;
 
@@ -65,6 +66,10 @@ public class BaseController {
 	@ModelAttribute("iceStunServer")
 	public String iceStunServer() {
 		return bindedValues.getIceStunServer();
+	}
+	@ModelAttribute("iceTurnServer")
+	public TurnServerProperty iceTurnServer() {
+		return bindedValues.getTurnServerProperty();
 	}
 	
 	@ModelAttribute("maxRecordingTimeString")

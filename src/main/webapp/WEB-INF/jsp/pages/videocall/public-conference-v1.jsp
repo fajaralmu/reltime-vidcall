@@ -70,11 +70,15 @@
 	var videoEnabled = ${!videoEnabled};
 	var isJoined = ${isJoined};
 	var initialPeerCount = ${members.size()};
-	
+	//iceTurnServer
 	maxRecordingTime = parseInt("${maxRecordingTime}");
 	rtcConfiguration = {
 		    "iceServers" : [ 
 		    	{ "url":"stun:${iceStunServer}"  } 
+		    	,{
+		    	      "url":"turn:${iceTurnServer.username}@${iceTurnServer.url}",
+		    	      "credential":"${iceTurnServer.password}"
+		    	    }
 		    ]
 		};
 	

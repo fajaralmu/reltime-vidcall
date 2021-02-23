@@ -29,4 +29,21 @@ public class BindedValues {
 	protected String recordingOutputExtension;
 	@Value("${app.streaming.ice.iceStunServer}")
 	protected String iceStunServer;
+	@Value("${app.streaming.ice.iceTurnServer}")
+	protected String iceTurnServer;
+	@Value("${app.streaming.ice.iceTurnServer.username}")
+	protected String iceTurnServerUsername;
+	@Value("${app.streaming.ice.iceTurnServer.password}")
+	protected String iceTurnServerPass;
+	
+	public TurnServerProperty getTurnServerProperty() {
+		
+		return TurnServerProperty.builder()
+				.password(iceTurnServerPass)
+				.username(iceTurnServerUsername)
+				.url(iceTurnServer).build();
+	}
+//	app.streaming.ice.iceTurnServer=206.253.167.195:2222
+//			app.streaming.ice.iceTurnServer.username=username
+//			app.streaming.ice.iceTurnServer.password=password
 }
