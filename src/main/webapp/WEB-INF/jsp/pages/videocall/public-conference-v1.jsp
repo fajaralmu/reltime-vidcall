@@ -76,7 +76,8 @@
 		    "iceServers" : [ 
 		    	{ "url":"stun:${iceStunServer}"  } 
 		    	,{
-		    	      "url":"turn:${iceTurnServer.username}@${iceTurnServer.url}",
+		    	      "url":"turn:${iceTurnServer.url}",
+		    	      "username": "${iceTurnServer.username}",
 		    	      "credential":"${iceTurnServer.password}"
 		    	    }
 		    ]
