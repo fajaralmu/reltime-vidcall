@@ -10,12 +10,14 @@
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1256">
 <meta name="description" content="${applicationDescription }">
-<meta property="og:title" content="${applicationHeaderLabel }" >
-<meta property="og:url" content="https://realtime-videocall.herokuapp.com/" >
+<meta property="og:title" content="${applicationHeaderLabel }">
+<meta property="og:url"
+	content="https://realtime-videocall.herokuapp.com/">
 <meta property="og:description" content="${applicationDescription }">
 <meta property="og:site_name" content="${applicationHeaderLabel }">
-<meta property="og:image" itemprop="image" content="https://realtime-videocall.herokuapp.com/res/img/Flag_of_Indonesia_200.png" >
-<meta property="og:type" content="website" >
+<meta property="og:image" itemprop="image"
+	content="https://realtime-videocall.herokuapp.com/res/img/Flag_of_Indonesia_200.png">
+<meta property="og:type" content="website">
 
 <title>${title}</title>
 <link rel="icon" href="<c:url value="/res/img/javaEE.ico"></c:url >"
@@ -34,7 +36,7 @@
 <script src="<c:url value="/res/js/stomp.js"></c:url >"></script>
 <script src="<c:url value="/res/js/websocket-util.js"></c:url >"></script>
 <script src="<c:url value="/res/js/ajax.js?v=1"></c:url >"></script>
-<script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script> 
+<script src="<c:url value="/res/js/util.js?v=1"></c:url >"></script>
 <script src="<c:url value="/res/js/dialog.js?v=1"></c:url >"></script>
 
 <script src="<c:url value="/res/fa/js/all.js?v=1"></c:url >"></script>
@@ -51,14 +53,13 @@
 
 
 <script type="text/javascript">
-
 	var ipAndPort = "${ipAndPort}";
 	var ctxPath = "${contextPath}";
 	var websocketUrl = "<spring:url value="/realtime-app" />";
 	var websocketUrlv2 = "${ipAndPort}<spring:url value="/socket" />";
 	var inCalling = false;
 </script>
-<style>  
+<style>
 .centered-align {
 	text-align: center;
 	width: 100%;
@@ -75,22 +76,24 @@
 				aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
 	</div>
-	  <input id="token-value" value="${pageToken }" type="hidden" />
+	<input id="token-value" value="${pageToken }" type="hidden" />
 	<input id="request-id" value="${requestId }" type="hidden" />
-	<input id="registered-request-id" value="${registeredRequestId }" type="hidden" />  
+	<input id="registered-request-id" value="${registeredRequestId }"
+		type="hidden" />
 	<div id="loading-div"></div>
-	<div class="container-fluid ">
+	<div class="container-fluid " style="padding: 0px">
 		<jsp:include page="include/head.jsp"></jsp:include>
 		<div class="container-fluid row">
 			<%-- <div class="col col-md-2 sidebar-custom">
 				<jsp:include page="include/sidebar.jsp"></jsp:include>
 			</div> --%>
 			<div class="col">
-				<jsp:include page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
+				<jsp:include
+					page="${pageUrl == null? 'error/notfound': pageUrl}.jsp"></jsp:include>
 			</div>
 		</div>
 		<jsp:include page="include/foot.jsp"></jsp:include>
-		
+
 	</div>
 	<script type="text/javascript">
 		document.body.onload = function() {
@@ -99,38 +102,57 @@
 			performWebsocketConnection();
 
 		}
-		
-		function initCallbackCalling(requestId){
+
+		function initCallbackCalling(requestId) {
 			const callbackNofityCall = {
-					subscribeUrl : "/wsResp/notifycall/"+requestId,
-					callback : function(resp){
-						const caller = resp.requestId;
-						const username = resp.username;
-						const url = "<spring:url value="/stream/videocallv2/" />"+caller+"?referrer=calling";
-						
-						if(inCalling){
-							sendToWebsocket("/app/acceptcall", { accept:false, destination: caller, message: 'busy', originId: requestId }); 
-							
-						}else{
-							confirmDialog("&nbsp;<h4>"+username+"("+caller+")</h4> want to call you.. ", {dialogIcon:"fa fa-user-circle", yesIcon:"fa fa-phone", yesText:"Accept", noIcon:"fa fa-phone", noText:"Decline"})
-							.then(function(ok){ 
-									sendToWebsocket("/app/acceptcall", { accept:ok, destination: caller, originId: requestId }); 
-									if(ok){
-										window.location.href = url; 
-									}
-							})
+				subscribeUrl : "/wsResp/notifycall/" + requestId,
+				callback : function(resp) {
+					const caller = resp.requestId;
+					const username = resp.username;
+					const url = "<spring:url value="/stream/videocallv2/" />"
+							+ caller + "?referrer=calling";
+
+					if (inCalling) {
+						sendToWebsocket("/app/acceptcall", {
+							accept : false,
+							destination : caller,
+							message : 'busy',
+							originId : requestId
+						});
+
+					} else {
+						confirmDialog(
+								"&nbsp;<h4>" + username + "(" + caller
+										+ ")</h4> want to call you.. ", {
+									dialogIcon : "fa fa-user-circle",
+									yesIcon : "fa fa-phone",
+									yesText : "Accept",
+									noIcon : "fa fa-phone",
+									noText : "Decline"
+								}).then(function(ok) {
+							sendToWebsocket("/app/acceptcall", {
+								accept : ok,
+								destination : caller,
+								originId : requestId
+							});
+							if (ok) {
+								window.location.href = url;
+							}
+						})
+					}
+				}
+			};
+			connectToWebsocket(callbackNofityCall);
+		}
+
+		function leaveCalling(callback) {
+			postReq("<spring:url value="/api/webrtc2/leavecall" />", {},
+					function(xhr) {
+						if (callback) {
+							callback(xhr.data);
 						}
-					}					
-				};
-			connectToWebsocket( callbackNofityCall); 
+					});
 		}
-		
-		function leaveCalling(callback){
-			postReq("<spring:url value="/api/webrtc2/leavecall" />",
-					{}, function(xhr) { if(callback){callback(xhr.data);} });
-		}
-		
-		
 	</script>
 	<c:if test="${registeredRequest != null }">
 		<script type="text/javascript">
@@ -138,30 +160,31 @@
 		</script>
 	</c:if>
 	<script type="text/javascript">
-		const elementHavingOnEnters = document.getElementsByClassName("onenter");
-		
-		function initOnEnterListener(){
+		const elementHavingOnEnters = document
+				.getElementsByClassName("onenter");
+
+		function initOnEnterListener() {
 			for (var i = 0; i < elementHavingOnEnters.length; i++) {
 				const element = elementHavingOnEnters[i];
 				const onEnter = element.getAttribute("on-enter");
-				
-				if(onEnter) {
+
+				if (onEnter) {
 					const originalKeyup = element.onkeyup;
-					element.onkeyup = function(event){
-						
-						if(originalKeyup){
+					element.onkeyup = function(event) {
+
+						if (originalKeyup) {
 							originalKeyup(event);
 						}
-						
+
 						if (event.keyCode === 13) { //when key is 'Enter'
-						    event.preventDefault(); 
-						    eval(onEnter);
+							event.preventDefault();
+							eval(onEnter);
 						}
 					}
 				}
 			}
 		}
-		
+
 		initOnEnterListener();
 	</script>
 </body>
