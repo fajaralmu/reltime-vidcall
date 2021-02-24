@@ -66,7 +66,7 @@ function updatePeerConnection(requestId, obj){
 
 function generatePeerConnection(requestId) {
 	
-	const peerConnection = new RTCPeerConnection( [rtcConfiguration]);
+	const peerConnection = new RTCPeerConnection(rtcConfiguration);
  
 	//TODO: onaddstream is deprecated, change to ontrack
 	peerConnection.onaddstream  = function(event) {
