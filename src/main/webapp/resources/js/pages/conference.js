@@ -108,6 +108,21 @@ function generatePeerConnection(requestId) {
 	peerConnection.oncandidateerror = function (e) {
 		console.error("Error On Candidate: ", e);
 	}
+	peerConnection.onconnectionstatechange = function(event) {
+			console.debug("Connection State: ", peerConnection.connectionState);
+		  switch(peerConnection.connectionState) {
+		    case "connected":
+		      // The connection has become fully connected
+		      break;
+		    case "disconnected":
+		    case "failed":
+		      // One or more transports has terminated unexpectedly or in an error
+		      break;
+		    case "closed":
+		      // The connection has been closed
+		      break;
+		  }
+		}
 //	peerConnection.setConfiguration([rtcConfiguration]);
 	
 	return peerConnection;
