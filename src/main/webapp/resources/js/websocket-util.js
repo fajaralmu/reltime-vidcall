@@ -13,6 +13,7 @@ function sendToWebsocket(url, requestObject){
 }
 
 function performWebsocketConnection(){
+	console.debug("performWebsocketConnection");
 	var socket = new SockJS(websocketUrl);
 	const stompClients = Stomp.over(socket);
 	stompClients.connect({}, function(frame) {
@@ -44,11 +45,19 @@ function performWebsocketConnection(){
 			callback(frame);
 		}
 		 
+	}, function(e) {
+		console.warn("Error connection websocket, reconnect");
+		doItLater(performWebsocketConnection, 2000);
 	});
 
 	this.stompClient = stompClients;
 }
-
+function doItLater(callback, intervalMs) {
+    const timeout = setTimeout(function(){
+       callback();
+        clearTimeout(timeout);
+      }, intervalMs)
+}
 /**
  * 
  * @param callBackObject
