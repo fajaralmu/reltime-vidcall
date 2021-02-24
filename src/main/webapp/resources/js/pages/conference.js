@@ -105,6 +105,10 @@ function generatePeerConnection(requestId) {
 		console.debug("ondatachannel: ", ev);
 		initDataChannel(ev);
 	}
+	peerConnection.oncandidateerror = function (e) {
+		console.error("Error On Candidate: ", e);
+	}
+	peerConnection.setConfiguration();
 	
 	return peerConnection;
 }
