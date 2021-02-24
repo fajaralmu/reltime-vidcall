@@ -7,7 +7,7 @@
 <div>
 	<h2>Main Menu</h2>
 	<div class="row">
-		<div class="col-6">
+		<div class="col-md-6">
 			<form id="form-register">
 				<div class="card">
 					<div class="card-header">
@@ -36,7 +36,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-6">
+		<div class="col-md-6">
 			<div class="card">
 				<div class="card-header">
 					<i class="fa fa-sticky-note"></i>&nbsp;README

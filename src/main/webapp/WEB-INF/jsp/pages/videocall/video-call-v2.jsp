@@ -12,13 +12,13 @@
 	<p><i>*begin Call to start video call</i></p>
 	
 	<div class="row" style="grid-row-gap: 5px">
-		<div class="col-6 camera"
+		<div class="col-md-6 camera"
 			style="padding: 10px; border: solid 1px green; text-align: center">
 			<h2>You</h2>
 			<video height="200" width="200" muted="muted" controls id="my-video"></video>
 
 		</div>
-		<div class="col-6 output-receiver"
+		<div class="col-md-6 output-receiver"
 			style="padding: 10px; border: solid 1px green; text-align: center;">
 			<h2>Partner <small id="partner-is-online">Online:
 					${partnerInfo.active }</small></h2>

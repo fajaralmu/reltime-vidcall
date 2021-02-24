@@ -8,7 +8,7 @@
 	<h3 style="text-align: center">Member List</h3>
 	<div class="row">
 		<c:forEach var="member" items="${members}">
-			<div class="col-6" id="member-item-${member.requestId}">
+			<div class="col-md-6" id="member-item-${member.requestId}">
 				<span>
 					<c:if test="${true ==  member.roomCreator}">
 						 <i class="fas fa-headset"></i> 
