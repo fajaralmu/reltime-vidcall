@@ -108,7 +108,7 @@ function generatePeerConnection(requestId) {
 	peerConnection.oncandidateerror = function (e) {
 		console.error("Error On Candidate: ", e);
 	}
-	peerConnection.setConfiguration(rtcConfiguration);
+//	peerConnection.setConfiguration([rtcConfiguration]);
 	
 	return peerConnection;
 }
