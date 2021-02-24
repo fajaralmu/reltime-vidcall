@@ -7,7 +7,7 @@
 <div>
 	<h2><i class="fas fa-comments"></i>&nbsp;Chatting With: ${partner.username}</h2>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form id="message-form">
 				<div class="form-group">
 					<label for="chat-message">Message</label> <input type="text"
@@ -17,7 +17,7 @@
 			</form>
 			<p id="is-typing"></p>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<div id="chatting-message" style="overflow: scroll; height: 500px; padding: 10px">
 				<c:forEach items="${messages }" var="message">
 					<div class="alert ${registeredRequest.requestId == message.requestId ? 'alert-success':'alert-secondary' }" >  

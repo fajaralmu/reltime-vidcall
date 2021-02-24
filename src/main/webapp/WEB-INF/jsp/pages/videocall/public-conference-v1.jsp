@@ -10,7 +10,7 @@
 		<div class="card">
 			<div class="card-header"><i class="fas fa-house-user"></i>&nbsp;Conference Data</div>
 			<div class="card-body row">
-				<div class="col-md-6" style="text-align: center;" >
+				<div class="col-lg-6" style="text-align: center;" >
 			
 					<video height="200" width="200" muted="muted" controls id="my-video"></video>  
 					<h5>Enabled: <span class="badge badge-info" id="info-video-enabled">${videoEnabled }</span></h5>
@@ -27,7 +27,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6"> 
+				<div class="col-lg-6"> 
 					<jsp:include page="partial/room-panel.jsp"></jsp:include>
 				</div>
 			</div>
@@ -41,10 +41,10 @@
 			class="fas fa-file-download"></i> Recorded Capture</a>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<jsp:include page="partial/conference-member-list.jsp"></jsp:include>
 		</div>
-		<div class="col-md-6"> 
+		<div class="col-lg-6"> 
 			<jsp:include page="partial/conference-chat-log.jsp"></jsp:include>
 		</div>
 	</div>
@@ -240,7 +240,7 @@
 		const date = response.date;
 		const isRoomCreator = response.roomCreator;
 		const memberElementObject = {
-			tagName : 'div',className: 'col-md-6',
+			tagName : 'div',className: "col-lg-6",
 			id : "member-item-" + requestId,
 			ch1 : {
 				tagName : 'span',

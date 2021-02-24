@@ -7,7 +7,7 @@
 <div>
 	<h2>Dashboard</h2>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form onsubmit="return false">
 				<div class="card">
 					<div class="card-header">Generate Room Id</div>
@@ -23,7 +23,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<form onsubmit="goToExistingRoom(); return false;">
 				<div class="card">
 					<div class="card-header">Go To Existing Room</div>
